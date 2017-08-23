@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 道具 -->
+<mapper namespace="PropMapper">
+	<!-- 查询道具列表 -->
+	<select id="selectPropList" parameterType="map" resultType="Prop">
+		SELECT tp.id, tp.name
+		FROM tab_prop tp
+		<if test="roundId != null">
+		INNER JOIN tab_play_round_prop_map tprpm 
+		   ON tprpm.prop_id = tp.id
+		  AND tprpm.round_id = #{roundId}
+		</if>
+		WHERE 1 = 1
+		<if test="projectId != null">
+		  AND tp.project_id = #{projectId}
+		</if>
+	</select>
+	
+	<!-- 查询道具列表，带有道具的场次信息 -->
+	<select id="selectPropListWithRoundInfo" parameterType="map" resultType="map">
+		SELECT
+			tp.id,
+			tp.`name`,
+			GROUP_CONCAT(
+				tpr.seriesno,
+				'-',
+				tpr.roundno
+			ORDER BY
+				tpr.seriesno,
+				ABS(tpr.roundno),
+				tpr.roundno
+			) seriesRoundNos,
+			count(tpr.id) roundCount
+		FROM
+			tab_prop tp
+		LEFT JOIN tab_play_round_prop_map tprpm ON tprpm.prop_id = tp.id
+		LEFT JOIN tab_play_round tpr ON tpr.id = tprpm.round_id
+		WHERE
+			tp.project_id = #{projectId}
+		GROUP BY
+			tp.id,
+			tp.`name`
+		ORDER BY
+			roundCount DESC
+	</select>
+	
+	<!-- 批量新增 -->
+	<insert id="insertBatch">
+		INSERT INTO tab_prop(id, project_id, name)
+		VALUES
+		<foreach collection="list" separator="," item="p">
+			(#{p.id}, #{p.project.id}, #{p.name})
+		</foreach>
+	</insert>
+	
+	<!-- 根据项目ID删除数据 -->
+	<delete id="deleteByProjectId" parameterType="String">
+		DELETE FROM tab_prop where project_id = #{projectId}
+	</delete>
+</mapper>

@@ -1,0 +1,281 @@
+/*剧本解析  start*/
+.anal-content {
+    width: 1100px;
+    height: 620px;
+    background-color: #ffffff;
+}
+
+/*左侧  start*/
+.anal-content .anal-left {
+    width: 640px;
+    height: 540px;
+    float: left;
+    margin-left: 10px;
+    position: relative;
+    overflow: auto;
+    margin-top: 20px;
+}
+.anal-content .anal-left .anal-left-title {
+    width: 100%;
+}
+.anal-content .anal-left .anal-left-title h4 {
+    float: left;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 25px;
+}
+.anal-content .anal-left .anal-left-figure {
+    font-size: 14px;
+    color: rgb(41,41,41);
+    margin: 16px 0;
+}
+.anal-content .anal-left .anal-left-totleword {
+    color: rgb(153,153,153);
+    font-size: 12px;
+    margin: 10px 0;
+}
+.anal-content .anal-left .anal-color {
+    margin-bottom: 40px;
+}
+.anal-content .anal-left .anal-color .anal-color-keyword {
+    float: left;
+    margin-right: 15px;
+    cursor: pointer;
+}
+.anal-content .anal-left .anal-color .anal-color-keyword .color {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+}
+.anal-content .anal-left .anal-color .main-actor .color {
+    background-color: #b699bd;
+}
+.anal-content .anal-left .anal-color .special-actor .color {
+    background-color: #00cccc;
+}
+.anal-content .anal-left .anal-color .public-actor .color {
+    background-color: #009bff;
+}
+.anal-content .anal-left .anal-color .stage .color {
+    background-color: #d09180;
+}
+.anal-content .anal-left .anal-color .dress .color {
+    background-color: #e0620d;
+}
+.anal-content .anal-left .anal-color .sign .color {
+    background-color: #cc0000;
+}
+.anal-content .anal-left .anal-color .ad-anal .color {
+    background-color: #5db85e;
+}
+.anal-content .anal-left .anal-color .word {
+    display: inline-block;
+    color: rgb(41,41,41);
+    font-size: 12px;
+}
+.anal-content .anal-left .anal-color .anal-color-keyword.active .color {
+    background-color: #cccccc;
+}
+.anal-content .anal-left .anal-color .anal-color-keyword.active .word {
+    color: #cccccc;
+}
+.anal-content .anal-left .anal-color .anal-color-keyword:hover .color {
+    background-color: #cccccc;
+}
+.anal-content .anal-left  .anal-color .anal-color-keyword:hover .word {
+    color: #cccccc;
+}
+
+.anal-content .anal-left .anal-left-content {
+    width: 100%;
+    height: 550px;
+    font-size: 14px;
+    color: rgb(41,41,41);
+    line-height: 36px;
+}
+.anal-content .anal-left .anal-left-content span {
+    /*display: inline-block;*/
+}
+.anal-content .anal-left .anal-left-content .main-actor {
+    background-color: #b699bd;
+}
+.anal-content .anal-left .anal-left-content .special-actor {
+    background-color: #00cccc;
+}
+.anal-content .anal-left .anal-left-content .public-actor {
+    background-color: #009bff;
+}
+.anal-content .anal-left .anal-left-content .stage {
+    background-color: #d09180;
+}
+.anal-content .anal-left .anal-left-content .dress {
+    background-color: #e0620d;
+}
+.anal-content .anal-left .anal-left-content .sign {
+    background-color: #cc0000;
+    position: relative;
+}
+.anal-content .anal-left .anal-left-content .sign>.sign-child {
+    position: absolute;
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border-radius: 16px;
+    top: -15px;
+    right: -10px;
+    color: #ffffff;
+    line-height: 16px;
+    text-align: center;
+    background-color: #cc0000;
+    font-size: 12px;
+}
+.anal-content .anal-left .anal-left-content .ad-anal {
+    background-color: #5db85e;
+    position: relative;
+}
+.anal-content .anal-left .anal-left-content .ad-anal>.ad-anal-child {
+    position: absolute;
+    white-space: nowrap;
+    top: -17px;
+    left: 0px;
+    color: #5db85e;
+    line-height: 16px;
+    font-size: 12px;
+    z-index: 1111;
+}
+/*左侧  end*/
+
+/*右侧  start*/
+.anal-content .anal-right {
+    width: 450px;
+    height: 540px;
+    background-color: #ffffff;
+    float: left;
+    position: relative;
+}
+.anal-content .anal-right .anal-right-title {
+    border-bottom: 1px solid #ededed;
+    margin-left: 50px;
+    padding-left: 20px;
+}
+.anal-content .anal-right .anal-right-title h5 {
+    font-size: 14px;
+    color: rgb(179,179,179);
+    margin-right: 50px;
+    display: inline-block;
+    line-height: 50px;
+    cursor: pointer;
+}
+.anal-content .anal-right .anal-right-title h5.active {
+    color: rgb(41,41,41);
+    border-bottom: 3px solid #29d9c2;
+}
+.anal-content .anal-right .anal-right-title h5:hover {
+    color: rgb(41,41,41);
+    border-bottom: 3px solid #29d9c2;
+}
+.anal-content .anal-right .anal-right-title i {
+    cursor: pointer;
+}
+/*场景信息  start*/
+.anal-content .anal-right .scene-info {
+    margin-top: 10px;
+    margin-left: 50px;
+    margin-right: 30px;
+}
+.anal-content .anal-right .scene-info .scene-info-con {
+    height: 40px;
+    font-size: 0px;
+}
+.anal-content .anal-right .scene-info .scene-info-con>span {
+    display: inline-block;
+    height: 40px;
+    line-height: 40px;
+    font-size: 14px;
+    color: rgb(179,179,179);
+    margin-right: 40px;
+    vertical-align: top;
+}
+.anal-content .anal-right .scene-info .scene-info-con>.one {
+    width: 60px;
+    text-align: right;
+}
+.anal-content .anal-right .scene-info .scene-info-con>.two {
+    width: 250px;
+    color: rgb(41,41,41);
+    text-align: left;
+    margin-right: 0;
+    overflow: hidden;
+}
+/*场景信息  end*/
+
+/*剧本标记  start*/
+.anal-content .anal-right .play-sign {
+    width: 465px;
+    height: 507px;
+    padding-left: 50px;
+    overflow: auto;
+}
+.anal-content .anal-right .play-sign ul li {
+    float: left;
+    width: 80px;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    border-right: 1px solid #ededed;
+    border-bottom: 1px solid #ededed;
+    overflow: hidden;
+}
+.anal-content .anal-right .play-sign ul li:nth-last-child(1) {
+    border-right: none;
+}
+/*剧本标记  end*/
+
+/*广告植入  start*/
+.anal-content .anal-right .ad-import {
+    width: 450px;
+    height: 507px;
+    padding-left: 50px;
+    overflow: auto;
+}
+.anal-content .anal-right .ad-import .ad-import-con {
+    width: 380px;
+    border-bottom: 1px solid #ededed;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+.anal-content .anal-right .ad-import-con .con-title {
+}
+.anal-content .anal-right .ad-import-con .con-title h6 {
+    display: inline-block;
+    font-size: 16px;
+    color: rgb(41,41,41);
+    margin-right: 40px;
+}
+.anal-content .anal-right .ad-import-con .con-title>span{
+    font-size: 14px;
+    margin-right: 30px;
+    color: rgb(204,204,204);
+}
+.anal-content .anal-right .ad-import-con .con-title>.phone{
+    margin-right: 190px;
+}
+.anal-content .anal-right .ad-import-con .con-con span{
+    display: inline-block;
+    margin-top: 8px;
+    margin-right: 40px;
+    margin-bottom: 15px;
+    color: rgb(204,204,204);
+    font-size: 14px;
+}
+.anal-content .anal-right .ad-import-con .con-describe {
+    display: inline-block;
+    color: rgb(153,153,153);
+    font-size: 14px;
+}
+/*广告植入  end*/
+
+/*右侧  end*/
+
+/*剧本解析  end*/

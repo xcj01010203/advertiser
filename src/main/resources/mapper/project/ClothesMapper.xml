@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 服装 -->
+<mapper namespace="ClothesMapper">
+	<!-- 查询服装列表 -->
+	<select id="selectClothesList" parameterType="map" resultType="Clothes">
+		SELECT tc.id, tc.name
+		FROM tab_clothes tc
+		<if test="roundId != null">
+		INNER JOIN tab_play_round_clothes_map tprcm 
+		   ON tprcm.clothes_id = tc.id
+		  AND tprcm.round_id = #{roundId}
+		</if>
+		WHERE 1 = 1
+		<if test="projectId != null">
+		  AND tc.project_id = #{projectId}
+		</if>
+	</select>
+	
+	<!-- 批量新增 -->
+	<insert id="insertBatch">
+		INSERT INTO tab_clothes(id, project_id, name)
+		VALUES 
+		<foreach collection="list" separator="," item="c">
+			(#{c.id}, #{c.project.id}, #{c.name})
+		</foreach>
+	</insert>
+	
+	<!-- 根据项目ID删除数据 -->
+	<delete id="deleteByProjectId" parameterType="String">
+		DELETE FROM tab_clothes where project_id = #{projectId}
+	</delete>
+</mapper>

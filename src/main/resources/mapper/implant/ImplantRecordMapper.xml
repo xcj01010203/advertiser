@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 广告植入 -->
+<mapper namespace="ImplantRecordMapper">
+	<!-- 更新一条记录 -->
+	<update id="updateOne">
+		UPDATE tab_implant_record
+		SET name = #{name},
+			round_id = #{playRound.id},
+			mode_id = #{implantMode.id},
+			goods_id = #{goods.id},
+			`desc` = #{desc}
+		WHERE id = #{id}
+	</update>
+	
+	<!-- 新增一条记录 -->
+	<insert id="insertOne">
+		INSERT INTO tab_implant_record(id, project_id, name, round_id, mode_id, goods_id, `desc`, createtime)
+		VALUES (#{id}, #{project.id}, #{name}, #{playRound.id}, #{implantMode.id}, #{goods.id}, #{desc}, #{createTime})
+	</insert>
+	
+	<!-- 删除一条记录 -->
+	<delete id="deleteOne" parameterType="String">
+		DELETE FROM tab_implant_record WHERE id=#{id}
+	</delete>
+	
+	<!-- 根据项目ID删除数据 -->
+	<delete id="deleteByProjectId" parameterType="String">
+		DELETE FROM tab_implant_record where project_id = #{projectId}
+	</delete>
+	
+	<!-- 根据项目ID删除数据 -->
+	<delete id="deleteByRoundIds">
+		DELETE FROM tab_implant_record where round_id IN
+		<foreach collection="list" open="(" close=")" separator="," item="roundId">
+			#{roundId}
+		</foreach>
+	</delete>
+	
+	<!-- 查询广告记录 -->
+	<select id="selectRecord" parameterType="map" resultType="ImplantRecord">
+		SELECT 
+			tir.id, 
+			tir.name, 
+			tpr.id as 'playRound.id',
+			tpr.seriesno as 'playRound.seriesNo',
+			tpr.roundno as 'playRound.roundNo',
+			tir.mode_id as 'implantMode.id', 
+			tim.name as 'implantMode.name', 
+			tir.goods_id as 'goods.id', 
+			tg.goods as 'goods.goods',
+			tir.desc
+		FROM tab_implant_record tir, 
+			 tab_implant_mode tim, 
+			 tab_goods tg, 
+			 tab_play_round tpr
+		WHERE 1 = 1
+		  AND tir.mode_id = tim.id
+		  AND tir.goods_id = tg.id
+		  AND tir.round_id = tpr.id
+		<if test="projectId != null">
+		  AND tir.project_id = #{projectId}
+		</if>
+		<if test="roundId != null">
+		  AND tir.round_id = #{roundId}
+		</if>
+		<if test="name != null">
+		  AND tir.name = #{name}
+		</if>
+		<if test="modeId != null">
+		  AND tir.mode_Id = #{modeId}
+		</if>
+		<if test="goodsId != null">
+		  AND tir.goods_id = #{goodsId}
+		</if>
+		ORDER BY tpr.seriesno, ABS(tpr.roundno), tpr.roundno, tir.createtime asc
+	</select>
+</mapper>

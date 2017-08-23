@@ -1,0 +1,935 @@
+package com.xiaotu.advertiser.project.service;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.stereotype.Service;
+
+import com.xiaotu.advertiser.dictionary.model.GoodsModel;
+import com.xiaotu.advertiser.dictionary.model.ImplantModeModel;
+import com.xiaotu.advertiser.project.controller.dto.PlayRoundDto;
+import com.xiaotu.advertiser.project.model.ClothesModel;
+import com.xiaotu.advertiser.project.model.PlayRoleModel;
+import com.xiaotu.advertiser.project.model.PlayRoundModel;
+import com.xiaotu.advertiser.project.model.ProjectModel;
+import com.xiaotu.advertiser.project.model.PropModel;
+import com.xiaotu.advertiser.project.model.map.PlayRoundClothesMapModel;
+import com.xiaotu.advertiser.project.model.map.PlayRoundPropMapModel;
+import com.xiaotu.advertiser.project.model.map.PlayRoundRoleMapModel;
+import com.xiaotu.advertiser.user.model.UserModel;
+import com.xiaotu.common.db.Page;
+import com.xiaotu.common.db.util.UUIDUtils;
+import com.xiaotu.common.exception.BusinessException;
+import com.xiaotu.common.mvc.BaseService;
+import com.xiaotu.common.util.SessionUtil;
+
+/**
+ * 场次信息
+ * @author xuchangjian 2017年6月21日下午3:36:52
+ */
+@Service
+public class PlayRoundService extends BaseService{
+	
+	/**
+	 * 根据多个场次ID批量删除场次
+	 * @author xuchangjian 2017年6月22日下午3:18:36
+	 * @param idList
+	 */
+	public void removeBatchById(List<String> idList)
+	{
+		
+		// 删除分析结果
+		this.delete("ImplantAnalyseResultMapper.deleteBatchMapByRoundIds", idList);
+		this.delete("ImplantAnalyseResultMapper.deleteBatchWordByRoundIds", idList);
+		this.delete("ImplantAnalyseResultMapper.deleteBatchResultByRoundIds", idList);
+		
+		//删除和角色的关联关系
+		this.delete("PlayRoundRoleMapMapper.deleteBatchByRoundIds", idList);
+		
+		//删除和道具的关联关系
+		this.delete("PlayRoundPropMapMapper.deleteBatchByRoundIds", idList);
+		
+		//删除和服装的关联关系
+		this.delete("PlayRoundClothesMapMapper.deleteBatchByRoundIds", idList);
+		
+		//删除剧本内容
+		this.delete("PlayContentMapper.deleteBatchByRoundIds", idList);
+		
+		//删除剧本标记和品类的关联
+		this.delete("PlayMarkGoodsMapMapper.deleteByRoundIds", idList);
+		
+		//删除剧本标记和角色的关联
+		this.delete("PlayMarkRoleMapMapper.deleteByRoundIds", idList);
+		
+		//删除剧本标记信息
+		this.delete("PlayMarkMapper.deleteByRoundIds", idList);
+		
+		//删除植入广告记录和角色的关联
+		this.delete("ImplantRoleMapMapper.deleteByRoundIds", idList);
+		
+		//删除植入广告记录
+		this.delete("ImplantRecordMapper.deleteByRoundIds", idList);
+		
+		//删除原来的场次
+		this.delete("deleteBatchByIds", idList);
+		
+	}
+	
+	/**
+	 * 获取项目中剧本的集场号列表
+	 * @author xuchangjian 2017年6月23日上午9:37:24
+	 * @return
+	 */
+	public Map<String, Object> querySeriesRoundNos()
+	{
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		
+		ProjectModel project = SessionUtil.getSessionProject();
+		UserModel user = SessionUtil.getSessionUser();
+		
+		Map<String, Object> playRoundParameter = new HashMap<String, Object>();
+		playRoundParameter.put("projectId", project.getId());
+		List<PlayRoundModel> roundList = this.getList("selectPlayRound", playRoundParameter);
+		
+		//存储集场信息的map，key表示集次，value表示场次信息列表
+		Map<Integer, List<Map<String, Object>>> seriesNoMap = new HashMap<Integer, List<Map<String, Object>>>();
+		for (PlayRoundModel round : roundList)
+		{
+			String id = round.getId();
+			int seriesNo = round.getSeriesNo();
+			String roundNo = round.getRoundNo();
+			boolean isManualSaved = round.getIsManualSaved();
+			
+			if (!seriesNoMap.containsKey(seriesNo))
+			{
+				List<Map<String, Object>> roundNoMapList = new ArrayList<Map<String, Object>>();
+				Map<String, Object> roundNoMap = new HashMap<String, Object>();
+				roundNoMap.put("id", id);
+				roundNoMap.put("roundNo", roundNo);
+				roundNoMap.put("isManualSaved", isManualSaved);
+				
+				roundNoMapList.add(roundNoMap);
+				seriesNoMap.put(seriesNo, roundNoMapList);
+			}
+			else 
+			{
+				List<Map<String, Object>> roundNoMapList = seriesNoMap.get(seriesNo);
+				Map<String, Object> roundNoMap = new HashMap<String, Object>();
+				roundNoMap.put("id", id);
+				roundNoMap.put("roundNo", roundNo);
+				roundNoMap.put("isManualSaved", isManualSaved);
+				
+				roundNoMapList.add(roundNoMap);
+			}
+		}
+		
+		Map<String, Object> bookMarksParameter = new HashMap<String, Object>();
+		bookMarksParameter.put("projectId", project.getId());
+		bookMarksParameter.put("userId", user.getId());
+		bookMarksParameter.put("type", 1);
+		String bookMarksRoundId = this.get("BookMarksMapper.selectBookMark", bookMarksParameter);
+		
+		PlayRoundModel playRound = null;
+		if (!StringUtils.isBlank(bookMarksRoundId)) 
+		{
+			Map<String, Object> playRoundParams = new HashMap<String, Object>();
+			playRoundParams.put("projectId", project.getId());
+			playRoundParams.put("id", bookMarksRoundId);
+			playRound = this.get("selectPlayRound", playRoundParams);
+		}
+		
+		
+		resultMap.put("seriesNoList", seriesNoMap);
+		resultMap.put("bookmarks", playRound);
+		return resultMap;
+	}
+	
+	/**
+	 * 获取集次列表 
+	 * @author xuchangjian 2017年6月29日下午6:26:16
+	 * @return
+	 */
+	public Object querySeriesNoList()
+	{
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		
+		ProjectModel project = SessionUtil.getSessionProject();
+		
+		Map<String, Object> playRoundParameter = new HashMap<String, Object>();
+		playRoundParameter.put("projectId", project.getId());
+		List<PlayRoundModel> roundList = this.getList("selectPlayRound", playRoundParameter);
+		
+		List<Integer> seriesNoList = new ArrayList<Integer>();
+		for (PlayRoundModel round : roundList)
+		{
+			if (!seriesNoList.contains(round.getSeriesNo()))
+			{
+				seriesNoList.add(round.getSeriesNo());
+			}
+		}
+		
+		resultMap.put("seriesNoList", seriesNoList);
+		return resultMap;
+	}
+
+	@Override
+	protected String getKey() {
+		return "PlayRoundMapper";
+	}
+
+	/**
+	 * 查询场次详细信息
+	 * @author xuchangjian 2017年6月23日下午12:11:46
+	 * @param roundId
+	 * @return
+	 */
+	public PlayRoundDto queryRoundDetail(String roundId)
+	{
+		ProjectModel project = SessionUtil.getSessionProject();
+		
+		//查询场次基本信息
+		Map<String, Object> playRoundParam = new HashMap<String, Object>();
+		playRoundParam.put("projectId", project.getId());
+		playRoundParam.put("id", roundId);
+		PlayRoundModel playRound = this.get("selectPlayRound", playRoundParam);
+		
+
+		//角色、服装、道具公用的查询参数
+		Map<String, Object> RoleClothesPropParam = new HashMap<String, Object>();
+		RoleClothesPropParam.put("projectId", project.getId());
+		RoleClothesPropParam.put("roundId", roundId);
+		
+		List<String> majorRoleNameList = new ArrayList<String>();	//主要角色列表
+		List<String> guestRoleNameList = new ArrayList<String>();	//特约角色列表
+		List<String> massRoleNameList = new ArrayList<String>();	//群众角色列表
+		List<String> clothesNameList = new ArrayList<String>();	//服装列表
+		List<String> propNameList = new ArrayList<String>();	//道具列表
+		
+		//查询场次角色信息
+		List<PlayRoleModel> roleList = this.getList("PlayRoleMapper.selectPlayRoleList", RoleClothesPropParam);
+		if (roleList != null)
+		{
+			for (PlayRoleModel role : roleList)
+			{
+				int type = role.getType();
+				String name = role.getName();
+				if (type == 1)
+				{
+					majorRoleNameList.add(name);
+				}
+				if (type == 2)
+				{
+					guestRoleNameList.add(name);
+				}
+				if (type == 3)
+				{
+					massRoleNameList.add(name);
+				}
+			}
+		}
+		
+		//查询场次服装信息
+		List<ClothesModel> clothesList = this.getList("ClothesMapper.selectClothesList", RoleClothesPropParam);
+		if (clothesList != null)
+		{
+			for (ClothesModel clothes : clothesList)
+			{
+				clothesNameList.add(clothes.getName());
+			}
+		}
+		
+		//查询场次道具信息
+		List<PropModel> propList = this.getList("PropMapper.selectPropList", RoleClothesPropParam);
+		if (propList != null)
+		{
+			for (PropModel prop : propList)
+			{
+				propNameList.add(prop.getName());
+			}
+		}
+		
+		PlayRoundDto roundDto = new PlayRoundDto();
+		roundDto.setId(playRound.getId());
+		roundDto.setSeriesNo(playRound.getSeriesNo());
+		roundDto.setRoundNo(playRound.getRoundNo());
+		roundDto.setAtmosphere(playRound.getAtmosphere());
+		roundDto.setSite(playRound.getSite());
+		roundDto.setFirstLocation(playRound.getFirstLocation());
+		roundDto.setMajorRoleNameList(majorRoleNameList);
+		roundDto.setGuestRoleNameList(guestRoleNameList);
+		roundDto.setMassRoleNameList(massRoleNameList);
+		roundDto.setClothesNameList(clothesNameList);
+		roundDto.setPropNameList(propNameList);
+		roundDto.setRemark(playRound.getRemark());
+		
+		return roundDto;
+	}
+	
+	/**
+	 * 保存场次信息
+	 * @author xuchangjian 2017年6月26日下午2:07:58
+	 * @param playRound
+	 * @return
+	 */
+	public void updateRoundByPlayRoundDto(PlayRoundDto playRoundDto)
+	{
+		ProjectModel project = SessionUtil.getSessionProject();
+		
+		if (playRoundDto.getSeriesNo() == null || StringUtils.isBlank(playRoundDto.getRoundNo()))
+		{
+			throw new BusinessException("集场次信息不能为空");
+		}
+		
+		//校验集场号是否有重复
+		Map<String, Object> existRoundParam = new HashMap<String, Object>();
+		existRoundParam.put("projectId", project.getId());
+		existRoundParam.put("seriesNo", playRoundDto.getSeriesNo());
+		existRoundParam.put("roundNo", playRoundDto.getRoundNo());
+		PlayRoundModel existRound = this.get("selectPlayRound", existRoundParam);
+		if (existRound != null && !existRound.getId().equals(playRoundDto.getId()))
+		{
+			throw new BusinessException("已存在相同集场号的场次，请更改集场号");
+		}
+		
+		
+		PlayRoundModel playRound = new PlayRoundModel();
+		playRound.setId(playRoundDto.getId());
+		playRound.setSeriesNo(playRoundDto.getSeriesNo());
+		playRound.setRoundNo(playRoundDto.getRoundNo());
+		playRound.setAtmosphere(playRoundDto.getAtmosphere());
+		playRound.setSite(playRoundDto.getSite());
+		playRound.setFirstLocation(playRoundDto.getFirstLocation());
+		playRound.setRemark(playRoundDto.getRemark());
+		playRound.setLastUpdateTime(new Date());
+		playRound.setIsManualSaved(true);
+		
+		this.update("updateOne", playRound);
+		
+		
+		/*
+		 * 保存场次中角色信息
+		 */
+		//库中已有的角色信息
+		Map<String, Object> existRoleParam = new HashMap<String, Object>();
+		existRoleParam.put("projectId", project.getId());
+		List<PlayRoleModel> existRoleList = this.getList("PlayRoleMapper.selectPlayRoleList", existRoleParam);
+		List<PlayRoundRoleMapModel> existRoleMapList = new ArrayList<PlayRoundRoleMapModel>();
+		
+		List<String> idList = new ArrayList<String>();
+		idList.add(playRoundDto.getId());
+		
+		//删除原有的场合和角色关联关系
+		this.delete("PlayRoundRoleMapMapper.deleteBatchByRoundIds", idList);		
+		
+		List<PlayRoleModel> toAddRoleList = new ArrayList<PlayRoleModel>();
+		List<PlayRoleModel> toUpdateRoleList = new ArrayList<PlayRoleModel>();
+		List<PlayRoundRoleMapModel> toAddRoundRoleMapList = new ArrayList<PlayRoundRoleMapModel>();
+		
+		//主要角色
+		if (playRoundDto.getMajorRoleNameList() != null)
+		{
+			Map<String, Object> roleCompareResult = this.comparePlayRole(existRoleList, existRoleMapList, playRoundDto.getMajorRoleNameList(), project, playRound, 1);
+			toAddRoleList.addAll((List<PlayRoleModel>) roleCompareResult.get("toAddRoleList"));
+			toUpdateRoleList.addAll((List<PlayRoleModel>) roleCompareResult.get("toUpdateRoleList"));
+			toAddRoundRoleMapList.addAll((List<PlayRoundRoleMapModel>) roleCompareResult.get("toAddRoundRoleMapList"));
+			
+			existRoleList.addAll((List<PlayRoleModel>) roleCompareResult.get("toAddRoleList"));
+			existRoleMapList.addAll((List<PlayRoundRoleMapModel>) roleCompareResult.get("toAddRoundRoleMapList"));
+		}
+		
+		//特约角色
+		if (playRoundDto.getGuestRoleNameList() != null)
+		{
+			Map<String, Object> roleCompareResult = this.comparePlayRole(existRoleList, existRoleMapList, playRoundDto.getGuestRoleNameList(), project, playRound, 2);
+			toAddRoleList.addAll((List<PlayRoleModel>) roleCompareResult.get("toAddRoleList"));
+			toUpdateRoleList.addAll((List<PlayRoleModel>) roleCompareResult.get("toUpdateRoleList"));
+			toAddRoundRoleMapList.addAll((List<PlayRoundRoleMapModel>) roleCompareResult.get("toAddRoundRoleMapList"));
+			
+			existRoleList.addAll((List<PlayRoleModel>) roleCompareResult.get("toAddRoleList"));
+			existRoleMapList.addAll((List<PlayRoundRoleMapModel>) roleCompareResult.get("toAddRoundRoleMapList"));
+		}
+		
+		//群众角色
+		if (playRoundDto.getMassRoleNameList() != null)
+		{
+			Map<String, Object> roleCompareResult = this.comparePlayRole(existRoleList, existRoleMapList, playRoundDto.getMassRoleNameList(), project, playRound, 3);
+			toAddRoleList.addAll((List<PlayRoleModel>) roleCompareResult.get("toAddRoleList"));
+			toUpdateRoleList.addAll((List<PlayRoleModel>) roleCompareResult.get("toUpdateRoleList"));
+			toAddRoundRoleMapList.addAll((List<PlayRoundRoleMapModel>) roleCompareResult.get("toAddRoundRoleMapList"));
+			
+			existRoleList.addAll((List<PlayRoleModel>) roleCompareResult.get("toAddRoleList"));
+			existRoleMapList.addAll((List<PlayRoundRoleMapModel>) roleCompareResult.get("toAddRoundRoleMapList"));
+		}
+		if (toAddRoleList.size() > 0)
+		{
+			this.save("PlayRoleMapper.insertBatch", toAddRoleList);
+		}
+		if (toUpdateRoleList.size() > 0)
+		{
+			this.update("PlayRoleMapper.updateBatch", toUpdateRoleList);
+		}
+		if (toAddRoundRoleMapList.size() > 0)
+		{
+			this.save("PlayRoundRoleMapMapper.insertBatch", toAddRoundRoleMapList);
+		}
+		
+		
+		/*
+		 * 保存场次中道具信息
+		 */
+		//删除和道具的关联关系
+		this.delete("PlayRoundPropMapMapper.deleteBatchByRoundIds", idList);
+		//把道具信息和库中已有记录比较
+		if (playRoundDto.getPropNameList() != null)
+		{
+			this.compareProp(project, playRoundDto.getPropNameList(), playRound);
+		}
+		
+		
+		/*
+		 * 保存场次中服装信息
+		 */
+		//删除和服装的关联关系
+		this.delete("PlayRoundClothesMapMapper.deleteBatchByRoundIds", idList);
+		//把服装信息和库中已有记录比较
+		if (playRoundDto.getClothesNameList() != null)
+		{
+			this.compareClothes(project, playRoundDto.getClothesNameList(), playRound);
+		}
+	}
+	
+	/**
+	 * 把服装信息和库中已有记录进行比较
+	 * @author xuchangjian 2017年6月26日下午3:23:53
+	 * @param project	项目信息
+	 * @param clothesNameList	当前服装列表
+	 * @param round	场次信息
+	 */
+	public void compareClothes(ProjectModel project, List<String> clothesNameList, PlayRoundModel round)
+	{
+		//原有的道具信息
+		Map<String, Object> existClothesParam = new HashMap<String, Object>();
+		existClothesParam.put("projectId", project.getId());
+		List<ClothesModel> existClothesList = this.getList("ClothesMapper.selectClothesList", existClothesParam);
+		
+		List<ClothesModel> toAddClothesList = new ArrayList<ClothesModel>();
+		List<PlayRoundClothesMapModel> toAddMapList = new ArrayList<PlayRoundClothesMapModel>();
+		
+		for (String clothesName : clothesNameList)
+		{
+			if (StringUtils.isBlank(clothesName))
+			{
+				continue;
+			}
+			
+			boolean exists = false;
+			ClothesModel myClothes = new ClothesModel();
+			for (ClothesModel clothes : existClothesList)
+			{
+				if (clothesName.equals(clothes.getName()))
+				{
+					exists = true;
+					myClothes = clothes;
+					break;
+				}
+			}
+			
+			if (!exists)
+			{
+				myClothes.setProject(project);
+				myClothes.setName(clothesName);
+				toAddClothesList.add(myClothes);
+			}
+			
+			PlayRoundClothesMapModel map = new PlayRoundClothesMapModel();
+			map.setClothes(myClothes);
+			map.setPlayRound(round);
+			toAddMapList.add(map);
+		}
+		if (toAddClothesList.size() > 0)
+		{
+			this.save("ClothesMapper.insertBatch", toAddClothesList);
+		}
+		if (toAddMapList.size() > 0)
+		{
+			this.save("PlayRoundClothesMapMapper.insertBatch", toAddMapList);
+		}
+		
+	}
+	
+	/**
+	 * 把道具信息和数据库中已有记录比较
+	 * @author xuchangjian 2017年6月26日下午3:10:47
+	 * @param project 项目信息	
+	 * @param propNameList	当前道具列表
+	 * @param round	当前场次信息
+	 * @return
+	 */
+	public void compareProp(ProjectModel project, List<String> propNameList, PlayRoundModel round)
+	{
+		//原有的道具信息
+		Map<String, Object> existPropParam = new HashMap<String, Object>();
+		existPropParam.put("projectId", project.getId());
+		List<PropModel> existPropList = this.getList("PropMapper.selectPropList", existPropParam);
+		
+		List<PropModel> toAddPropList = new ArrayList<PropModel>();
+		List<PlayRoundPropMapModel> toAddMapList = new ArrayList<PlayRoundPropMapModel>();
+		
+		for (String propName : propNameList)
+		{
+			if (StringUtils.isBlank(propName))
+			{
+				continue;
+			}
+			
+			PropModel myProp = new PropModel();
+			boolean exists = false;
+			for (PropModel existProp : existPropList)
+			{
+				if (propName.equals(existProp.getName()))
+				{
+					myProp = existProp;
+					exists = true;
+					break;
+				}
+			}
+			
+			if (!exists)
+			{
+				myProp.setProject(project);
+				myProp.setName(propName);;
+				toAddPropList.add(myProp);
+			}
+			
+			PlayRoundPropMapModel myMap = new PlayRoundPropMapModel();
+			myMap.setPlayRound(round);
+			myMap.setProp(myProp);
+			toAddMapList.add(myMap);
+		}
+		if (toAddPropList.size() > 0)
+		{
+			this.save("PropMapper.insertBatch", toAddPropList);
+		}
+		if (toAddMapList.size() > 0)
+		{
+			this.save("PlayRoundPropMapMapper.insertBatch", toAddMapList);
+		}
+	}
+	
+	/**
+	 * 把场次的主演信息和库中已有的记录进行比对
+	 * @author xuchangjian 2017年6月22日上午11:42:37
+	 * @param existPlayRoleList	数据库中已有的角色信息
+	 * @param majorRoleNameList	当前场次的所有主要角色
+	 * @param project	项目信息
+	 * @param playRound	场次信息
+	 * @param roleType 角色类型：1：主要角色；2：特约角色；3：群众角色
+	 * @return 
+	 * toAddRoleList -->  需要新增的场次角色列表
+	 * toAddRoundRoleMapList  -->  需要新增的场次和角色关联关系列表
+	 */
+	public Map<String, Object> comparePlayRole(List<PlayRoleModel> existPlayRoleList, List<PlayRoundRoleMapModel> existMapList, List<String> majorRoleNameList, ProjectModel project, PlayRoundModel playRound, Integer roleType)
+	{
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		
+		List<PlayRoleModel> toAddRoleList = new ArrayList<PlayRoleModel>();	//待新增的角色记录
+		List<PlayRoleModel> toUpdateRoleList = new ArrayList<PlayRoleModel>();
+		List<PlayRoundRoleMapModel> toAddMapList = new ArrayList<PlayRoundRoleMapModel>();
+		for (String roleName : majorRoleNameList)
+		{
+			if (StringUtils.isBlank(roleName)) 
+			{
+				continue;
+			}
+			
+			PlayRoleModel myPlayRole = new PlayRoleModel();
+			
+			//判断数据库中是否已有相同名称的角色
+			boolean exists = false;
+			for (PlayRoleModel existPlayRole : existPlayRoleList)
+			{
+				if (roleName.equals(existPlayRole.getName()))
+				{
+					myPlayRole = existPlayRole;
+					exists = true;
+					break;
+				}
+			}
+			
+			myPlayRole.setProject(project);
+			myPlayRole.setName(roleName);
+			myPlayRole.setType(roleType);
+			myPlayRole.setOrder(existPlayRoleList.size() + 1);
+			myPlayRole.setCreateTime(new Date());
+			myPlayRole.setLastUpdateTime(new Date());
+			//如果没有，则需要新建一个角色
+			if (!exists)
+			{
+				myPlayRole.setId(UUIDUtils.getStringUUID());
+				toAddRoleList.add(myPlayRole);
+			}
+			else
+			{
+				toUpdateRoleList.add(myPlayRole);
+			}
+			
+			//判断Map是否已存在
+			boolean existMap = false;
+			for (PlayRoundRoleMapModel map : existMapList)
+			{
+				if (playRound.getId().equals(map.getPlayRound().getId()) && myPlayRole.getId().equals(map.getPlayRole().getId()))
+				{
+					existMap = true;
+					break;
+				}
+			}
+			
+			if (!existMap)
+			{
+				PlayRoundRoleMapModel map = new PlayRoundRoleMapModel();
+				map.setProject(project);
+				map.setPlayRole(myPlayRole);
+				map.setPlayRound(playRound);
+				toAddMapList.add(map);
+			}
+		}
+		
+		resultMap.put("toAddRoleList", toAddRoleList);
+		resultMap.put("toUpdateRoleList", toUpdateRoleList);
+		resultMap.put("toAddRoundRoleMapList", toAddMapList);
+		return resultMap;
+	}
+	
+	/**
+	 * 查询场次信息中所有下拉信息
+	 * @author xuchangjian 2017年6月26日下午4:17:33
+	 * @return
+	 */
+	public Map<String, Object> queryAllDropDownList()
+	{
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		
+		ProjectModel project = SessionUtil.getSessionProject();
+		
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("projectId", project.getId());
+		
+		List<PlayRoundModel> roundList = this.getList("selectPlayRound", param);
+		List<PlayRoleModel> roleList = this.getList("PlayRoleMapper.selectPlayRoleList", param);
+		List<ClothesModel> clothesList = this.getList("ClothesMapper.selectClothesList", param);
+		List<PropModel> propList = this.getList("PropMapper.selectPropList", param);
+		List<GoodsModel> goodsList = this.getList("GoodsMapper.selectGoods");
+		List<ImplantModeModel> implantModeList = this.getList("ImplantModeMapper.selectAll");
+		
+		List<String> atmosphereList = new ArrayList<String>();
+		List<String> siteList = new ArrayList<String>();
+		List<String> firstLocationList = new ArrayList<String>();
+		List<String> majorRoleNameList = new ArrayList<String>();
+		List<String> guestRoleNameList = new ArrayList<String>();
+		List<String> massRoleNameList = new ArrayList<String>();
+		List<String> clothesNameList = new ArrayList<String>();
+		List<String> propNameList = new ArrayList<String>();
+		
+		for (PlayRoundModel playRound : roundList)
+		{
+			if (!atmosphereList.contains(playRound.getAtmosphere()) && !StringUtils.isBlank(playRound.getAtmosphere()))
+			{
+				atmosphereList.add(playRound.getAtmosphere());
+			}
+			if (!siteList.contains(playRound.getSite()) && !StringUtils.isBlank(playRound.getSite()))
+			{
+				siteList.add(playRound.getSite());
+			}
+			if (!firstLocationList.contains(playRound.getFirstLocation()) && !StringUtils.isBlank(playRound.getFirstLocation()))
+			{
+				firstLocationList.add(playRound.getFirstLocation());
+			}
+		}
+		
+		for (PlayRoleModel playRole : roleList)
+		{
+			if (playRole.getType() == 1)
+			{
+				majorRoleNameList.add(playRole.getName());
+			}
+			if (playRole.getType() == 2)
+			{
+				guestRoleNameList.add(playRole.getName());
+			}
+			if (playRole.getType() == 3)
+			{
+				massRoleNameList.add(playRole.getName());
+			}
+		}
+		
+		for (ClothesModel clothes : clothesList)
+		{
+			clothesNameList.add(clothes.getName());
+		}
+		
+		for (PropModel prop : propList)
+		{
+			propNameList.add(prop.getName());
+		}
+		
+		
+		resultMap.put("atmosphereList", atmosphereList);
+		resultMap.put("siteList", siteList);
+		resultMap.put("firstLocationList", firstLocationList);
+		resultMap.put("majorRoleNameList", majorRoleNameList);
+		resultMap.put("guestRoleNameList", guestRoleNameList);
+		resultMap.put("massRoleNameList", massRoleNameList);
+		resultMap.put("clothesNameList", clothesNameList);
+		resultMap.put("propNameList", propNameList);
+		resultMap.put("goodsList", goodsList);
+		resultMap.put("implantModeList", implantModeList);
+		return resultMap;
+	}
+	
+	/**
+	 * 查询所有场次信息列表
+	 * @author xuchangjian 2017年6月27日上午10:38:33
+	 * @return
+	 */
+	public Map<String, Object> queryRoundList(Page page)
+	{
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		
+		ProjectModel project = SessionUtil.getSessionProject();
+		
+		/*
+		 * 此处采用分页查询场次信息（场次太多，有可能导致内存溢出）
+		 * 需要注意的是，这里查询出的主要角色信息是主要角色的ID，多个用逗号隔开
+		 * 这样处理可以有效避免角色名字中带有“逗号”而导致的结果不正确问题
+		 */
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("projectId", project.getId());
+		List<Map<String, Object>> roundList = this.queryPageList("selectFullWithContent", params, page);
+		
+		//由于一个项目下主要角色没多少，所以就不采用分页查询了，道具亦然
+		List<PlayRoleModel> roundRoleList = this.getList("PlayRoleMapper.selectPlayRoleList", params);
+		List<PropModel> propList = this.getList("PropMapper.selectPropList", params);
+		
+		//把角色封装成以id为key，角色信息为value的Map形式
+		Map<String, PlayRoleModel> roleMap = new HashMap<String, PlayRoleModel>();
+		for (PlayRoleModel role : roundRoleList)
+		{
+			roleMap.put(role.getId(), role);
+		}
+		Map<String, String> propIdNameMap = new HashMap<String, String>();
+		for (PropModel prop : propList)
+		{
+			propIdNameMap.put(prop.getId(), prop.getName());
+		}
+		
+		//封装最后的场次数据
+		List<Map<String, Object>> roundMapList = new ArrayList<Map<String, Object>>();
+		for (Map<String, Object> round : roundList)
+		{
+			String roundId = (String) round.get("id");
+			
+			//计算该场次的所有角色名称列表
+			String roleIds = (String) round.get("roleIds");
+			List<Map<String, Object>> majorRoleNameList = new ArrayList<>();
+			if (!StringUtils.isBlank(roleIds))
+			{
+				for (String myRoleId : roleIds.split(","))
+				{
+					PlayRoleModel role = roleMap.get(myRoleId);
+					Map<String, Object> rMap=new HashMap<>();
+					rMap.put("id", role.getId());
+					rMap.put("name", role.getName());
+					majorRoleNameList.add(rMap);
+				}
+			}
+			
+			String propIds = (String) round.get("propIds");
+			List<String> propNameList = new ArrayList<String>();
+			if (!StringUtils.isBlank(propIds))
+			{
+				for (String propId : propIds.split(","))
+				{
+					propNameList.add(propIdNameMap.get(propId));
+				}
+			}
+			
+			
+			Map<String, Object> roundMap = new HashMap<String, Object>();
+			roundMap.put("id", roundId);
+			roundMap.put("seriesNo", round.get("seriesNo"));
+			roundMap.put("roundNo", round.get("roundNo"));
+			roundMap.put("atmosphere", round.get("atmosphere"));
+			roundMap.put("site", round.get("site"));
+			roundMap.put("firstLocation", round.get("firstLocation"));
+			roundMap.put("remark", round.get("remark"));
+			roundMap.put("title", round.get("title"));
+			roundMap.put("content", round.get("content"));
+			
+			roundMap.put("roleList", majorRoleNameList);
+			roundMap.put("propList", propNameList);
+			
+			roundMapList.add(roundMap);
+		}
+		
+		resultMap.put("roundList", roundMapList);
+		if (page != null)
+		{
+			resultMap.put("totalPage", page.getTotalPage());
+		}
+		return resultMap;
+	}
+	
+	/**
+	 * 获取集下的场次列表
+	 * @author xuchangjian 2017年6月29日下午5:04:16
+	 * @param seriesNoList	集次列表
+	 * @return
+	 */
+	public Map<String, Object> querySeriesRoundList(List<Integer> seriesNoList, String roleId, String propId, Integer pageSize, Integer currentPage)
+	{
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		
+		ProjectModel project = SessionUtil.getSessionProject();
+		
+		/*
+		 * 需要注意的是，这里查询出的主要角色信息是主要角色的ID，多个用逗号隔开
+		 * 这样处理可以有效避免角色名字中带有“逗号”而导致的结果不正确问题
+		 */
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("projectId", project.getId());
+		params.put("seriesNoList", seriesNoList);
+		params.put("roleId", roleId);
+		params.put("propId", propId);
+		Page page = null;
+		
+		List<Map<String, Object>> roundList = null;
+		if (pageSize != null && currentPage != null) 
+		{
+			page = new Page();
+			page.setPageSize(pageSize);
+			page.setCurrentPage(currentPage);
+			roundList = this.queryPageList("selectFullWithoutContent", params, page);
+		} 
+		else 
+		{
+			roundList = this.getList("selectFullWithoutContent", params);
+		}
+		
+		//角色列表、道具列表
+		List<PlayRoleModel> roundRoleList = this.getList("PlayRoleMapper.selectPlayRoleList", params);
+		List<PropModel> propList = this.getList("PropMapper.selectPropList", params);
+		
+		//把角色封装成以roundId为key，角色信息为value的Map形式
+		Map<String, PlayRoleModel> roleMap = new HashMap<String, PlayRoleModel>();
+		for (PlayRoleModel role : roundRoleList)
+		{
+			roleMap.put(role.getId(), role);
+		}
+		//封装道具
+		Map<String, String> propIdNameMap = new HashMap<String, String>();
+		for (PropModel prop : propList)
+		{
+			propIdNameMap.put(prop.getId(), prop.getName());
+		}
+		
+		//封装最后的场次数据，key为集次，value为集次下的场次列表
+		Map<Integer, List<Map<String, Object>>> seriesRoundList = new HashMap<Integer, List<Map<String, Object>>>();
+		for (Map<String, Object> round : roundList)
+		{
+			String roundId = (String) round.get("id");
+			int seriesNo = (int) round.get("seriesNo");
+			
+			//计算该场次的所有角色名称列表
+			String roleIds = (String) round.get("roleIds");
+			List<String> majorRoleNameList = new ArrayList<String>();
+			List<String> guestRoleNameList = new ArrayList<String>();
+			List<String> massRoleNameList = new ArrayList<String>();
+			if (!StringUtils.isBlank(roleIds))
+			{
+				for (String myRoleId : roleIds.split(","))
+				{
+					PlayRoleModel role = roleMap.get(myRoleId);
+					if (role.getType() == 1)
+					{
+						majorRoleNameList.add(role.getName());
+					}
+					if (role.getType() == 2)
+					{
+						guestRoleNameList.add(role.getName());
+					}
+					if (role.getType() == 3)
+					{
+						massRoleNameList.add(role.getName());
+					}
+				}
+			}
+			//计算道具
+			String propIds = (String) round.get("propIds");
+			List<String> propNameList = new ArrayList<String>();
+			if (!StringUtils.isBlank(propIds))
+			{
+				for (String myPropId : propIds.split(","))
+				{
+					propNameList.add(propIdNameMap.get(myPropId));
+				}
+			}
+			
+			
+			Map<String, Object> roundMap = new HashMap<String, Object>();
+			roundMap.put("id", roundId);
+			roundMap.put("seriesNo", seriesNo);
+			roundMap.put("roundNo", round.get("roundNo"));
+			roundMap.put("atmosphere", round.get("atmosphere"));
+			roundMap.put("site", round.get("site"));
+			roundMap.put("firstLocation", round.get("firstLocation"));
+			roundMap.put("remark", round.get("remark"));
+			
+			roundMap.put("majorRoleNameList", majorRoleNameList);
+			roundMap.put("guestRoleNameList", guestRoleNameList);
+			roundMap.put("massRoleNameList", massRoleNameList);
+			roundMap.put("propNameList", propNameList);
+			
+			
+			if (!seriesRoundList.containsKey(seriesNo))
+			{
+				List<Map<String, Object>> myRoundList = new ArrayList<Map<String, Object>>();
+				myRoundList.add(roundMap);
+				seriesRoundList.put(seriesNo, myRoundList);
+			}
+			else
+			{
+				seriesRoundList.get(seriesNo).add(roundMap);
+			}
+		}
+		
+		if (page != null)
+		{
+			resultMap.put("totalPage", page.getTotalPage());
+			resultMap.put("totalRows", page.getTotalRows());
+		}
+		resultMap.put("roundList", seriesRoundList);
+		return resultMap;
+	}
+	
+	/**
+	 * 查询场次的统计信息
+	 * @author xuchangjian 2017年7月3日上午9:27:16
+	 * @return
+	 */
+	public Map<String, Object> queryRoundStatistic(String roleId, String propId) 
+	{
+		ProjectModel project = SessionUtil.getSessionProject();
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("projectId", project.getId());
+		params.put("roleId", roleId);
+		params.put("propId", propId);
+		Map<String, Object> roundList = this.get("selectRoundStatistic", params);
+		
+		return roundList;
+	}
+}

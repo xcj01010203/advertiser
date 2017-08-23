@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv=Content-Type content="text/html;charset=utf-8">
+    <!--指明当前的页面在IE浏览器渲染的时候使用最新的渲染引擎来渲染-->
+    <meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1">
+    <!--网站的关键字-->
+    <meta name="keywords" content="广告植入">
+    <!--网站主要内容-->
+    <meta name="description" content="小土科技">
+    <title>上传文件</title>
+    <link rel="stylesheet" href="${basePath}/static/component/webuploader/webuploader.css">
+    <link rel="stylesheet" href="${basePath}/static/component/webuploader/uploadScenario.css">
+    <script src="${basePath}/static/component/webuploader/webuploader.js"></script>
+    <style>
+        .upload-file .header {
+            width: 100%;
+            height: 50px;
+            border-bottom: 1px solid #dddddd;
+        }
+
+        .upload-file .header .header-con {
+            padding: 0 30px;
+        }
+
+        .upload-file .header .header-con h4 {
+            float: left;
+            margin-top: 20px;
+        }
+
+        .upload-file .header .header-con i {
+            float: right;
+            margin-top: 16px;
+            cursor: pointer;
+        }
+
+        .operate {
+            margin: 0 30px;
+        }
+
+        .operate #picker {
+            margin-top: 20px;
+            margin-bottom: 15px;
+            display: inline-block;
+        }
+
+        .operate #picker .webuploader-pick {
+            background-color: #29d9c2;
+        }
+
+        .operate #picker .webuploader-pick-hover {
+            background-color: #29d9b0;
+        }
+
+        .operate #startBtn {
+            float: right;
+            margin: 20px 0;
+        }
+
+        #filelist {
+            border-top: 1px solid #dddddd;
+            border-bottom: 1px solid #dddddd;
+        }
+
+        #filelist thead tr th:nth-child(1) {
+            text-align: left;
+            padding-left: 50px;
+        }
+
+        #filelist tbody tr td:nth-child(1) {
+            text-align: left;
+            padding-left: 50px;
+        }
+
+        #filelist > tbody > tr > .state {
+            position: relative;
+        }
+
+
+        /*遮罩  start*/
+        .shade {
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            top:0;
+            left: 0;
+            background-color: transparent;
+            z-index: -111;
+        }
+        .shade .shade-con {
+            position: absolute;
+            width: 1110px;
+            height: 560px;
+            left: 50%;
+            margin-left: -555px;
+            top: -100px;
+            margin-top: 0;
+            background-color: #ffffff;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            border-radius: 6px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            overflow: auto;
+            opacity: 0;
+            filter: Alpha(opacity=0);
+            z-index: -111;
+        }
+        /*.shade-fade {*/
+        /*background-color: #7B7B7B;*/
+        /*opacity: 1;*/
+        /*transition: all 0.15s linear;*/
+        /*}*/
+        /*.shade-con-fade {*/
+        /*opacity: 1;*/
+        /*top: 50%;*/
+        /*margin-top: -250px;*/
+        /*transition: all 0.3s linear;*/
+        /*}*/
+        /*遮罩  end*/
+    </style>
+</head>
+<body>
+<div class="upload-file panel panel-default">
+    <div class="header">
+        <div class="header-con">
+            <h4>
+                <#include '../component/dobuleBias.html'/>
+                剧本列表
+            </h4>
+            <i class="icon iconfont">&#xe61c;</i>
+        </div>
+    </div>
+    <!--用来存放文件信息-->
+    <div class="operate">
+        <div id="picker">选择文件</div>
+        <button id="startBtn" class="btn btn-default">开始上传</button>
+    </div>
+    <table id="filelist" class="table table-hover table-bordered">
+        <thead>
+        <tr>
+            <th width="300">文件名称</th>
+            <th width="100">状态</th>
+            <th width="100">操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!--<tr>-->
+        <!--<td>ddd</td>-->
+        <!--<td>ddd</td>-->
+        <!--<td>ddd</td>-->
+        <!--</tr>-->
+        </tbody>
+    </table>
+</div>
+<script>
+    $(function () {
+
+        $(".project-list-four .four-content .four-right .upload-play-t").click(function () {
+            $(".shade").css({
+                "backgroundColor": "rgba(0,0,0,0.5)",
+                "opacity": "1",
+                "transition": "all 0.15s ease-in",
+                "zIndex": 100
+            })
+            $(".shade .shade-con").css({
+                "opacity": 1,
+                "filter": "Alpha(opacity=1)",
+                "top": "50%",
+                "marginTop": "-250px",
+                "transition": "all 0.3s ease-in",
+                "zIndex": 100
+            })
+        })
+
+        $(".shade .shade-con .upload-file .header .header-con i").click(function () {
+            doPost(basePath + '/playRoundTmp/chackHasSkipOrReplaceData', {}, function (data) {
+                if (data.status == 0) {
+                    if (data.data.hasData == true) {
+                        // 有修改
+                        $(".shade .shade-con .file-box").addClass("hide")
+                        $(".shade .shade-con .result-box").removeClass("hide")
+
+                        // 获取需要跳过或替换的集场号列表
+                        getJumpOrReplaceList()
+
+                    } else {
+                        // 无修改
+                        $(".shade").css({
+                            "backgroundColor": "transparent",
+                            "opacity": "0",
+                            "transition": "all 0.15s ease-in",
+                            "zIndex": -111
+                        })
+                        $(".shade .shade-con").css({
+                            "opacity": 0,
+                            "filter": "Alpha(opacity=0)",
+                            "top": "-100px",
+                            "marginTop": "0",
+                            "transition": "all 0.3s ease-in",
+                            "zIndex": -111,
+                        })
+                    }
+                }
+            })
+        })
+
+        // 上传剧本
+        uploadFile()
+
+    })
+
+    // 上传剧本
+    function uploadFile() {
+
+        var uploader = WebUploader.create({
+            // swf文件路径
+            swf: '../../static/lib/webuploader/Uploader.swf',
+
+            // 文件接收服务端。
+            server: basePath + '/play/uploadPlay',
+
+            // 选择文件的按钮。可选。
+            // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+            pick: '#picker',
+            formData: {},
+            threads: 1,
+            // 限制上传文件数量
+            // fileNumLimit: 20,
+
+            // 设置时间超时
+            timeout: 0,
+
+            // 不压缩image, 默认如果是jpeg，文件上传前会压缩一把再上传！
+            resize: false,
+
+            // 如果某个分片由于网络问题出错，允许自动重传多少次？
+            chunkRetry: 2,
+
+            // 只允许选择文件，可选。
+            accept: {
+                title: 'word',
+                extensions: 'doc,docx,pdf,zip,rar',
+                mimeTypes: ''
+            }
+        });
+
+        // 当有文件被添加进队列的时候
+        uploader.on('fileQueued', function (file) {
+            var newTr = $("<tr id=" + file.id + " class='item'><td><p>" + file.name
+                + "</p></td><td class='state'>等待上传...</td><td class=''><span class='deleteScenario'" +
+                ">删除</span></td></tr>");
+
+            newTr.find(".deleteScenario").on("click", function () {
+                uploader.removeFile(file, true);
+                newTr.remove();
+            });
+            $("#filelist tbody").append(newTr);
+        });
+
+        // 文件上传过程中创建进度条实时显示。
+        uploader.on('uploadProgress', function (file, percentage) {
+            var $state = $('#' + file.id).find(".state"),
+                $percent = $state.find('.progress-bar');
+
+            // 避免重复创建
+            if (!$percent.length) {
+                $state.text("");
+
+//                $state.append("<div class='progress-bar spinner'><div class='rect1'></div><div class='rect2'></div>" +
+                $state.append("<div class='spinner'><div class='rect1'></div><div class='rect2'></div>" +
+                    "<div class='rect3'></div><div class='rect4'></div><div class='rect5'></div></div>");
+
+                $("#filelist tbody").find("tr[id=" + file.id + "]").find(".deleteScenario").hide();
+            }
+        });
+
+        // 上传成功的回调
+        uploader.on('uploadSuccess', function (file, response) {
+            if (response.status == 0) {
+                // 上传成功
+                uploader.stop();
+                $('#myModal').modal({backdrop: 'static', keyboard: false, toggle: 'toggle'});
+                $("#modal-header").html('<button type="button" class="close" data-dismiss="modal" aria-label="Close">' +
+                    '<span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="myModalLabel">上传成功</h4>')
+                $('#modal-body').html('<h4 style="color:#7EE12D">提示信息</h4><p>' + response.data.uploadDesc.replace(/(\r\n)|(\n)/g, "<br>") + '</p>');
+                $("#modal-content>.modal-header>button").click(function () {
+                    clearTimeout(timer);
+                    setTimeout(function () {
+                        uploader.upload();
+                    }, 200)
+                })
+                var timer = setTimeout(function () {
+                    $("#modal-content>.modal-header>button").click()
+                }, 3000)
+
+                $('#' + file.id).find('.state').text('上传成功');
+            } else {
+                uploader.stop();
+                $('#myModal').modal({backdrop: 'static', keyboard: false, toggle: 'toggle'});
+                $("#modal-header").html('<button type="button" class="close" data-dismiss="modal" aria-label="Close">' +
+                    '<span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="myModalLabel">上传失败 ' +
+                    '<span style="font-size: 12px;vertical-align: text-bottom;color: #999">&nbsp;请点击关闭按钮继续上传</span></h4>');
+                $('#modal-body').html('<h4 style="color:#D9534F">提示信息</h4><p>' + response.message + '</p>');
+
+                $("#modal-content>.modal-header>button").click(function () {
+                    uploader.upload();
+                })
+            }
+
+            // 删除列表中的文件
+            setTimeout(function () {
+                $("#filelist tbody").find("tr[id=" + file.id + "]").find(".deleteScenario").click();
+            }, 1000);
+        });
+
+        // 上传失败的回调
+        uploader.on('uploadError', function (file, response) {
+            $('#' + file.id).find('.state').text('上传出错');
+            uploader.stop(true);
+        });
+
+        // 上传完成的回调
+        uploader.on('uploadComplete', function (file) {
+            $('#' + file.id).find('.progress').fadeOut();
+        });
+
+        $("#startBtn").click(function () {
+            uploader.option('formData', {});
+            uploader.upload();
+        })
+
+//        $("#picker>.webuploader-pick").html("添加文件")
+    }
+
+</script>
+</body>
+</html>

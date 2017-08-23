@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv=Content-Type content="text/html;charset=utf-8">
+    <!--指明当前的页面在IE浏览器渲染的时候使用最新的渲染引擎来渲染-->
+    <meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1">
+    <!--网站的关键字-->
+    <meta name="keywords" content="广告植入">
+    <!--网站主要内容-->
+    <meta name="description" content="小土科技">
+    <title>个人信息</title>
+    <#include "/common/context.html"/>
+    <link rel="stylesheet" href="${basePath}/static/css/user/personalInfo.css">
+    <script src="${basePath}/static/js/user/personalInfo.js"></script>
+    <script src="${basePath}/static/js/common/base.js"></script>
+    <script src="${basePath}/static/js/user/alertify.js"></script>
+</head>
+<body>
+<#include '/component/header.html'/>
+<div class="personal-information clearfix">
+    <div class="center">
+        <div class="info-left">
+            <div class="info-left-top">
+                <i class="icon iconfont">&#xe680;</i>
+                <h5>
+                	<#if user.userName??>
+	                	${user.userName}
+					</#if>
+				</h5>
+                <div class="login-time">最后登录: 
+                <span>
+                	<#if lastTime??>
+                	 	${lastTime}
+					</#if>
+                </span></div>
+                <div class="info-con clearfix">
+                    <div class="info-con-left">
+                        <p>项目</p>
+                        <h5>
+	                       	<#if projectCount??>
+	                	 		${projectCount}
+							</#if>
+                        </h5>
+                    </div>
+                    <div class="info-con-right">
+                        <p>已分析</p>
+                         <h5>
+	                        <#if projectSuccessCount??>
+	                	 		${projectSuccessCount}
+							</#if>
+                        </h5>
+                    </div>
+                </div>
+            </div>
+            <div class="info-left-bottom">
+                <a href="${basePath}/base/forward/user/myMessage" changeStatus="message">
+                    <div class="info-content">
+                        <div class="info-con info-my-msg">
+                            我的消息
+                        </div>
+                    </div>
+                </a>
+                <a href="${basePath}/base/forward/user/personalInfo" changeStatus="personal">
+                    <div class="info-content info-border">
+                        <div class="info-con info-pnal-msg info-con-select">
+                            个人信息
+                        </div>
+                    </div>
+                </a>
+                <a href="${basePath}/base/forward/user/userProtocol" changeStatus="protocol">
+                    <div class="info-content">
+                        <div class="info-con info-user-pto">
+                            用户协议
+                        </div>
+                    </div>
+                </a>
+                <a href="${basePath}/base/forward/user/suggestionBack" changeStatus="suggestion">
+                    <div class="info-content info-border">
+                        <div class="info-con info-sug-feed">
+                            意见反馈
+                        </div>
+                    </div>
+                </a>
+                <a href="${basePath}/base/forward/user/safeSet" changeStatus="safe">
+                    <div class="info-content">
+                        <div class="info-con info-safe-set">
+                            安全设置
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="info-right">
+            <!--个人信息 personal前缀-->
+            <div class="personal-info">
+                <div class="personal-info-top">
+                    <#include '/component/dobuleBias.html'/>
+                    <h4>个人信息</h4>
+                </div>
+                <div class="personal-content">
+                    <div class="personal-con personal-name">
+                        <span>姓名</span>
+                        <#if user.userName??>
+	                		<input type="text" id="uuserName" name="userName" value="${user.userName}">
+	                		<#else>
+                        		<input type="text" id="uuserName" name="userName">
+						</#if>
+                    </div>
+                    <div class="personal-con personal-sex">
+                        <span>性别</span>
+                         <#if user.sex??>
+                         	<#if user.sex=0>
+                         			<label><input id="sex1" name="sex-type" value="0" type="radio" checked="checked"/>男</label>
+                         			<label><input id="sex2" name="sex-type" value="1" type="radio"/>女</label>
+                         		<#else>
+                         			<label><input id="sex1" name="sex-type" value="0" type="radio"/>男</label>
+                         			<label><input id="sex2" name="sex-type" value="1" type="radio" checked="checked"/>女</label>
+                         	</#if>
+                         		<#else>
+                        			<label><input id="sex1" name="sex-type" value="0" type="radio"/>男</label>
+                        			<label><input id="sex2" name="sex-type" value="1" type="radio"/>女</label>
+                        </#if>
+                    </div>
+                    <div class="personal-con personal-sex">
+                        <span>公司</span>
+                        <#if user.company??>
+                        		<input type="text" id="ucompany" name="company" value="${user.company}">
+                        	<#else>
+                        		<input type="text" id="ucompany" name="company">
+                        </#if>
+                    </div>
+                    <div class="personal-con personal-sex">
+                        <span>邮箱</span>
+                        <#if user.email??>
+                        		<input type="text" id="uemail" name="email" value="${user.email}">
+                        	<#else>
+                        		<input type="text" id="uemail" name="email">
+                        </#if>
+                    </div>
+                    <button class="btn-ok" onclick="updateUser()">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<#include '/component/footer.html'/>
+</body>
+</html>

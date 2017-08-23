@@ -1,0 +1,99 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+    PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+
+    <typeAliases>
+    	<typeAlias alias="Goods" type="com.xiaotu.advertiser.dictionary.model.GoodsModel" />
+		<typeAlias alias="Word" type="com.xiaotu.advertiser.dictionary.model.WordModel" />
+		<typeAlias alias="GoodsWordMap" type="com.xiaotu.advertiser.dictionary.model.GoodsWordMapModel" />
+    	<typeAlias alias="Subject" type="com.xiaotu.advertiser.dictionary.model.SubjectModel" />
+    	<typeAlias alias="ImplantMode" type="com.xiaotu.advertiser.dictionary.model.ImplantModeModel" />
+    	
+		<typeAlias alias="UserModel" type="com.xiaotu.advertiser.user.model.UserModel" />
+    	<typeAlias alias="RoleModel" type="com.xiaotu.advertiser.user.model.RoleModel" />
+    	<typeAlias alias="MenuModel" type="com.xiaotu.advertiser.user.model.MenuModel" />
+    	<typeAlias alias="LogManage" type="com.xiaotu.advertiser.user.model.LogManageModel" />
+    	<typeAlias alias="Message" type="com.xiaotu.advertiser.user.model.MessageModel" />
+    	<typeAlias alias="UserBackReply" type="com.xiaotu.advertiser.user.model.UserBackReplyModel" />
+    	
+    	<!-- 项目相关 -->
+    	<typeAlias alias="Project" type="com.xiaotu.advertiser.project.model.ProjectModel" />
+    	<typeAlias alias="Play" type="com.xiaotu.advertiser.project.model.PlayModel" />
+    	<typeAlias alias="PlayRound" type="com.xiaotu.advertiser.project.model.PlayRoundModel" />
+    	<typeAlias alias="PlayRoundTmp" type="com.xiaotu.advertiser.project.model.PlayRoundTmpModel" />
+    	<typeAlias alias="PlayContent" type="com.xiaotu.advertiser.project.model.PlayContentModel" />
+    	<typeAlias alias="PlayRole" type="com.xiaotu.advertiser.project.model.PlayRoleModel" />
+    	<typeAlias alias="PlayRoundRoleMap" type="com.xiaotu.advertiser.project.model.map.PlayRoundRoleMapModel" />
+    	<typeAlias alias="PlayRoundPropMap" type="com.xiaotu.advertiser.project.model.map.PlayRoundPropMapModel" />
+    	<typeAlias alias="PlayRoundClothesMap" type="com.xiaotu.advertiser.project.model.map.PlayRoundClothesMapModel" />
+    	<typeAlias alias="BookMarks" type="com.xiaotu.advertiser.project.model.BookMarksModel" />
+    	<typeAlias alias="Clothes" type="com.xiaotu.advertiser.project.model.ClothesModel" />
+    	<typeAlias alias="Prop" type="com.xiaotu.advertiser.project.model.PropModel" />
+    	<typeAlias alias="PlayMark" type="com.xiaotu.advertiser.project.model.PlayMarkModel" />
+    	<typeAlias alias="RoleAnalyseResult" type="com.xiaotu.advertiser.project.model.RoleAnalyseResultModel" />
+    	
+    	<!-- 广告相关 -->
+    	<typeAlias alias="ImplantRecord" type="com.xiaotu.advertiser.implant.model.ImplantRecordModel" />
+    	<typeAlias alias="AnalysisJob" type="com.xiaotu.advertiser.implant.model.AnalysisJobModel" />
+    	
+	</typeAliases>
+	
+	<!-- 拦截器 -->
+	<plugins>
+		<plugin interceptor="com.xiaotu.common.db.interceptor.PaginationInterceptor">
+			<property name="defaultDialectClass" value="com.xiaotu.common.db.impl.MySQLDialect" />
+			<property name="dialectNames" value="MySQL,PostgreSQL" />
+			<property name="MySQL" value="com.xiaotu.common.db.impl.MySQLDialect" />
+			<property name="PostgreSQL" value="com.xiaotu.common.db.impl.PostgreSQLDialect"/>
+		</plugin>
+		<plugin interceptor="com.xiaotu.common.db.interceptor.SQLInterceptor" />
+	</plugins>	
+
+
+    <mappers>
+    	<mapper resource="mapper/dictionary/GoodsMapper.xml"/>
+    	<mapper resource="mapper/dictionary/WordMapper.xml"/>
+    	<mapper resource="mapper/dictionary/GoodsWordMapMapper.xml"/>
+    	<mapper resource="mapper/dictionary/SubjectMapper.xml"/>
+    	<mapper resource="mapper/dictionary/ImplantModeMapper.xml"/>
+    	
+    	<mapper resource="mapper/user/UserMapper.xml"/>
+    	<mapper resource="mapper/user/RoleMapper.xml"/>
+    	<mapper resource="mapper/user/MenuMapper.xml"/>
+    	<mapper resource="mapper/user/LogManageMapper.xml"/>
+    	<mapper resource="mapper/user/MessageMapper.xml"/>
+    	<mapper resource="mapper/user/UserBackReplyMapper.xml"/>   	
+    	
+    	<!-- 项目相关 -->
+    	<mapper resource="mapper/project/ProjectMapper.xml"/>
+    	<mapper resource="mapper/project/PlayMapper.xml"/>
+    	<mapper resource="mapper/project/PlayRoundMapper.xml"/>
+    	<mapper resource="mapper/project/PlayRoundTmpMapper.xml"/>
+    	<mapper resource="mapper/project/PlayContentMapper.xml"/>
+    	<mapper resource="mapper/project/PlayRoleMapper.xml"/>
+    	<mapper resource="mapper/project/PlayRoundRoleMapMapper.xml"/>
+    	<mapper resource="mapper/project/PlayRoundPropMapMapper.xml"/>
+    	<mapper resource="mapper/project/PlayRoundClothesMapMapper.xml"/>
+    	<mapper resource="mapper/project/BookMarksMapper.xml"/>
+    	<mapper resource="mapper/project/ClothesMapper.xml"/>
+    	<mapper resource="mapper/project/PropMapper.xml"/>
+    	<mapper resource="mapper/project/PlayMarkMapper.xml"/>
+    	<mapper resource="mapper/project/PlayMarkRoleMapMapper.xml"/>
+    	<mapper resource="mapper/project/PlayMarkGoodsMapMapper.xml"/>
+    	<mapper resource="mapper/project/RoleAnalyseResultMapper.xml"/>
+    	
+    	<!-- 广告相关 -->
+    	<mapper resource="mapper/implant/ImplantRecordMapper.xml"/>
+    	<mapper resource="mapper/implant/ImplantRoleMapMapper.xml"/>
+    	<mapper resource="mapper/implant/ImplantAnalyseResultMapper.xml"/>
+    	<mapper resource="mapper/implant/ImplantAnalyseJobMapper.xml"/>
+    	
+    	<!-- 数据分析 -->
+    	<mapper resource="mapper/data/ChannelDataAnalyseMapper.xml"/>
+    	<mapper resource="mapper/data/SubjectDataAnalyseMapper.xml"/>
+    </mappers>
+    
+</configuration>

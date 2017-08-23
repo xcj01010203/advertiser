@@ -1,0 +1,134 @@
+package com.xiaotu.advertiser.project.service;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.stereotype.Service;
+
+import com.xiaotu.advertiser.project.model.PlayRoleModel;
+import com.xiaotu.advertiser.project.model.PlayRoundModel;
+import com.xiaotu.advertiser.project.model.ProjectModel;
+import com.xiaotu.advertiser.project.model.RoleAnalyseResultModel;
+import com.xiaotu.advertiser.project.model.map.PlayRoundRoleMapModel;
+import com.xiaotu.common.db.Page;
+import com.xiaotu.common.mvc.BaseService;
+import com.xiaotu.common.util.SessionUtil;
+
+/**
+ * 场次中的角色
+ * @author xuchangjian 2017年6月22日下午1:56:42
+ */
+@Service
+public class PlayRoleService extends BaseService {
+
+	@Override
+	protected String getKey() {
+		return "PlayRoleMapper";
+	}
+	
+	/**
+	 * 获取场次中角色列表
+	 * @author xuchangjian 2017年6月30日上午11:14:59
+	 * @return
+	 */
+	public Map<String, Object> queryRoleList(Page page)
+	{
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		
+		ProjectModel project = SessionUtil.getSessionProject();
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("projectId", project.getId());
+		
+		List<Map<String, Object>> roleList = this.queryPageList("selectRoleListWithRoundInfo", params, page);
+		
+		for (Map<String, Object> role : roleList)
+		{
+			String seriesRoundNos = (String) role.get("seriesRoundNos");
+			if (!StringUtils.isBlank(seriesRoundNos))
+			{
+				String firstRound = seriesRoundNos.split(",")[0];
+				role.put("firstRound", firstRound);
+				role.remove("seriesRoundNos");
+			}
+			
+			
+		}
+		
+		resultMap.put("roleList", roleList);
+		resultMap.put("totalRows", page.getTotalRows());
+		resultMap.put("totalPage", page.getTotalPage());
+		return resultMap;
+	}
+	
+	/**
+	 * 保存自动分析出的角色信息
+	 * @param roleList
+	 */
+	public void saveAnalyseRole(List<String> roleList) 
+	{
+		ProjectModel project = SessionUtil.getSessionProject();
+		
+		/*
+		 * 删除原来的角色信息
+		 */
+		//删除剧本标记和角色的关联
+		this.delete("PlayMarkRoleMapMapper.deleteByProjectId", project.getId());
+		//删除植入广告记录和角色的关联
+		this.delete("ImplantRoleMapMapper.deleteByProjectId", project.getId());
+		//删除广告分析中的关键字和角色的关联关系
+		this.delete("ImplantAnalyseResultMapper.deleteMapByProject", project.getId());
+		//删除场次和角色的关联关系
+		this.delete("PlayRoundRoleMapMapper.deleteByProjectId", project.getId());
+		//删除角色信息
+		this.delete("PlayRoleMapper.deleteByProjectId", project.getId());
+		
+		//把分析出的角色信息入库
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("projectId", project.getId());
+		params.put("roleNameList", roleList);
+		List<RoleAnalyseResultModel> resultList = this.getList("RoleAnalyseResultMapper.selectByNames", params);
+		
+		List<String> addedRoleNameList = new ArrayList<String>();	//已经处理过的角色名称
+		List<PlayRoleModel> toAddRoleList = new ArrayList<PlayRoleModel>();	//待添加的角色信息
+		List<PlayRoundRoleMapModel> toAddRoundRoleMapList = new ArrayList<PlayRoundRoleMapModel>();
+		for (RoleAnalyseResultModel result : resultList) {
+			String roleName = result.getRoleName();
+			String roundId = result.getRound().getId();
+			
+			PlayRoleModel playRole = new PlayRoleModel();
+			playRole.setProject(project);
+			playRole.setName(roleName);
+			playRole.setType(PlayRoleModel.MIAN_ROLE_TYPE);
+			playRole.setOrder(1);
+			playRole.setCreateTime(new Date());
+			playRole.setLastUpdateTime(new Date());
+			
+			if (!addedRoleNameList.contains(roleName)) {
+				addedRoleNameList.add(roleName);
+				toAddRoleList.add(playRole);
+			} else {
+				int index = toAddRoleList.indexOf(playRole);
+				playRole = toAddRoleList.get(index);
+			}
+			
+			PlayRoundModel round = new PlayRoundModel();
+			round.setId(roundId);
+			
+			PlayRoundRoleMapModel roundRoleMap = new PlayRoundRoleMapModel();
+			roundRoleMap.setProject(project);
+			roundRoleMap.setPlayRound(round);
+			roundRoleMap.setPlayRole(playRole);
+			toAddRoundRoleMapList.add(roundRoleMap);
+			
+		}
+		this.save("PlayRoleMapper.insertBatch", toAddRoleList);
+		this.save("PlayRoundRoleMapMapper.insertBatch", toAddRoundRoleMapList);
+		
+		//删除分析出的角色信息
+		this.delete("RoleAnalyseResultMapper.deleteByProjectId", project.getId());
+	}
+}

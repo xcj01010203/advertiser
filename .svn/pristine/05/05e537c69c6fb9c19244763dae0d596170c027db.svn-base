@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<configuration scan="true" scanPeriod="60 seconds" debug="true">
+
+    <!-- 控制台 -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+        	<!-- 
+            <pattern>%-20(%d{MM-dd HH:mm:ss.SSS}) %-5level %caller{1} - %msg%n</pattern>
+             -->
+            <pattern>%t %-20(%d{MM-dd HH:mm:ss.SSS}) %-5level %logger{80}[%line] - %msg%n</pattern>
+        </encoder>
+    </appender>
+     <!-- 总日志
+    <appender name="LOGFILE_ROOT" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>./logs/logger.log.%d{yyyy-MM-dd}</fileNamePattern>
+            <maxHistory>7</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%t %-20(%d{MM-dd HH:mm:ss.SSS}) %-5level %logger{80}[%line] - %msg%n</pattern>
+        </encoder>
+    </appender>
+     -->
+    <root level="DEBUG">
+        <appender-ref ref="STDOUT"/>
+    </root>
+    
+    <logger name="com.xiaotu.common.db" level="error"/>
+    <logger name="org.springframework.jdbc.datasource.DataSourceUtils" level="error"/>
+</configuration>

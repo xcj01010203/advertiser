@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv=Content-Type content="text/html;charset=utf-8">
+    <!--指明当前的页面在IE浏览器渲染的时候使用最新的渲染引擎来渲染-->
+    <meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1">
+    <!--网站的关键字-->
+    <meta name="keywords" content="广告植入">
+    <!--网站主要内容-->
+    <meta name="description" content="小土科技">
+    <title>上传文件</title>
+    <link rel="stylesheet" href="${basePath}/static/css/component//resultContent.css">
+    <link rel="stylesheet" href="${basePath}/static/js/component/resultContent.js">
+</head>
+<body>
+<div class="result-content panel panel-default">
+    <div class="header">
+        <div class="header-con">
+            <h4>
+                <#include '../component/dobuleBias.html'/>
+                结果处理(以下场景已更改)
+            </h4>
+        </div>
+    </div>
+    <div class="con clearfix">
+        <div class="con-left scrollbar">
+            <!--<div class="left-cb"><input type="checkbox"><span>1-1</span></div>-->
+            <!--<div class="left-cb"><input type="checkbox"><span>1-1</span></div>-->
+        </div>
+        <div class="con-mid scrollbar">
+            <div class="con-mid-title con-mid-new-title">
+                <span class="piece"></span>新剧本
+            </div>
+            <div class="con-mid-content con-mid-new-content">
+                <!--<h4>3.林家小妹</h4>-->
+                <!--<p>-->
+                <!--hehehe大打发 <br>-->
+                <!--hehehe大打发 <br>-->
+                <!--hehehe大打发 <br>-->
+                <!--</p>-->
+            </div>
+            <div class="con-mid-title con-mid-old-title">
+                <span class="piece"></span>老剧本
+            </div>
+            <div class="con-mid-content con-mid-old-content">
+                <!--<h4>3.林家小妹</h4>-->
+                <!--<p>-->
+                <!--hehehe大打发 <br>-->
+                <!--hehehe大打发 <br>-->
+                <!--hehehe大打发 <br>-->
+                <!--hehehe大打发 <br>-->
+                <!--</p>-->
+            </div>
+        </div>
+        <div class="con-right">
+            <table class="table table-hover table-bordered">
+                <thead>
+                <tr>
+                    <th width="100"></th>
+                    <th width="150">新场景信息</th>
+                    <th width="150">原场景信息</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>集/场</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>气氛</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>内外</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>主场景</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>主要演员</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>特约演员</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>群众演员</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>服装</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>道具</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>备注</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="btns">
+        <button class="all btn">场景/剧本全替换</button>
+        <button class="play btn">只替换剧本</button>
+        <button class="jump btn">跳过</button>
+        <button class="cancel-btn btn">取消</button>
+    </div>
+</div>
+
+<script>
+    $(function () {
+
+    })
+
+    // 获取需要跳过或替换的集场号列表
+    function getJumpOrReplaceList() {
+        var url = basePath + '/playRoundTmp/queryRoundTmpList';
+        doPost(url, {}, function (data) {
+            if (data.status == 0) {
+                if (!!data.data.seriesNoMap) {
+                    var seriesNoObj = data.data.seriesNoMap, html = '';
+                    for (var item in seriesNoObj) {
+                        for (var i = 0; i < seriesNoObj[item].length; i++) {
+                            html += '<div class="left-cb"><input flagid="' + seriesNoObj[item][i].id + '" type="checkbox"><span>'
+                                + item + '-' + seriesNoObj[item][i].roundNo + '</span></div>';
+                        }
+                    }
+                    $(".result-content .con .con-left").html(html);
+
+
+                    // 场景和剧本全替换
+                    replacePlayScene()
+
+                    // 查询单个需要跳过或替换的数据（带有原场景信息）
+                    checkSingleJpOrRepData()
+
+                    // 只替换剧本
+                    onlyReplacePlay()
+
+                    //    跳过选中的
+                    skipChecked()
+
+                    // 全部跳过
+                    skipAll()
+                }
+            }
+        })
+    }
+
+    // 查询单个需要跳过或替换的数据（带有原场景信息）
+    function checkSingleJpOrRepData() {
+        $(".result-content .con .con-left .left-cb input").click(function () {
+            if ($(this).is(":checked")) {
+                // 选中
+                var flagid = $(this).attr("flagid");
+                // 渲染中间内容跟右侧表格内容
+                drawMiddleAndRight(flagid)
+
+            } else {
+
+                // 还有修改的剧本，没有选中清空页面
+                refreshInputContent()
+
+                var prev = $(this).parents(".left-cb");
+                var prevCheck = prev.find("input").is(":checked");
+                var flagid;
+                while (!prevCheck) {
+                    prev = prev.prev();
+                    if (prev[0]) {
+                        prevCheck = prev.find("input").is(":checked")
+                        if (prevCheck) {
+                            flagid = prev.find("input").attr("flagid");
+                        }
+                    } else {
+                        break;
+                    }
+                }
+                if (!flagid) {
+                    var next = $(this).parents(".left-cb");
+                    var nextCheck = next.find("input").is(":checked");
+                    while (!nextCheck) {
+                        next = next.next();
+                        if (next[0]) {
+                            nextCheck = next.find("input").is(":checked")
+                            if (nextCheck) {
+                                flagid = next.find("input").attr("flagid");
+                            }
+                        } else {
+                            break;
+                        }
+                    }
+                }
+
+                if (!!flagid) {
+                    // 渲染中间内容跟右侧表格内容
+                    drawMiddleAndRight(flagid)
+                } else {
+
+                }
+
+            }
+        })
+    }
+
+    //    渲染中间内容跟右侧表格内容
+    function drawMiddleAndRight(flagid) {
+        var url = basePath + '/playRoundTmp/queryRoundTmpDetail';
+        doPost(url, {id: flagid}, function (data) {
+            if (data.status == 0) {
+                var newPlay = data.data.newPlay, newRoundDetail = data.data.newRoundDetail,
+                    oldPlay = data.data.oldPlay, oldRoundDetail = data.data.oldRoundDetail;
+                var newPlayHtml = '<h4>' + newPlay.title + '</h4><p>' + newPlay.content + '</p>';
+                var oldPlayHtml = '<h4>' + oldPlay.title + '</h4><p>' + oldPlay.content + '</p>'
+                $(".result-content .con .con-mid .con-mid-new-content").html(newPlayHtml);
+                $(".result-content .con .con-mid .con-mid-old-content").html(oldPlayHtml);
+
+                var roundDetailHtml = '';
+                roundDetailHtml += '<tr><td>集/场</td><td>' + newRoundDetail.seriesNo + '/' + newRoundDetail.roundNo + '</td>';
+                roundDetailHtml += '<td>' + oldRoundDetail.seriesNo + '/' + oldRoundDetail.roundNo + '</td></tr>';
+                roundDetailHtml += '<tr><td>气氛</td><td>' + newRoundDetail.atmosphere + '</td><td>' + oldRoundDetail.atmosphere + '</td></tr>';
+                roundDetailHtml += '<tr><td>内外</td><td>' + newRoundDetail.site + '</td><td>' + oldRoundDetail.site + '</td></tr>';
+                roundDetailHtml += '<tr><td>主场景</td><td>' + newRoundDetail.firstLocation + '</td><td>' + oldRoundDetail.firstLocation + '</td></tr>';
+                roundDetailHtml += '<tr><td>主要演员</td><td>' + newRoundDetail.majorRoleNameList.join(",") + '</td><td>' + oldRoundDetail.majorRoleNameList.join(",") + '</td></tr>';
+                roundDetailHtml += '<tr><td>特约演员</td><td>' + newRoundDetail.guestRoleNameList.join(",") + '</td><td>' + oldRoundDetail.guestRoleNameList.join(",") + '</td></tr>';
+                roundDetailHtml += '<tr><td>群众演员</td><td>' + newRoundDetail.massRoleNameList.join(",") + '</td><td>' + oldRoundDetail.massRoleNameList.join(",") + '</td></tr>';
+                roundDetailHtml += '<tr><td>服装</td><td>' + newRoundDetail.clothesNameList.join(",") + '</td><td>' + oldRoundDetail.clothesNameList.join(",") + '</td></tr>';
+                roundDetailHtml += '<tr><td>道具</td><td>' + newRoundDetail.propNameList.join(",") + '</td><td>' + oldRoundDetail.propNameList.join(",") + '</td></tr>';
+                roundDetailHtml += '<tr><td>备注</td><td>' + newRoundDetail.remark + '</td><td>' + oldRoundDetail.remark + '</td></tr>';
+                $(".result-content .con .con-right table tbody").html(roundDetailHtml);
+            }
+        })
+    }
+
+    // 场景和剧本全替换
+    function replacePlayScene() {
+        $(".result-content .btns .all").click(function () {
+            var checkedArr = [];
+            $(".result-content .con .con-left .left-cb").each(function (index, value) {
+                var input = $(value).find("input");
+                if (input.is(":checked")) {
+                    checkedArr.push(input.attr("flagid"))
+                }
+            })
+            var url = basePath + '/playRoundTmp/replaceAll';
+            doPost(url, {idList: checkedArr}, function (data) {
+                if (data.status == 0) {
+                    modelWindow("场景剧本替换成功", 1000)
+
+                    // 移除选中的checkbox
+                    removeCheckedBox()
+
+                    if (!$(".result-content .con .con-left .left-cb input")[0]) {
+
+                        $(".shade .shade-con .file-box").removeClass("hide")
+                        $(".shade .shade-con .result-box").addClass("hide")
+
+                        // 关闭弹窗
+                        closeShade()
+                    } else {
+
+                        // 还有修改的剧本，没有选中清空页面
+                        refreshInputContent()
+
+                    }
+                } else {
+                    setTimeout(function () {
+                        modelWindow(data.message)
+                    }, 300)
+                }
+            })
+        })
+    }
+
+    // 只替换剧本
+    function onlyReplacePlay() {
+        $(".result-content .btns .play").click(function () {
+            var checkedArr = [];
+            $(".result-content .con .con-left .left-cb").each(function (index, value) {
+                var input = $(value).find("input");
+                if (input.is(":checked")) {
+                    checkedArr.push(input.attr("flagid"))
+                }
+            })
+            var url = basePath + '/playRoundTmp/replaceContent';
+            doPost(url, {idList: checkedArr}, function (data) {
+                if (data.status == 0) {
+                    modelWindow("剧本替换成功", 1000)
+
+                    // 移除选中的checkbox
+                    removeCheckedBox()
+
+                    if (!$(".result-content .con .con-left .left-cb input")[0]) {
+
+                        $(".shade .shade-con .file-box").removeClass("hide")
+                        $(".shade .shade-con .result-box").addClass("hide")
+
+                        // 关闭弹窗
+                        closeShade()
+                    } else {
+
+                        // 还有修改的剧本，没有选中清空页面
+                        refreshInputContent()
+
+                    }
+                } else {
+                    setTimeout(function () {
+                        modelWindow(data.message)
+                    }, 300)
+                }
+            })
+        })
+    }
+
+    //    跳过选中的
+    function skipChecked() {
+        $(".result-content .btns .jump").click(function () {
+            var checkedArr = [];
+            $(".result-content .con .con-left .left-cb").each(function (index, value) {
+                var input = $(value).find("input");
+                if (input.is(":checked")) {
+                    checkedArr.push(input.attr("flagid"))
+                }
+            })
+            var url = basePath + '/playRoundTmp/replaceAll';
+            doPost(url, {idList: checkedArr}, function (data) {
+                if (data.status == 0) {
+                    alert(111)
+                    modelWindow("跳过成功", 1000)
+
+                    // 移除选中的checkbox
+                    removeCheckedBox()
+
+                    if (!$(".result-content .con .con-left .left-cb input")[0]) {
+
+                        $(".shade .shade-con .file-box").removeClass("hide")
+                        $(".shade .shade-con .result-box").addClass("hide")
+
+                        // 关闭弹窗
+                        closeShade()
+                    } else {
+
+                        // 还有修改的剧本，没有选中清空页面
+                        refreshInputContent()
+
+                    }
+                } else {
+                    setTimeout(function () {
+                        modelWindow(data.message)
+                    }, 300)
+                }
+            })
+        })
+    }
+
+    // 全部跳过
+    function skipAll() {
+        $(".result-content .btns .cancel-btn").click(function () {
+            var url = basePath + '/playRoundTmp/skipAll';
+            doPost(url, {}, function (data) {
+                if (data.status == 0) {
+                    modelWindow("全部跳过", 1000);
+
+                    $(".shade .shade-con .file-box").removeClass("hide")
+                    $(".shade .shade-con .result-box").addClass("hide")
+
+                    // 关闭弹窗
+                    closeShade()
+                } else {
+                    setTimeout(function () {
+                        modelWindow(data.message)
+                    }, 300)
+                }
+            })
+        })
+    }
+
+    // 移除选中的checkbox
+    function removeCheckedBox() {
+        var leftCB = $(".result-content .con .con-left .left-cb")
+        leftCB.each(function (index, value) {
+            var input = $(value).find("input").is(":checked");
+            if (input) {
+                $(value).remove();
+            }
+        })
+        if (!leftCB[0]) {
+            console.log(222)
+            // 关闭弹窗
+            closeShade()
+        }
+    }
+
+    // 关闭弹窗
+    function closeShade() {
+        $(".shade").css({
+            "backgroundColor": "transparent",
+            "opacity": "0",
+            "zIndex": -111
+        })
+        $(".shade .shade-con").css({
+            "opacity": 0,
+            "filter": "Alpha(opacity=0)",
+            "top": "-100px",
+            "marginTop": "0",
+            "zIndex": -111
+        })
+
+//        $(".shade").css({
+//            "backgroundColor": "transparent",
+//            "opacity": "0",
+//            "transition": "all 0.15s ease-in",
+//            "zIndex": -111
+//        })
+//        $(".shade .shade-con").css({
+//            "opacity": 0,
+//            "filter": "Alpha(opacity=0)",
+//            "top": "-100px",
+//            "marginTop": "0",
+//            "transition": "all 0.3s ease-in",
+//            "zIndex": -111,
+//        })
+    }
+
+    // 还有修改的剧本，没有选中清空页面
+    function refreshInputContent() {
+        var html = '<tr><td>集/场</td><td></td><td></td></tr><tr><td>气氛</td><td></td><td></td></tr>';
+        html += '<tr><td>内外</td><td></td><td></td></tr><tr><td>主场景</td><td></td><td></td></tr>';
+        html += '<tr><td>主要演员</td><td></td><td></td></tr><tr><td>特约演员</td><td></td><td></td></tr>';
+        html += '<tr><td>群众演员</td><td></td><td></td></tr><tr><td>服装</td><td></td><td></td></tr>';
+        html += '<tr><td>道具</td><td></td><td></td></tr><tr><td>备注</td><td></td><td></td></tr>';
+        // 未选中
+        $(".result-content .con .con-mid .con-mid-content").html('');
+        $(".result-content .con .con-right table tbody").html(html);
+    }
+
+</script>
+
+</body>
+</html>

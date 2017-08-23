@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 场次和服装关联关系 -->
+<mapper namespace="PlayRoundClothesMapMapper">
+
+	<!-- 删除多个场次的关联关系 -->
+	<delete id="deleteBatchByRoundIds">
+		DELETE FROM tab_play_round_clothes_map
+		WHERE round_id IN 
+		<foreach collection="list" open="(" close=")" separator="," item="roundId">
+			#{roundId}
+		</foreach>
+	</delete>
+	
+	<!-- 根据项目ID删除数据 -->
+	<delete id="deleteByProjectId" parameterType="String">
+		DELETE FROM tab_play_round_clothes_map where clothes_id IN (SELECT id FROM tab_clothes WHERE project_id = #{projectId})
+	</delete>
+	
+	<!-- 批量新增 -->
+	<insert id="insertBatch">
+		INSERT INTO tab_play_round_clothes_map(id, round_id, clothes_id)
+		VALUES
+		<foreach collection="list" separator="," item="tprcm">
+			(#{tprcm.id}, #{tprcm.playRound.id}, #{tprcm.clothes.id})
+		</foreach>
+	</insert>
+</mapper>

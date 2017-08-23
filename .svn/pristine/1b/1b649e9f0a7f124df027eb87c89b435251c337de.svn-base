@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>IconFont</title>
+
+    <style type="text/css">
+
+        @font-face {
+            font-family: "iconfont";
+            src: url('${basePath}/static/css/common/icon/iconfont.eot'); /* IE9*/
+            src: url('${basePath}/static/css/common/icon/iconfont.eot#iefix') format('embedded-opentype'), /* IE6-IE8 */ url('${basePath}/static/css/common/icon/iconfont.woff') format('woff'), /* chrome, firefox */ url('${basePath}/static/css/common/icon/iconfont.ttf') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/ url('iconfont.svg#iconfont') format('svg'); /* iOS 4.1- */
+        }
+
+        .iconfont {
+            font-family: "iconfont" !important;
+            font-size: 16px;
+            font-style: normal;
+            -webkit-font-smoothing: antialiased;
+            -webkit-text-stroke-width: 0.2px;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+    </style>
+</head>
+<body>
+
+<!--bootstrap模态窗体-->
+<div aria-hidden=”true” data-backdrop=”static” class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div id="modal-content" class="modal-content">
+            <div id="modal-header" class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div id="modal-body" class="modal-body">
+                <div id="modal-body-error"></div>
+                <div id="modal-body-warn"></div>
+                <div id="modal-body-msg"></div>
+            </div>
+            <div id="modal-footer" class="modal-footer" style="display: none;"></div>
+        </div>
+    </div>
+</div>
+<!--<i class="icon iconfont">&#xe60a;</i> 右三角-->
+<!--<i class="icon iconfont">&#xe600;</i> 右下三角-->
+<!--<i class="icon iconfont">&#xe612;</i> 设置-->
+<!--<i class="icon iconfont">&#xe680;</i> 用户(信息中的)-->
+<!--<i class="icon iconfont">&#xe61b;</i> 删除-->
+<!--<i class="icon iconfont">&#xe609;</i> 上-->
+<!--<i class="icon iconfont">&#xe617;</i> 叉-->
+<!--<i class="icon iconfont">&#xe623;</i> 大于号-->
+<!--<i class="icon iconfont">&#xe658;</i> 小于号-->
+<!--<i class="icon iconfont">&#xe81f;</i> 减-->
+<!--<i class="icon iconfont">&#xe608;</i> 上三角-->
+<!--<i class="icon iconfont">&#xe647;</i> 搜索-->
+<!--<i class="icon iconfont">&#xe602;</i> 下-->
+<!--<i class="icon iconfont">&#xe604;</i> 下三角-->
+<!--<i class="icon iconfont">&#xe651;</i> 加-->
+<!--<i class="icon iconfont">&#xe601;</i> 解锁-->
+<!--<i class="icon iconfont">&#xe61c;</i> 叉-->
+<!--<i class="icon iconfont">&#xe682;</i> 用户-->
+<!--<i class="icon iconfont">&#xe66d;</i> 笔-->
+<!--<i class="icon iconfont">&#xe631;</i> 用户- -->
+</body>
+</html>

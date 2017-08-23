@@ -1,0 +1,133 @@
+$(function() {
+	loadRoleList();
+});
+
+//加载角色列表
+function loadRoleList() {
+	$("#tcdPageCode").createPage({
+		url: "/playRole/queryRoleList",
+		data: {},
+		pageSize: 20,
+		successFn: function(response) {
+			if (response.status == 1) {
+				alert(response.msssage);
+				return;
+			}
+			var roleList = response.data.roleList || [];
+			
+			var typeJson = {};
+			typeJson["1"] = "主要演员";
+			typeJson["2"] = "特约演员";
+			typeJson["3"] = "群众演员";
+			
+			var roleTrArray = [];
+			
+			$.each(roleList, function(index, item) {
+				roleTrArray.push("<tr>");
+				roleTrArray.push("		<td>"+ (index + 1) +"</td>");
+				roleTrArray.push("		<td><a class='text-primary' href='javascript:showRoleViewList(\""+ item.id +"\")'>"+ item.name +"</a></td>");
+				roleTrArray.push("		<td>"+ typeJson[item.type] +"</td>");
+				roleTrArray.push("		<td>"+ item.roundCount +"</td>");
+				roleTrArray.push("		<td>"+ filterNull(item.firstRound) +"</td>");
+				roleTrArray.push("</tr>");
+			});
+			
+			$("#roleListTbody").empty();
+			$("#roleListTbody").html(roleTrArray.join(''));
+		}
+	});
+	
+	
+	
+//	var url = "/playRole/queryRoleList";
+//	var successFn = function(response) {
+//		if (response.status == 1) {
+//			alert(response.msssage);
+//			return;
+//		}
+//		var roleList = response.data.roleList || [];
+//		
+//		var typeJson = {};
+//		typeJson["1"] = "主要演员";
+//		typeJson["2"] = "特约演员";
+//		typeJson["3"] = "群众演员";
+//		
+//		var roleTrArray = [];
+//		
+//		$.each(roleList, function(index, item) {
+//			roleTrArray.push("<tr>");
+//			roleTrArray.push("		<td>"+ (index + 1) +"</td>");
+//			roleTrArray.push("		<td><a class='text-primary' href='javascript:showRoleViewList(\""+ item.id +"\")'>"+ item.name +"</a></td>");
+//			roleTrArray.push("		<td>"+ typeJson[item.type] +"</td>");
+//			roleTrArray.push("		<td>"+ item.roundCount +"</td>");
+//			roleTrArray.push("		<td>"+ filterNull(item.firstRound) +"</td>");
+//			roleTrArray.push("</tr>");
+//		});
+//		
+//		$("#roleListTbody").empty();
+//		$("#roleListTbody").html(roleTrArray.join(''));
+//	};
+//	
+//	doPost(url, {}, successFn);
+}
+
+//显示角色场景表
+function showRoleViewList(id) {
+	
+	$("#roleRoundPage").createPage({
+		url: "/playRound/querySeriesRoundList",
+		data: {roleId: id},
+		pageSize: 10,
+		successFn: function(response) {
+			if (response.status == 1) {
+				alert(response.message);
+				return;
+			}
+			
+			var roundList = response.data.roundList;
+			var roundTrArray = [];
+			for (var key in roundList) {
+				var myRoundList = roundList[key];
+				$.each(myRoundList, function(index, item) {
+					roundTrArray.push("<tr>");
+					roundTrArray.push("	<td width='5%'>"+ item.seriesNo + "-" + item.roundNo +"</td>");
+					roundTrArray.push("	<td width='5%' class='over-hide'>"+ filterNull(item.atmosphere) +"</td>");
+					roundTrArray.push("	<td width='5%' class='over-hide'>"+ filterNull(item.site) +"</td>");
+					roundTrArray.push("	<td width='15%' class='over-hide' title='"+ filterNull(item.firstLocation) +"'>"+ filterNull(item.firstLocation) +"</td>");
+					roundTrArray.push("	<td width='20%' class='over-hide' title='"+ filterNull(item.majorRoleNameList.join("|")) +"'>"+ filterNull(item.majorRoleNameList.join("|")) +"</td>");
+					roundTrArray.push("	<td width='10%' class='over-hide' title='"+ filterNull(item.guestRoleNameList.join("|")) +"'>"+ filterNull(item.guestRoleNameList.join("|")) +"</td>");
+					roundTrArray.push("	<td width='10%' class='over-hide' title='"+ filterNull(item.massRoleNameList.join("|")) +"'>"+ filterNull(item.massRoleNameList.join("|")) +"</td>");
+					roundTrArray.push("	<td width='20%' class='over-hide' title='"+ filterNull(item.propNameList.join("|")) +"'>"+ filterNull(item.propNameList.join("|")) +"</td>");
+					roundTrArray.push("	<td width='10%' class='over-hide' title='"+ filterNull(item.remark) +"'>"+ filterNull(item.remark) +"</td>");
+					roundTrArray.push("</tr>");
+					
+				});
+			}
+			
+			$("#viewListTbody").html(roundTrArray.join(''));
+			
+			$('#viewListDiv').modal('show');
+		}
+	});
+	
+	//加载统计信息
+	var url = "/playRound/queryRoundStatistic";
+	var successFn = function(response) {
+		if (response.status == 1) {
+			alert(response.message);
+			return ;
+		}
+		
+		//统计信息
+		var totalCount = response.data.totalCount || 0;
+		var innerCount = response.data.innerCount || 0;
+		var outCount = response.data.outCount || 0;
+		$("#viewStatistic").html("共" + totalCount + "场，其中内景" + innerCount + "场，外景" + outCount + "场");
+	};
+	doPost(url, {roleId: id}, successFn);
+}
+
+//关闭弹窗
+function closeWin() {
+	$("#roleViewListDiv").hide();
+}

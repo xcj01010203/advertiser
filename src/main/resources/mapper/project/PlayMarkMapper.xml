@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 剧本标记 -->
+<mapper namespace="PlayMarkMapper">
+	
+	<!-- 插入一条记录 -->
+	<insert id="insertOne">
+		INSERT INTO tab_play_mark(id, project_id, round_id, word, word_x, description, createtime)
+		VALUES (#{id}, #{project.id}, #{playRound.id}, #{word}, #{word_x}, #{description}, #{createTime})
+	</insert>
+	
+	<!-- 更新一条信息 -->
+	<update id="upateOne">
+		UPDATE tab_play_mark
+		SET word = #{word},
+			word_x = #{word_x},
+			description = #{description},
+			createtime = #{createTime}
+		WHERE id = #{id}
+	</update>
+	
+	<!-- 根据ID删除记录 -->
+	<delete id="deleteById" parameterType="String">
+		DELETE FROM tab_play_mark WHERE id = #{id}
+	</delete>
+	
+	<!-- 查询标记列表 -->
+	<select id="selectMark" parameterType="map" resultType="PlayMark">
+		SELECT id, word, word_x, description
+		FROM tab_play_mark
+		WHERE 1 = 1
+		<if test="roundId != null">
+		  AND round_id = #{roundId}
+		</if>
+		<if test="word != null">
+		  AND word = #{word}
+		</if>
+		<if test="word_x != null">
+		  AND word_x = #{word_x}
+		</if>
+		ORDER BY createtime asc
+	</select>
+	
+	<!-- 查询剧本标记列表 -->
+	<select id="selectScriptMark" parameterType="map" resultType="PlayMark">
+		SELECT 
+		tpm.id, 
+		tpm.word, 
+		tpm.word_x, 
+		tpm.description,
+		tpr.id as 'playRound.id',
+		tpr.seriesno as 'playRound.seriesNo',
+		tpr.roundno as 'playRound.roundNo'
+		FROM tab_play_mark tpm,
+		tab_play_round tpr
+		WHERE 1 = 1
+		AND tpm.round_id = tpr.id
+		<if test="projectId != null">
+		  AND tpm.project_id = #{projectId}
+		</if>
+			ORDER BY tpm.createtime asc
+	</select>
+	
+	<!-- 根据项目ID删除数据 -->
+	<delete id="deleteByProjectId" parameterType="String">
+		DELETE FROM tab_play_mark where project_id = #{projectId}
+	</delete>
+	
+	<!-- 根据多个场次ID删除数据 -->
+	<delete id="deleteByRoundIds">
+		DELETE FROM tab_play_mark where round_id IN 
+		<foreach collection="list" open="(" close=")" separator="," item="roundId">
+			#{roundId}
+		</foreach>
+	</delete>
+</mapper>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv=Content-Type content="text/html;charset=utf-8">
+    <!--指明当前的页面在IE浏览器渲染的时候使用最新的渲染引擎来渲染-->
+    <meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1">
+    <!--网站的关键字-->
+    <meta name="keywords" content="广告植入">
+    <!--网站主要内容-->
+    <meta name="description" content="小土科技">
+    <title>投放环境</title>
+    <#include "../common/context.html"/>
+    <link rel="stylesheet" href="${basePath}/static/css/dataAnalyse/throwEnvironment.css">
+    <script src="${basePath}/static/js/dataAnalyse/throwEnvironment.js"></script>
+</head>
+<body>
+<#include '../component/header.html'/>
+<#include '../component/levelThreeLinkage.html'>
+    <div class="project-list-four">
+        <!--场景表-->
+        <div class="scene four-content center">
+            <div class="four-left">
+                数据分析-投放环境
+            </div>
+            <div class="four-middle">
+                条件设置<i class="icon iconfont down">&#xe604;</i><i class="icon iconfont top hide">&#xe608;</i>
+            </div>
+            <div class="four-middle-right">
+                收视地区、播出频道、播出日期、播出时间等
+            </div>
+        </div>
+    </div>
+<input type="hidden" id="singleChannelFlag" value="true">
+<#include '../component/areaTimePicker.html'>
+    <div class="center content channel">
+    	<div class="panel panel-default">
+    		<div class="panel-heading">
+                <h4><#include '../component/dobuleBias.html'/>目标平台历史播放效果排名</h4>
+    		</div>
+    		<div class="panel-body" id="channelRank">
+    			
+    		</div>
+    		<div class="panel-body hidden">
+    			暂无数据
+    		</div>
+    	</div>
+    	<div class="panel panel-default">
+    		<div class="panel-heading">
+                <h4><#include '../component/dobuleBias.html'/>题材分布</h4>
+    		</div>
+    		<div class="panel-body" id="channelSubjectMarket">
+    			
+    		</div>
+    		<div class="panel-body hidden">
+    			暂无数据
+    		</div>
+    	</div>
+    	<div class="panel panel-default">
+    		<div class="panel-heading">
+                <h4><#include '../component/dobuleBias.html'/>分城贡献</h4>
+    		</div>
+    		<div class="panel-body" id="channelCity">
+    			
+    		</div>
+    		<div class="panel-body hidden">
+    			暂无数据
+    		</div>
+    	</div>
+    	<div class="panel panel-default">
+    		<div class="panel-heading">
+                <h4><#include '../component/dobuleBias.html'/>人群分布</h4>
+    		</div>
+    		<div class="panel-body" id="peopleSpread">
+    		
+    		</div>
+    		<div class="panel-body hidden">
+    			暂无数据
+    		</div>
+    	</div>
+    </div>
+<#include '../component/footer.html'/>
+</body>
+</html>

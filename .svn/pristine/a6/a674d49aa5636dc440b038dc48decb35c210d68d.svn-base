@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!--场次信息 -->
+<mapper namespace="PlayRoundMapper">
+	<!-- 根据条件查询记录，只获取场次的基本信息 -->
+	<select id="selectPlayRound" parameterType="map" resultType="PlayRound">
+		SELECT 
+		  id,
+		  seriesno,
+		  roundno,
+		  atmosphere,
+		  site,
+		  firstlocation,
+		  remark,
+		  ismanualsaved
+		FROM tab_play_round
+		WHERE project_id = #{projectId}
+		<if test="isManualSaved != null">
+		  AND isManualSaved = #{isManualSaved}
+		</if>
+		<if test="id != null">
+		  AND id = #{id}
+		</if>
+		<if test="seriesNo != null">
+		  AND seriesno = #{seriesNo}
+		</if>
+		<if test="roundNo != null">
+		  AND roundno = #{roundNo}
+		</if>
+		ORDER BY seriesno, abs(roundno), roundno
+	</select>
+	
+	<!-- 查询场次的完整信息，带有剧本内容、角色、道具） -->
+	<select id="selectFullWithContent" parameterType="map" resultType="map">
+		SELECT
+			tpr.id,
+			tpr.seriesNo,
+			tpr.roundNo,
+			tpr.atmosphere,
+			tpr.site,
+			tpr.firstLocation,
+			tpr.remark,
+			tpr.isManualSaved,
+			tpc.title,
+			tpc.content,
+			tprrm.roleIds,
+			tprpm.propIds
+		FROM
+			tab_play_round tpr
+		LEFT JOIN tab_play_content tpc ON tpc.round_id = tpr.id
+		
+		-- 角色信息
+		LEFT JOIN (
+			SELECT
+				round_id,
+				GROUP_CONCAT(play_roleid) roleIds
+			FROM
+				tab_play_round_role_map
+			WHERE
+				project_id = #{projectId}
+			GROUP BY
+				round_id
+		) tprrm ON tprrm.round_id = tpr.id
+		
+		-- 道具信息
+		LEFT JOIN (
+			SELECT
+				trm.round_id,
+				GROUP_CONCAT(trm.prop_id) propIds
+			FROM
+				tab_play_round_prop_map trm,
+				tab_prop tp
+			WHERE
+				trm.prop_id = tp.id
+			AND tp.project_id = #{projectId}
+			GROUP BY
+				round_id
+		) tprpm ON tprpm.round_id = tpr.id
+		WHERE
+			tpr.project_id = #{projectId}
+		ORDER BY
+			tpr.seriesno,
+			abs(tpr.roundno),
+			tpr.roundno
+	</select>
+	
+	<!-- 查询场次的完整信息，带有角色、道具） -->
+	<select id="selectFullWithoutContent" parameterType="map" resultType="map">
+		SELECT
+			tpr.id,
+			tpr.seriesNo,
+			tpr.roundNo,
+			tpr.atmosphere,
+			tpr.site,
+			tpr.firstLocation,
+			tpr.remark,
+			tpr.isManualSaved,
+			tprrm.roleIds,
+			tprpm.propIds
+		FROM
+			tab_play_round tpr
+		
+		-- 角色信息
+		LEFT JOIN (
+			SELECT
+				round_id,
+				GROUP_CONCAT(play_roleid) roleIds
+			FROM
+				tab_play_round_role_map
+			WHERE
+				project_id = #{projectId}
+			GROUP BY
+				round_id
+		) tprrm ON tprrm.round_id = tpr.id
+		
+		-- 道具信息
+		LEFT JOIN (
+			SELECT
+				trm.round_id,
+				GROUP_CONCAT(trm.prop_id) propIds
+			FROM
+				tab_play_round_prop_map trm,
+				tab_prop tp
+			WHERE
+				trm.prop_id = tp.id
+			AND tp.project_id = #{projectId}
+			GROUP BY
+				round_id
+		) tprpm ON tprpm.round_id = tpr.id
+		WHERE
+			tpr.project_id = #{projectId}
+			<if test="seriesNoList != null">
+			  AND tpr.seriesno IN
+			  <foreach collection="seriesNoList" open="(" separator="," close=")" item="series">
+			  	#{series}
+			  </foreach>
+			</if>
+			<if test="roleId != null">
+			  AND tprrm.roleIds like '%${roleId}%'
+			</if>
+			<if test="propId != null">
+			  AND tprpm.propIds like '%${propId}%'
+			</if>
+		ORDER BY
+			tpr.seriesno,
+			abs(tpr.roundno),
+			tpr.roundno
+	</select>
+	
+	<!-- 查询场次的统计信息，带有角色、道具） -->
+	<select id="selectRoundStatistic" parameterType="map" resultType="map">
+		SELECT
+			count(tpr.id) totalCount,
+			sum(IF(LOCATE('外', tpr.site) != 0, 1, 0)) outCount,
+			sum(IF(LOCATE('外', tpr.site) != 0, 0, 1)) innerCount
+		FROM
+			tab_play_round tpr
+		
+		-- 角色信息
+		LEFT JOIN (
+			SELECT
+				round_id,
+				GROUP_CONCAT(play_roleid) roleIds
+			FROM
+				tab_play_round_role_map
+			WHERE
+				project_id = #{projectId}
+			GROUP BY
+				round_id
+		) tprrm ON tprrm.round_id = tpr.id
+		
+		-- 道具信息
+		LEFT JOIN (
+			SELECT
+				trm.round_id,
+				GROUP_CONCAT(trm.prop_id) propIds
+			FROM
+				tab_play_round_prop_map trm,
+				tab_prop tp
+			WHERE
+				trm.prop_id = tp.id
+			AND tp.project_id = #{projectId}
+			GROUP BY
+				round_id
+		) tprpm ON tprpm.round_id = tpr.id
+		WHERE
+			tpr.project_id = #{projectId}
+			<if test="seriesNoList != null">
+			  AND tpr.seriesno IN
+			  <foreach collection="seriesNoList" open="(" separator="," close=")" item="series">
+			  	#{series}
+			  </foreach>
+			</if>
+			<if test="roleId != null">
+			  AND tprrm.roleIds like '%${roleId}%'
+			</if>
+			<if test="propId != null">
+			  AND tprpm.propIds like '%${propId}%'
+			</if>
+		ORDER BY
+			tpr.seriesno,
+			abs(tpr.roundno),
+			tpr.roundno
+	</select>
+	
+	<!-- 查询项目下场次数量 -->
+	<select id="countProjectRound" parameterType="String" resultType="Integer">
+		SELECT count(1)
+		FROM tab_play_round
+		WHERE project_id = #{projectId}
+	</select>
+	
+	<!-- 批量插入 -->
+	<insert id="insertBatch">
+		INSERT INTO tab_play_round(
+			id, project_id, seriesno, 
+			roundno, atmosphere, site, 
+			firstlocation, ismanualsaved, createtime, lastupdatetime)
+		VALUES
+		<foreach collection="list" separator="," item="pr">
+			(#{pr.id}, #{pr.project.id}, #{pr.seriesNo}, 
+			 #{pr.roundNo}, #{pr.atmosphere}, #{pr.site}, 
+			 #{pr.firstLocation}, #{pr.isManualSaved}, #{pr.createTime}, #{pr.lastUpdateTime})
+		</foreach>
+	</insert>
+	
+	<!-- 删除多个场次信息 -->
+	<delete id="deleteBatchByIds">
+		DELETE FROM tab_play_round
+		WHERE id IN
+		<foreach collection="list" open="(" close=")" separator="," item="id">
+			#{id}
+		</foreach>
+	</delete>
+	
+	<!-- 更新单条记录 -->
+	<update id="updateOne" parameterType="PlayRound">
+		UPDATE tab_play_round
+		SET seriesno = #{seriesNo}, 
+			roundno = #{roundNo}, 
+			atmosphere = #{atmosphere}, 
+			site = #{site}, 
+			firstlocation = #{firstLocation}, 
+			remark = #{remark}, 
+			ismanualsaved = #{isManualSaved}, 
+			lastupdatetime = #{lastUpdateTime}
+		WHERE id = #{id}
+	</update>
+	
+	<!-- 根据项目ID删除数据 -->
+	<delete id="deleteByProjectId" parameterType="String">
+		DELETE FROM tab_play_round where project_id = #{projectId}
+	</delete>
+</mapper>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 维护剧本内容相关信息 -->
+<mapper namespace="PlayContentMapper">
+	<!-- 批量插入 -->
+	<insert id="insertBatch">
+		INSERT INTO tab_play_content(
+			id, project_id, 
+			round_id, title, content, wordcount)
+		VALUES
+		<foreach collection="list" separator="," item="pc">
+			(#{pc.id}, #{pc.project.id}, #{pc.playRound.id}, #{pc.title}, #{pc.content}, #{pc.wordCount})
+		</foreach>
+	</insert>
+	
+	<!-- 删除多个场次的剧本内容 -->
+	<delete id="deleteBatchByRoundIds">
+		DELETE FROM tab_play_content
+		WHERE round_id IN
+		<foreach collection="list" open="(" close=")" separator="," item="roundId">
+			#{roundId}
+		</foreach>
+	</delete>
+	
+	<!-- 查询场次的剧本内容 -->
+	<select id="selectPlayContent" parameterType="map" resultType="PlayContent">
+		SELECT id, project_id as 'project.id', round_id as 'playRound.id', title, content, wordcount
+		FROM tab_play_content
+		WHERE 1 = 1
+		  <if test="roundId != null">
+		  	AND round_id = #{roundId}
+		  </if>
+		  <if test="projectId != null">
+		  	AND project_id = #{projectId}
+		  </if>
+		  <if test="roundIdList != null">
+		    AND round_id IN
+		  	<foreach collection="roundIdList" open="(" separator="," close=")" item="roundId">
+		  		#{roundId}
+		  	</foreach>
+		  </if>
+	</select>
+	
+	<!-- 查询项目下有剧本的场数 -->
+	<select id="countProjectContent" parameterType="String" resultType="Integer">
+		SELECT count(1)
+		FROM tab_play_content
+		WHERE 1 = 1
+		AND project_id = #{projectId}
+	</select>
+	
+	<!-- 批量更新 -->
+	<update id="updateBatch">
+		REPLACE INTO tab_play_content(id, project_id, 
+			round_id, title, content, wordcount)
+		VALUES
+		<foreach collection="list" separator="," item="pc">
+			(#{pc.id}, #{pc.project.id}, #{pc.playRound.id}, #{pc.title}, #{pc.content}, #{pc.wordCount})
+		</foreach>
+	</update>
+	
+	<!-- 根据项目ID删除数据 -->
+	<delete id="deleteByProjectId" parameterType="String">
+		DELETE FROM tab_play_content where project_id = #{projectId}
+	</delete>
+</mapper>

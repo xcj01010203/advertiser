@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="LogManageMapper">
+	
+	<!-- 添加日志信息 -->
+	<insert id="insertLog" parameterType="LogManage">
+		INSERT INTO advertiser.tab_log_manage (id,userId,menuId,status,createtime,commite,ip) 
+		values(#{id},#{userId},#{menuId},#{status},now(),#{commite},#{ip})
+	</insert>	
+	
+	<!-- 查询日志信息 -->
+	<select id="selectLog" parameterType="LogManage" resultType="LogManage">
+		SELECT
+			tl.id,
+			tl.userid,
+			tl.menuid,
+			tl.status,
+			tl.createtime,
+			tu.username AS 'userModel.username',
+			tm.menuname AS 'menuModel.menuname',
+			tl.commite,
+			tl.ip
+		FROM
+			tab_log_manage tl,
+			tab_user tu,
+			tab_menu tm
+		WHERE
+			tl.userid = tu.id
+		AND tl.menuid = tm.menuid
+		<if test="userName!=null and userName!= ''">
+			and tu.username like '%${userName}%' 
+		</if>
+		<if test="status!=null and status!= ''">
+			and tl.status = #{status} 
+		</if>
+		<if test="startTime!=null and startTime!=''">
+		 	<![CDATA[and DATE_FORMAT(tl.createtime, '%Y-%m-%d')>=  DATE_FORMAT(#{startTime}, '%Y-%m-%d')]]>
+		</if> 
+		<if test="endTime!=null and endTime!=''">
+			<![CDATA[and DATE_FORMAT(tl.createtime, '%Y-%m-%d') <= DATE_FORMAT(#{endTime}, '%Y-%m-%d')]]>
+		</if>
+		ORDER BY tl.createtime desc
+	</select>
+</mapper>

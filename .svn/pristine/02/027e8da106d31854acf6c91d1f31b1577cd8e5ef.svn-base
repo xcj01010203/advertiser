@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!--需要提示替换或跳过的场次数据 -->
+<mapper namespace="PlayRoundTmpMapper">
+	<!-- 批量插入数据 -->
+	<insert id="insertBatch" >
+		INSERT INTO tab_play_round_tmp(
+			id, project_id, round_id, 
+			seriesno, roundno, atmosphere, 
+			site, title, content, 
+			majorrolenames, firstlocation) 
+		VALUES
+		<foreach collection="list" separator="," item="prt">
+ 			(#{prt.id},#{prt.project.id},#{prt.playRound.id},#{prt.seriesNo}, #{prt.roundNo}, #{prt.atmosphere},#{prt.site}, #{prt.title}, #{prt.content}, #{prt.majorRoleNames}, #{prt.firstLocation})
+ 		</foreach>
+	</insert>
+	
+	<!-- 查询库中已有的数据，不带有剧本内容信息 -->
+	<select id="selectWithoutContent" parameterType="map" resultType="PlayRoundTmp">
+		SELECT 
+			id, 
+			project_id as 'project.id', 
+			round_id as 'playRound.id',
+			seriesno,
+			roundno
+		FROM tab_play_round_tmp
+		WHERE 1 = 1
+		<if test="projectId != null">
+		  AND project_id = #{projectId}
+		</if>
+		<if test="idList != null">
+		  AND id IN
+		  <foreach collection="idList" open="(" separator="," close=")" item="id">
+		  	#{id}
+		  </foreach>
+		</if>
+		ORDER BY seriesno, abs(roundno), roundno
+	</select>
+	
+	<!-- 根据ID查询记录 -->
+	<select id="selectWithContent" parameterType="map" resultType="PlayRoundTmp">
+		SELECT 
+			id,
+			round_id as 'playRound.id',
+			seriesno, 
+			roundno, 
+			atmosphere, 
+			site, 
+			title, 
+			content, 
+			majorrolenames, 
+			firstlocation
+		FROM tab_play_round_tmp
+		WHERE 1 = 1
+		<if test="id != null">
+		  AND id = #{id}
+		</if>
+		<if test="idList != null">
+		  AND id IN
+		  <foreach collection="idList" open="(" separator="," close=")" item="id">
+		  	#{id}
+		  </foreach>
+		</if>
+	</select>
+	
+	<!-- 根据ID删除记录 -->
+	<delete id="deleteByRoundTmp" parameterType="map">
+		DELETE FROM tab_play_round_tmp 
+		WHERE 1 = 1
+		<if test="projectId != null">
+		  AND project_id = #{projectId}
+		</if>
+		<if test="idList != null">
+		  AND id IN
+		  <foreach collection="idList" open="(" separator="," close=")" item="id">
+			#{id}
+		  </foreach>
+		</if>
+	</delete>
+	
+	<!-- 根据项目ID删除数据 -->
+	<delete id="deleteByProjectId" parameterType="String">
+		DELETE FROM tab_play_round_tmp where project_id = #{projectId}
+	</delete>
+</mapper>

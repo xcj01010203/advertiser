@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv=Content-Type content="text/html;charset=utf-8">
+    <!--指明当前的页面在IE浏览器渲染的时候使用最新的渲染引擎来渲染-->
+    <meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1">
+    <!--网站的关键字-->
+    <meta name="keywords" content="广告植入">
+    <!--网站主要内容-->
+    <meta name="description" content="小土科技">
+    <title>剧本解析</title>
+    <#include "../common/context.html"/>
+    <link rel="stylesheet" href="${basePath}/static/css/playManage/playAnalyse.css">
+    <script src="${basePath}/static/js/playManage/playAnalyse.js"></script>
+</head>
+<body>
+<#include '../component/header.html'/>
+<#include '../component/levelThreeLinkage.html'>
+
+    <div id="roundModal" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">确定要删除本场信息？</div>
+            <div id="round-footer" class="round-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">确定</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="project-list-four">
+        <!--剧本解析-->
+        <div class="anal four-content center">
+            <div class="four-left">
+                剧本管理-剧本解析
+            </div>
+            <div class="four-middle"><span>请上传剧本</span><i class="icon iconfont down">&#xe604;</i><i class="icon iconfont top hide">&#xe608;</i>
+            </div>
+            <div class="four-right">
+                <button class="upload-play upload-play-t">上传剧本</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="project-list-five hide">
+        <div class="five-content center">
+            <div class="five-content-gather clearfix">
+                <div class="gather-left">集次</div>
+                <ul class="gather-right">
+                    <!--<li class="active"><a href="javascript:;">1(3)</a><i class="icon iconfont">&#xe600;</i></li>-->
+                    <!--<li><a href="javascript:;">1(3)</a><i class="icon iconfont">&#xe600;</i></li>-->
+                </ul>
+            </div>
+            <div class="five-content-space clearfix">
+                <div class="space-left">场次</div>
+                <ul class="space-right">
+                    <!--<li class="active"><a href="javascript:;">1</a><i class="icon iconfont">&#xe600;</i></li>-->
+                    <!--<li><a href="javascript:;">1</a><i class="icon iconfont">&#xe600;</i></li>-->
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="anal-content clearfix">
+        <div class="anal-left">
+            <div class="anal-left-title clearfix">
+                <!--<h4>1-11 日本街/密室内 日,外/内 <br>人物 : 天狼、日本武士若干、关东军士兵、被打小贩、环境人物</h4>-->
+                <h4></h4>
+                <div class="anal-color">
+                    <div flag="main-actor" class="anal-color-keyword main-actor clearfix">
+                        <span class="color"></span>
+                        <span class="word">主要演员</span>
+                    </div>
+                    <div flag="special-actor" class="anal-color-keyword special-actor clearfix">
+                        <span class="color"></span>
+                        <span class="word">特约演员</span>
+                    </div>
+                    <div flag="public-actor" class="anal-color-keyword public-actor clearfix">
+                        <span class="color"></span>
+                        <span class="word">群众演员</span>
+                    </div>
+                    <div flag="stage" class="anal-color-keyword stage clearfix">
+                        <span class="color"></span>
+                        <span class="word">道具</span>
+                    </div>
+                    <div flag="dress" class="anal-color-keyword dress clearfix">
+                        <span class="color"></span>
+                        <span class="word">服装</span>
+                    </div>
+                    <div flag="sign" class="anal-color-keyword sign clearfix">
+                        <span class="color"></span>
+                        <span class="word">标记</span>
+                    </div>
+                    <div flag="ad-anal" class="anal-color-keyword ad-anal clearfix">
+                        <span class="color"></span>
+                        <span class="word">广告分析</span>
+                    </div>
+                </div>
+            </div>
+            <!--<div class="anal-left-figure">人物 : 天狼、日本武士若干、关东军士兵、被打小贩、环境人物</div>-->
+            <!--<div class="anal-left-totleword">字数 : <span></span>字</div>-->
+            <div class="anal-left-totleword"></div>
+            <div contenteditable="true" class="anal-left-content scrollbar">
+                <!--门开着，<span class="ad-anal">子生<span>呵呵哒</span></span>敲了敲门框。</br>-->
+                <!--老谭正低头看着报纸，听到敲门声，没抬头说进来吧。</br>-->
+                <!--子生走了进来，大衣站在边低头不说话。</br>-->
+                <!--老谭这才抬头一看是子生，似乎也不知道该说些什么。过了会儿放下报纸，站起来给子生倒水。</br>-->
+                <!--门开着，子生敲了敲门框。</br>-->
+                <!--老谭正低头看着报纸，听到敲门声，没抬头说进来吧。</br>-->
+                <!--子生走了进来，大衣站在边低头不说话。</br>-->
+                <!--老谭这才抬头一看是子生，似乎也不知道该说些什么。过了会儿放下报纸，站起来给子生倒水。</br>-->
+                <!--门开着，子生敲了敲门框。</br>-->
+                <!--老谭正低头看着报纸，听到敲门声，没抬头说进来吧。</br>-->
+                <!--子生走了进来，大衣站在边低头不说话。</br>-->
+                <!--老谭这才抬头一看是子生，似乎也不知道该说些什么。过了会儿放下报纸，站起来给子生倒水。</br>-->
+                <!--门开着，子生敲了敲门框。</br>-->
+                <!--老谭正低头看着报纸，听到敲门声，没抬头说进来吧。</br>-->
+                <!--子生走了进来，大衣站在边低头不说话。</br>-->
+                <!--老谭这才抬头一看是子生，似乎也不知道该说些什么。过了会儿放下报纸，站起来给子生倒水。</br>-->
+            </div>
+            <div class="page-turning">
+                <i class="icon iconfont top">&#xe609;</i>
+                <i class="icon iconfont down">&#xe602;</i>
+            </div>
+        </div>
+        <div class="anal-middle"></div>
+        <div class="anal-right">
+            <div class="anal-right-title">
+                <h5 reval="scene-info" class="anal-right-tl scene-info-title active">场景信息</h5>
+                <h5 reval="play-sign" class="anal-right-tl play-sign-title">剧本标记</h5>
+                <h5 reval="ad-import" class="anal-right-tl ad-import-title">广告植入</h5>
+            </div>
+            <div class="anal-right-content scene-info scrollbar">
+                <!--输入的-->
+                <div class="import scene-info-con scene-info-single-tian ji">
+                    <span>集</span>
+                    <input type="text" value="">
+                </div>
+                <div class="import scene-info-con scene-info-single-tian chang">
+                    <span>场</span>
+                    <input type="text" value="">
+                </div>
+                <!--单选-->
+                <div flag="air" type="single-raido" class="single scene-info-con scene-info-single-tian air left-right-linkage">
+                    <span>气氛</span>
+                    <div class="con-box">
+                        <div class="con-name"><input sdtype="radio" lrdropdownlist="atmosphereList" type="text" value=""></div>
+                    </div>
+                </div>
+                <div flag="in-out" type="single-raido" class="single scene-info-con scene-info-single-tian in-out left-right-linkage">
+                    <span>内外景</span>
+                    <div class="con-box">
+                        <div class="con-name"><input sdtype="radio" lrdropdownlist="siteList" type="text" value=""></div>
+                    </div>
+                </div>
+                <div flag="main-scene" type="single-raido" class="single scene-info-con scene-info-single-tian main-scene left-right-linkage">
+                    <span>主场景</span>
+                    <div class="con-box">
+                        <div class="con-name"><input sdtype="radio" lrdropdownlist="firstLocationList" type="text"></div>
+                    </div>
+                </div>
+                <!--可多选-->
+                <div flag="main-actor" type="multiple-checkbox" class="multiple scene-info-con main-actor left-right-linkage">
+                    <span>主要演员</span>
+                    <div class="con-box">
+                        <!--<div class="con-name"><span>张凯</span><i class="icon iconfont">&#xe61c;</i></div>-->
+                        <div class="con-name con-input"><input sdtype="checkbox" lrdropdownlist="majorRoleNameList" type="text"></div>
+                    </div>
+                </div>
+                <div flag="special-actor" type="multiple-checkbox" class="multiple scene-info-con special-actor left-right-linkage">
+                    <span>特约演员</span>
+                    <div class="con-box">
+                        <div class="con-name con-input"><input sdtype="checkbox" lrdropdownlist="guestRoleNameList" type="text"></div>
+                    </div>
+                </div>
+                <div flag="public-actor" type="multiple-checkbox" class="multiple scene-info-con public-actor left-right-linkage">
+                    <span>群众演员</span>
+                    <div class="con-box">
+                        <div class="con-name con-input"><input sdtype="checkbox" lrdropdownlist="massRoleNameList" type="text"></div>
+                    </div>
+                </div>
+                <div flag="stage" type="multiple-checkbox" class="multiple scene-info-con stage left-right-linkage">
+                    <span>道具</span>
+                    <div class="con-box">
+                        <div class="con-name con-input"><input sdtype="checkbox" lrdropdownlist="propNameList" type="text"></div>
+                    </div>
+                </div>
+                <div flag="dress" type="multiple-checkbox" class="multiple scene-info-con dress left-right-linkage">
+                    <span>服装</span>
+                    <div class="con-box">
+                        <div class="con-name con-input"><input sdtype="checkbox" lrdropdownlist="clothesNameList" type="text"></div>
+                    </div>
+                </div>
+                <!--输入的-->
+                <div class="import scene-info-con scene-info-single-tian remake">
+                    <span>备注</span>
+                    <input type="text" value=''>
+                </div>
+                <button class="save">保存</button>
+                <button class="remove">删除</button>
+                <button class="cancel">取消</button>
+            </div>
+            <div class="anal-right-content play-sign hide">
+                <div class="play-sign-top scrollbar">
+                    <ul class="play-sign-title">
+                        <li class="order">序号</li>
+                        <li class="keyword">关键词</li>
+                        <li class="product-name">产品名称</li>
+                        <li class="role">角色</li>
+                        <li class="describe">描述</li>
+                        <li class="operate">操作</li>
+                    </ul>
+                    <!--<ul class="play-sign-con">-->
+                        <!--<li contentEditable class="order">1</li>-->
+                        <!--<li class="keyword">日本人</li>-->
+                        <!--<li class="product-name">手机</li>-->
+                        <!--<li class="role">天狼</li>-->
+                        <!--<li class="describe">描述</li>-->
+                        <!--<li class="operate"><i class="icon iconfont pen">&#xe66d;</i><i class="icon iconfont remove">&#xe61b;</i></li>-->
+                    <!--</ul>-->
+                </div>
+                <div class="play-sign-bottom scrollbar">
+                    <!--输入的-->
+                    <div class="import play-sign-bottom-con play-sign-bottom-single-tian keyword">
+                        <span>关键词</span>
+                        <!--这个标识用来判断保存剧本标记接口要不要传id-->
+                        <!--modify为false的时候，说明是从左侧划词来的关键词或填写的关键词，不需要传id-->
+                        <!--为true的时候，说明是从上面修改来的关键词，需要传id-->
+                        <input disabled="disabled" modify='false' signid='' type="text">
+                    </div>
+                    <!--多选-->
+                    <div flag="product-name" type="multiple-checkbox" class="multiple play-sign-bottom-con product-name left-right-linkage">
+                        <span>产品名称</span>
+                        <!--<span>品类</span>-->
+                        <div class="con-box">
+                            <!--<div class="con-name"><span>张凯</span><i class="icon iconfont">&#xe61c;</i></div>-->
+                            <div class="con-name con-input"><input readonly="true" sdtype="checkbox" lrdropdownlist="goodsList" type="text"></div>
+                        </div>
+                    </div>
+                    <div flag="role" type="multiple-checkbox" class="multiple play-sign-bottom-con role left-right-linkage">
+                        <span>角色</span>
+                        <div class="con-box">
+                            <div class="con-name con-input"><input readonly="true" sdtype="checkbox" lrdropdownlist="majorRoleNameList" type="text"></div>
+                        </div>
+                    </div>
+                    <!--输入的-->
+                    <div class="import play-sign-bottom-con play-sign-bottom-single-tian describe">
+                        <span>描述</span>
+                        <input type="text" value="">
+                    </div>
+                    <button class="add">保存</button>
+                    <button class="cancel">取消</button>
+                </div>
+            </div>
+            <div class="anal-right-content ad-import hide">
+                <div class="ad-import-top scrollbar">
+                    <!--<div class="ad-import-top-con">-->
+                        <!--<div class="con-title">-->
+                            <!--<h6>ipone6</h6>-->
+                            <!--<span class="stage">道具</span>-->
+                            <!--<span class="phone">手机</span>-->
+                            <!--<i class="icon iconfont remove">&#xe61b;</i>-->
+                            <!--<i class="icon iconfont pen">&#xe66d;</i>-->
+                        <!--</div>-->
+                        <!--<div class="con-con">-->
+                            <!--<span>角色：<i>天狼</i></span>-->
+                        <!--</div>-->
+                        <!--<div class="con-describe">描述：<i>描述</i></div>-->
+                    <!--</div>-->
+                </div>
+                <div class="ad-import-bottom scrollbar">
+                    <!--输入的-->
+                    <div class="import ad-import-bottom-con ad-import-bottom-single-tian name">
+                        <span>名称</span>
+                        <input modify="false" type="text">
+                    </div>
+                    <!--多选-->
+                    <div flag="role" type="multiple-checkbox" class="multiple ad-import-bottom-con role left-right-linkage">
+                        <span>角色</span>
+                        <div class="con-box">
+                            <!--<div class="con-name"><span>张凯</span><i class="icon iconfont">&#xe61c;</i></div>-->
+                            <div class="con-name con-input"><input readonly="true" sdtype="checkbox" lrdropdownlist="majorRoleNameList" type="text"></div>
+                        </div>
+                    </div>
+                    <!--单选-->
+                    <div flag="import-ploy" type="single-raido" class="single ad-import-bottom-con ad-import-bottom-single-tian import-ploy left-right-linkage">
+                        <span>植入手法</span>
+                        <div class="con-box">
+                            <div class="con-name"><input readonly="true" sdtype="radio" lrdropdownlist="implantModeList" type="text"></div>
+                        </div>
+                    </div>
+                    <div flag="product" type="single-radio" class="single ad-import-bottom-con ad-import-bottom-single-tian product left-right-linkage">
+                        <span>产品</span>
+                        <div class="con-box">
+                            <div class="con-name"><input readonly="true" sdtype="radio" lrdropdownlist="goodsList" type="text"></div>
+                        </div>
+                    </div>
+                    <!--输入的-->
+                    <div class="import ad-import-bottom-con ad-import-bottom-single-tian describe">
+                        <span>描述</span>
+                        <input type="text">
+                    </div>
+                    <button class="save">保存</button>
+                    <button class="cancel">取消</button>
+                </div>
+            </div>
+            <div class="anal-search hide">
+                <div class="anal-search-title">
+                    <#include '../component/dobuleBias.html'/>
+                    <h5>主要演员</h5>
+                    <i class="icon iconfont">&#xe61c;</i>
+                </div>
+                <div class="anal-search-sear">
+                    <input type="text"><i class="icon iconfont">&#xe647;</i>
+                </div>
+                <div mark="single-radio-con" class="single-radio scrollbars hide">
+                    <!--<div class="single-radio-con">-->
+                        <!--<input name="single-r" type="radio">-->
+                        <!--<span>武田</span>-->
+                    <!--</div>-->
+                </div>
+                <div mark="multiple-checkbox-con" class="multiple-checkbox scrollbar hide">
+                    <!--<div check-index="0" class="multiple-checkbox-con">-->
+                        <!--<input name="multiple-c" type="checkbox">-->
+                        <!--<span>武田</span>-->
+                    <!--</div>-->
+                </div>
+            </div>
+        </div>
+        <#include '../component/showLoading.html'/>
+    </div>
+
+    <ul class="anal-menu">
+        <li><a type="single" val="main-scene" show="scene-info" href="javascript:;">主场景</a></li>
+        <li><a type="multiple" val="main-actor" show="scene-info" href="javascript:;">主要演员</a></li>
+        <li><a type="multiple" val="special-actor" show="scene-info" href="javascript:;">特约演员</a></li>
+        <li><a type="multiple" val="public-actor" show="scene-info" href="javascript:;">群众演员</a></li>
+        <li><a type="multiple" val="dress" show="scene-info" href="javascript:;">服装</a></li>
+        <li><a type="multiple" val="stage" show="scene-info" href="javascript:;">道具</a></li>
+        <li><a val="keyword" show="play-sign" href="javascript:;">剧本标记</a></li>
+        <li><a val="name" show="ad-import" href="javascript:;">广告植入</a></li>
+    </ul>
+
+    <#include '../component/footer.html'/>
+
+    <div class="shade">
+        <div class="shade-con">
+            <div class="file-box">
+                <#include '../component/uploadFile.html'/>
+            </div>
+            <div class="result-box hide">
+                <#include '../component/resultContent.html'/>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

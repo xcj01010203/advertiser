@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="UserMapper">
+	<resultMap type="UserModel" id="user">
+		<id column="id" property="id" />
+		<result column="userName" property="userName"/>
+		<result column="passWord" property="passWord"/>
+		<result column="realName" property="realName"/>
+		<result column="sex" property="sex"/>
+		<result column="company" property="company" />
+		<result column="tel" property="tel"/>
+		<result column="email" property="email"/>
+		
+	</resultMap>
+	
+	<!-- 验证权重组名称是否存在 -->
+	<select id="selectUserByName" parameterType="UserModel" resultType="UserModel">
+		select * from advertiser.tab_user where 1=1 
+		<if test="userName!=null and userName!= ''">
+			and userName = #{userName} 
+		</if>
+	</select>
+	
+	<!-- 插入用户信息 -->
+	<insert id="insertUser" parameterType="UserModel">
+		INSERT INTO advertiser.tab_user (id,username,password,realname,company,sex,tel,email,status,createtime)
+		VALUES(#{id},#{userName},#{passWord},#{realName},#{company},#{sex},#{tel},#{email},0,now())
+	</insert>
+	
+	<!-- 修改用户信息 -->
+	<update id="updateUser" parameterType="UserModel"  >
+		update advertiser.tab_user
+		<set>
+		<if test="userName != null and userName != ''">
+			userName = #{userName},
+		</if>
+		<if test="passWord != null and passWord !=''">
+			password = #{passWord},
+		</if>
+		<if test="realName != null and realName !=''">
+			realName = #{realName},
+		</if>
+		<if test="sex != null">
+			sex = #{sex},
+		</if>
+		<if test="company != null">
+			company = #{company},
+		</if>
+		<if test="tel != null and tel !=''">
+			tel = #{tel},
+		</if>
+		
+		<if test="email != null and email !=''">
+			email = #{email},
+		</if>
+		</set>
+			where id = #{id}
+	</update>
+	
+	<!-- 查询所有的用户 -->
+	<select id="selectAllUser" parameterType="UserModel" resultType="UserModel">
+		select * from advertiser.tab_user where 1=1 
+		<if test="userName!=null and userName!= ''">
+			and userName like '%${userName}%' 
+		</if>
+		   ORDER BY createtime desc
+	</select>
+	
+	<!-- 根据手机号和密码查询用户-->
+	<select id="selectUser" resultType="UserModel" parameterType="UserModel">
+		SELECT * FROM advertiser.tab_user u where 1=1
+		<if test="tel != null">  
+            and u.tel=#{tel}  
+        </if>
+        <if test="passWord != null">
+            and u.password=#{passWord}
+        </if>
+       and status=0 
+	</select>
+	
+		
+	<!-- 删除用户（假删除） 将用户的状态改为已删除    -->
+	 <update id="updateUserStatus" parameterType="java.util.Map">
+		update advertiser.tab_user set status=#{s}
+        where id in 
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</update>	
+	
+	<!-- 删除用户信息 -->
+	<delete id="deleteUserById" parameterType="java.util.Map">
+		delete from advertiser.tab_user
+        where id in 
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+	
+	<!-- 删除该用户关联消息列表 -->
+	<delete id="deleteUserMessage" parameterType="java.util.Map">
+		delete from advertiser.tab_user_message
+        where userid in 
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+	<!-- 重置密码 -->
+	<update id="updatePassword"  parameterType="UserModel">
+		UPDATE advertiser.tab_user 
+		SET password = #{passWord}
+		WHERE id = #{id}
+	</update>
+	
+	
+</mapper>

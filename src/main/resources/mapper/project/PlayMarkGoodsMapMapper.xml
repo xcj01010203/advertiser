@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 剧本标记和品类的关联关系 -->
+<mapper namespace="PlayMarkGoodsMapMapper">
+
+	<!-- 批量插入 -->
+	<insert id="insertBatch">
+		INSERT INTO tab_play_mark_goods_map(id, goods_id, play_markid)
+		VALUES 
+		<foreach collection="list" separator="," item="tpmgm">
+			(#{tpmgm.id}, #{tpmgm.goods.id}, #{tpmgm.playMark.id})
+		</foreach>
+	</insert>
+	
+	<!-- 根据标记ID删除数据 -->
+	<delete id="deleteByMarkId" parameterType="String">
+		DELETE FROM tab_play_mark_goods_map WHERE play_markid = #{id}
+	</delete>
+	
+	<!-- 根据项目ID删除数据 -->
+	<delete id="deleteByProjectId" parameterType="String">
+		DELETE FROM tab_play_mark_goods_map where play_markid IN (SELECT id FROM tab_play_mark where project_id = #{projectId})
+	</delete>
+	
+	<!-- 根据多个场次ID删除数据 -->
+	<delete id="deleteByRoundIds">
+		DELETE FROM tab_play_mark_goods_map where play_markid IN (SELECT id FROM tab_play_mark where round_id IN 
+		<foreach collection="list" open="(" close=")" separator="," item="roundId">
+			#{roundId}
+		</foreach>
+		)
+	</delete>
+</mapper>

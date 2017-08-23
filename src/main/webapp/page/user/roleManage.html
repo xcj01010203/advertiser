@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv=Content-Type content="text/html;charset=utf-8">
+    <!--指明当前的页面在IE浏览器渲染的时候使用最新的渲染引擎来渲染-->
+    <meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1">
+    <!--网站的关键字-->
+    <meta name="keywords" content="广告植入">
+    <!--网站主要内容-->
+    <meta name="description" content="小土科技">
+    <title>角色管理</title>
+    <#include "/common/context.html"/>
+    <link rel="stylesheet" href="${basePath}/static/css/user/roleManage.css">
+    <script src="${basePath}/static/js/user/roleManage.js"></script>
+    <script src="${basePath}/static/js/common/base.js"></script>
+    <script src="${basePath}/static/js/user/alertify.js"></script>
+</head>
+<body>
+<#include '/component/header.html'/>
+<div class="new-project clearfix">
+    <div class="center">
+        <div class="left">
+            <#if menuList ? exists>
+                <#list menuList as menus>
+                <#if menus.cssName ?? && menus.menuLv ??>
+                    <#if menus.cssName == "user_settings" && menus.menuLv==1>
+                        <a href="${basePath}${menus.menuURL}">
+                            <div class="leftMenu">
+                                <div class="${menus.cssName}">${menus.menuName}</div>
+                            </div>
+                        </a>
+                    </#if>
+                 </#if>
+                </#list>
+            </#if>
+        </div>
+        <div class="right clearfix">
+            <div class="project-info project-message">
+                <div class="project-info-top">
+                    <#include '/component/dobuleBias.html'/>
+                    <h4>角色管理</h4>
+                </div>
+                <div class="userManage-box">
+                    <button class="userManage-box-btn" onclick="addRoleButton('userManage-box-btn')">新增角色</button>
+                    <button class="userManage-box-btn" onclick="updateRoleButton('userManage-box-btn')">修改角色</button>
+                    <button class="userManage-box-btn" onclick="removeRoleButton('userManage-box-btn')">删除角色</button>
+                    <button type="allot-func" class="u-btn allot-func userManage-box-btn">分配菜单功能</button>
+                </div>
+                <ul class="usrManage-th">
+                    <li><input name="project-type1" id="tot" value="type1" type="checkbox" onclick="selectAll();"/></li>
+                    <li>角色名称</li>
+                    <li>角色描述</li>
+                    <li>创建人</li>
+                    <li>创建时间</li>
+                    <li>最后修改人</li>
+                    <li>最后修改时间</li>
+                </ul>
+                <ul class="usrManage-table-td"></ul>
+                <div class="userManange-table-directions">共<span>1</span>条，显示<span>1</span>条</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<#include '/component/footer.html'/>
+<!--新增角色-->
+<div id="addShade" class="shade" style="display: none">
+    <div id="addPop" class="pop" style="display: none"><!--隐藏-->
+        <div class="project-info-top">
+            <#include '/component/dobuleBias.html'/>
+            <h4>新增角色</h4>
+            <div class="close">
+                <button onclick="addRoleButton('icon iconfont')"><span aria-hidden="true">&times;</span></button>
+            </div>
+        </div>
+        <br>
+        <div class="project-content">
+            <div class="project-content-block">
+                <span>名称</span>
+                <input type="text" id="roleName" name="roleName">
+            </div>
+            <div class="project-content-block">
+                <span>描述</span>
+                <input type="text" id="roleExplain" name="roleExplain">
+            </div>
+
+            <button class="btn-ok" onclick="addRole()">确定</button>
+            <button class="btn-cancel" onclick="addRoleButton('btn-cancel')">取消</button>
+        </div>
+    </div>
+</div><!--遮罩-->
+
+<!--修改角色-->
+<div id="updateShade" class="shade" style="display: none">
+    <div id="updatePop" class="pop" style="display: none">
+        <div class="project-info-top">
+            <#include '/component/dobuleBias.html'/>
+            <h4>修改角色</h4>
+            <div class="close"><i class="icon iconfont">
+                <button onclick="updateRoleButton('icon iconfont')">X</button>
+            </i></div>
+        </div>
+        <br>
+        <div class="project-content">
+            <div class="project-content-block">
+                <span>名称</span>
+                <input type="text" id="uroleName" name="roleName">
+            </div>
+            <div class="project-content-block">
+                <span>描述</span>
+                <input type="text" id="uroleExplain" name="roleExplain">
+            </div>
+
+            <button class="btn-ok" onclick="updateRole()">确定</button>
+            <button class="btn-cancel" onclick="updateRoleButton('btn-cancel')">取消</button>
+        </div>
+    </div>
+</div>
+
+<!--分配功能 查看该角色的功能列表 分配菜单 查看该角色的菜单列表-->
+<div class="shade hide" id="shadeModel">
+    <div class="pop" id="popModel">
+        <div class="project-info-top">
+            <#include '/component/dobuleBias.html'/>
+            <h4></h4>
+            <div class="close"><i class="icon iconfont">
+                <button onclick="dtbRoleButton(this)">X</button>
+            </i></div>
+        </div>
+        <div class="userManage-box">
+<!--             <button class="userManage-box-btn" onclick="addPerm()">赋予功能</button> -->
+<!--             <button class="close-all userManage-box-btn">关闭所有</button> -->
+<!--             <button class="open-all userManage-box-btn">打开所有</button> -->
+        </div>
+        <ul class="user-table usrManage-th"></ul>
+        <div class="trend-draw">
+        </div>
+    </div>
+</div>
+<!--分配功能 查看该角色的功能列表 分配菜单 查看该角色的菜单列表-->
+
+</body>
+</html>

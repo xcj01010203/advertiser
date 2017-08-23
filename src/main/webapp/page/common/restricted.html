@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>分析系统-访问受限</title>
+    <#include "/common/context.html"/>
+    <link rel="stylesheet" href="${basePath}/static/css/common/error.css"/>
+	<script type="text/javascript" src="${basePath}/static/js/common/restricted.js"></script>
+	<script src="${basePath}/static/js/common/base.js"></script>
+</head>
+
+<body>
+<header class="error-header">
+    <img src="${basePath}/static/images/user/warning.png" alt="error"/>
+    <p><strong>抱歉！</strong>您没有权限访问该网页......</p>
+</header>
+<section class="error-body">
+    <a href="javascript:autoRedirect();">页面将在<span id="noPerm" style="font-size: 30px;color: red;"></span>秒钟之后自动返回，如果没有返回，请点击此返回</a>
+</section>
+</body>
+
+</html>

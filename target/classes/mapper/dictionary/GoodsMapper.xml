@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="GoodsMapper">
+
+	<!-- 查询品类 -->
+	<select id="selectGoods" parameterType="map" resultType="Goods">
+		SELECT tg.id,tg.goods FROM tab_goods tg
+		 <where>
+		 	<if test="list!=null">
+		 		tg.goods IN
+		 		<foreach collection="list" open=" (" close=")" separator="," item="gd">
+		 			#{gd.goods}
+		 		</foreach>
+		 	</if>
+		 	<if test="projectId != null">
+		 		EXISTS (
+					SELECT
+						1
+					FROM
+						tab_implant_analyse_result tiar
+					WHERE
+						tiar.project_id = #{projectId}
+					AND tiar.goods_id = tg.id
+				)
+		 	</if>
+		 </where>
+		 ORDER BY tg.`order`
+	</select>
+	
+	<!-- 插入品类 -->
+	<insert id="insertGoods">
+		INSERT INTO tab_goods(id,goods) VALUES
+		<foreach collection="list" separator="," item="gd">
+ 			(#{gd.id},#{gd.goods})
+ 		</foreach>
+	</insert>
+	
+	<!-- 查询场次中所有的品类列表（带有标记信息） -->
+	<select id="selectByRoundId" parameterType="String" resultType="map">
+		SELECT tg.id, tg.goods, tpm.id as playMarkId
+		FROM tab_goods tg, tab_play_mark_goods_map tpmgm, tab_play_mark tpm
+		WHERE tpmgm.goods_id = tg.id
+		  AND tpmgm.play_markid = tpm.id
+		<if test="roundId != null">
+		  AND tpm.round_id = #{roundId}
+		</if>
+		<if test="projectId != null">
+		  AND tpm.project_id = #{projectId}
+		</if>
+	</select>
+</mapper>

@@ -1,0 +1,9 @@
+.btn-ananlyse {
+	margin-bottom: 20px;
+}
+
+/*表格表头样式  */
+.panel > .table-bordered thead{
+	background-color:#e9fbf9;
+}
+/*表格表头样式--end*/

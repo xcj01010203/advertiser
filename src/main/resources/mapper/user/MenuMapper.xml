@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="MenuMapper">
+	
+	<!-- 获取最大MENUId-->
+	<select id="selectMaxMenuId" resultType="MenuModel" parameterType="MenuModel">
+		select MAX(menuId) menuId from  advertiser.tab_menu where menuLv = #{menuLv}
+	</select>
+	
+	
+	<!-- 根据id和菜单名称查询-->
+	<select id="selectMenu" resultType="MenuModel" parameterType="MenuModel">
+		SELECT * FROM advertiser.tab_menu where 1=1
+        <if test="menuName != null">
+            and menuName = #{menuName}
+        </if>
+        <if test="id != null">
+            and id = #{id}
+        </if>
+        
+        order by menuId
+	</select>
+	
+	<!-- 根据父ID查询父菜单名称或根据名称查ID-->
+	<select id="selectMenuByName" resultType="MenuModel" parameterType="MenuModel">
+		SELECT id,menuName FROM advertiser.tab_menu where 1=1
+        <if test="fid != null">
+            and fid = #{fid}
+        </if>
+        <if test="menuName != null">
+            and menuName = #{menuName}
+        </if>
+	</select>
+
+	<!-- 查询角色已有菜单 -->
+	<select id="selectHadMenu" resultType="MenuModel" parameterType="String">
+		select 
+			m.* 
+		from 
+			advertiser.tab_menu m 
+		left join 
+			advertiser.tab_role_menu_map rm 
+		on 
+			m.id=rm.menuId 
+		where 
+			rm.roleId = #{roleId}
+        order by m.menuId
+	</select>
+	
+	<!-- 查询用户已有菜单 -->
+	<select id="selectUserMenu" resultType="MenuModel" parameterType="String">
+		select 
+			DISTINCT m.menuid,m.id,m.menuName,m.menuExplain,m.menuURL,m.fid,m.cssName,m.menuLv
+		from 
+			advertiser.tab_user u,advertiser.tab_role r,advertiser.tab_user_role_map ur,advertiser.tab_menu m,advertiser.tab_role_menu_map rm 
+		where 
+			u.id = ur.userId and ur.roleId=r.id and r.id = rm.roleId and rm.menuId = m.id and u.Id = #{userId} 
+			 and m.menuLv not in (0)
+		order by m.menuId
+	</select>
+	
+	<!-- 删除角色菜单 -->
+	<delete id="deleteRoleMenu" parameterType="String">
+		delete from advertiser.tab_role_menu_map where roleId = #{roleId} 
+	</delete>
+	
+	<!-- 添加角色菜单 -->
+	<insert id="insertRoleMenu" parameterType="java.util.List">
+		insert into advertiser.tab_role_menu_map (id,roleId,menuId) values
+		<foreach collection="list" item="menuId" separator=",">
+			<trim prefix="(" suffix=")" suffixOverrides=",">
+				REPLACE(UUID(),'-',''),#{roleId},#{menuId}
+			</trim>
+		</foreach>
+	</insert>
+	
+	<select id="selectMenuForUpdate" resultType="MenuModel" parameterType="MenuModel">
+		SELECT * FROM advertiser.tab_menu where 1=1
+        <if test="menuname != null">
+            and menuname = #{menuname}
+        </if>
+       <if test="parentid != null">
+            and fid = #{parentid}
+       </if>
+       <if test="parentid == null">
+            and parentid is null
+       </if>
+       and menuid != #{menuid}
+	</select>
+	
+	<!-- 添加菜單信息 -->
+	<insert id="insertMenu" parameterType="MenuModel">
+		insert into advertiser.tab_menu (id,menuId,menuName,fid,menuLv,menuExplain,menuurl,cssName) values(#{id},#{menuId},#{menuName},#{fid},#{menuLv},#{menuExplain},#{menuURL},#{cssName})
+	</insert>
+	
+	<update id="updateMenu" parameterType="MenuModel">
+		update advertiser.tab_menu 
+		<trim prefix="SET" suffixOverrides=",">
+			
+			<if test="menuId != null">
+				menuId = #{menuId},
+			</if>
+			<if test="menuName != null">
+				menuname = #{menuName},
+			</if>
+			<if test="menuExplain != null">
+				menuExplain = #{menuExplain},
+			</if>
+			<if test="menuURL != null">
+				menuurl = #{menuURL},
+			</if>
+			<if test="menuLv != null">
+				menuLv = #{menuLv},
+			</if>
+			<if test="cssName != null">
+				cssName = #{cssName},
+			</if>
+		</trim>
+		where id = #{id}
+	</update>
+	
+	<delete id="deleteMenu" parameterType="java.util.List">
+		delete from advertiser.tab_role_menu_map where menuid in	
+		<foreach collection="list" item="id" open="(" separator="," close=")">
+			#{id}
+		</foreach> ;
+		delete from advertiser.tab_menu where  id in 
+		<foreach collection="list" item="id" open="(" separator="," close=")">
+			#{id}
+		</foreach> 
+		
+	</delete>
+	
+	<!-- 查询进行功能控制的功能 或 根据功能名称查询-->
+	<select id="selectPerm" resultType="MenuModel" parameterType="MenuModel">
+		SELECT 
+			*
+		 FROM advertiser.tab_menu where 1=1
+        <if test="menuName != null">
+            and menuName = #{menuName}
+        </if>
+        <if test="id != null">
+            and id = #{id}
+        </if>
+        order by menuId
+	</select>
+	
+	<!-- 根据菜单URL获取菜单编号-->
+	<select id="selectMenuUrlByMenuId" resultType="MenuModel" parameterType="MenuModel">
+		SELECT menuid FROM advertiser.tab_menu where 1=1
+        <if test="menuurl != null">
+            and menuurl = #{menuurl}
+        </if>
+	</select>
+	
+	<!-- 查询用户已有功能功能   只查询id -->
+	<select id="selectPermList" resultType="MenuModel" parameterType="String">
+		select 
+			DISTINCT m.id as sss,m.* 
+		from 
+			advertiser.tab_user u,advertiser.tab_role r,advertiser.tab_user_role_map ur,advertiser.tab_menu m,advertiser.tab_role_menu_map rm 
+		where 
+			u.id = ur.userId and ur.roleId=r.id and r.id = rm.roleId and rm.menuId = m.id and u.Id = #{userId}
+		order by m.menuId
+	</select>
+	
+	<!-- 查询所有需要进行权限控制的功能  只查询id-->
+	<select id="selectPermListAll" resultType="MenuModel">
+		SELECT 
+			*
+		 FROM advertiser.tab_menu where 1=1
+        order by menuId
+	</select>
+	
+</mapper>

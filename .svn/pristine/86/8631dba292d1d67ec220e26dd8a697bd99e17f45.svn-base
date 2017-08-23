@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 广告植入自动分析结果 -->
+<mapper namespace="ImplantAnalyseJobMapper">
+
+	<!-- 新增任务 -->
+	<insert id="insertJob" parameterType="AnalysisJob">
+		INSERT INTO tab_implant_analyse_job(id,user_id,project_id,start_time,end_time,status,message)
+			 VALUES (#{id},#{user.id},#{project.id},#{startTime},#{endTime},#{status},#{message})
+	</insert>
+	
+	
+	<!-- 修改任务信息（任务开始执行时） -->
+	<update id="updateJob4Start" parameterType="AnalysisJob">
+		UPDATE tab_implant_analyse_job 
+		   SET user_id=#{user.id},start_time=#{startTime},status=#{status},end_time=null,message=null
+		 WHERE project_id=#{project.id}
+	</update>
+	
+	
+	<!-- 修改任务信息（执行执行完成后） -->
+	<update id="updateJob4Done" parameterType="AnalysisJob">
+		UPDATE tab_implant_analyse_job 
+		   SET end_time=#{endTime},status=#{status},message=#{message}
+	     WHERE project_id=#{project.id}
+	</update>
+	
+	<select id="selectJob" parameterType="Project" resultType="AnalysisJob">
+		SELECT id,user_id AS 'user.id',project_id AS 'project.id',start_time AS startTime,end_time AS endTime,status,message
+		  FROM tab_implant_analyse_job
+		 WHERE project_id=#{id}
+	</select>
+	
+	
+	<!-- 根据项目ID删除数据 -->
+	<delete id="deleteByProjectId" parameterType="String">
+		DELETE FROM tab_implant_analyse_job where project_id = #{projectId}
+	</delete>
+</mapper>

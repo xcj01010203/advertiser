@@ -1,0 +1,212 @@
+/*集次列表样式*/
+
+/*表格表头样式  */
+.panel > .table-bordered thead{
+	background-color:#e9fbf9;
+}
+/*表格表头样式--end*/
+.project-list ul li .project-list-li-manage{
+    background-color: #29d9c2;
+    color: #ffffff;
+}
+
+.project-list-five {
+    width: 100%;
+    background-color: #ffffff;
+    padding: 20px 0 30px 0;
+    border-top: 1px solid #ededed;
+}
+.project-list-five .five-content .five-content-gather {
+    width: 100%;
+}
+.project-list-five .five-content .five-content-gather li {
+    position: relative;
+    display: inline-block;
+    width: 102px;
+    height: 32px;
+    line-height: 32px;
+    margin-right: 10px;
+    text-align: center;
+    margin-bottom: 10px;
+    border: 1px solid #999999;
+    font-size: 14px;
+    color: rgb(51,51,51);
+    float: left;
+    cursor: pointer;
+}
+.project-list-five .five-content .five-content-gather li i {
+    position: absolute;
+    bottom: -13px;
+    right: -4px;
+    color: #ffffff;
+    z-index: -1;
+}
+.project-list-five .five-content .five-content-gather li:hover {
+    border: 1px solid #29d9c2;
+    color: #29d9c2;
+}
+.project-list-five .five-content .five-content-gather li:hover i {
+    color: #29d9c2;
+    z-index: 0;
+}
+.project-list-five .five-content .five-content-gather li.active {
+    border: 1px solid #29d9c2;
+    color: #29d9c2;
+}
+.project-list-five .five-content .five-content-gather li.active i {
+    color: #29d9c2;
+    z-index: 0;
+}
+
+
+/*详情弹窗*/
+.modal-title .series-round {
+	-webkit-user-select:none;
+    -moz-user-select:none;
+    -ms-user-select:none;
+    user-select:none;
+}
+.modal-title .series-round i{
+    cursor: pointer;
+    font-weight: bold;
+}
+.modal-title .series-round span {
+	margin:0 20px;
+}
+
+/*剧本分析遮罩*/
+.shade {
+    position: fixed;
+    top:0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+    z-index: -111;
+}
+.shade .shade-con {
+    position: absolute;
+    width: 1100px;
+    height: 600px;
+    left: 50%;
+    margin-left: -550px;
+    top: -600px;
+    margin-top: 0;
+    background-color: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+    opacity: 0;
+    z-index: -111;
+}
+.shade .shade-con .panel-heading h4 i {
+    cursor: pointer;
+}
+.shade .shade-con .panel-body {
+
+}
+.shade .shade-con .panel-body .panel-body-lr {
+    width: 530px;
+    height: 470px;
+    overflow-y: auto;
+}
+.shade .shade-con .panel-body .panel-body-lr .scene-info-con {
+    margin-bottom: 20px;
+}
+.shade .shade-con .panel-body .panel-body-lr .scene-info-con>span {
+    display: inline-block;
+    width: 70px;
+    height: 40px;
+    line-height: 40px;
+    /*vertical-align: middle;*/
+    text-align: right;
+    margin-right: 10px;
+}
+.shade .shade-con .panel-body .panel-body-lr .ji-chang input {
+    display: inline-block;
+    width: 90px;
+    height: 40px;
+    padding-left: 10px;
+    border: 1px solid #dedede;
+    background-color: #f5f5f5;
+    font-size: 14px;
+    cursor: text;
+}
+.shade .shade-con .panel-body .panel-body-lr .xuan-tian {
+    position: relative;
+}
+.shade .shade-con .panel-body .panel-body-lr .xuan-tian span {
+    float: left;
+    margin-right: 13px;
+}
+.shade .shade-con .panel-body .panel-body-lr .xuan-tian .con-box {
+    float: left;
+    width: 410px;
+    min-height: 40px;
+    padding-left: 10px;
+    border: 1px solid #dedede;
+    background-color: #f5f5f5;
+}
+.shade .shade-con .panel-body .panel-body-lr .xuan-tian .con-ul {
+    float: left;
+    width: 410px;
+    height: 200px;
+    margin-left: 83px;
+    border: 1px solid #dedede;
+    border-top: none;
+    overflow: auto;
+}
+.shade .shade-con .panel-body .panel-body-lr .xuan-tian .con-ul li {
+    width: 100%;
+    padding-left: 2%;
+    height: 24px;
+    line-height: 24px;
+}
+.shade .shade-con .panel-body .panel-body-lr .xuan-tian .con-ul li:hover {
+    background-color: #29d9c2;
+}
+.shade .shade-con .panel-body .panel-body-lr .xuan-tian .con-box .con-ni {
+    float: left;
+    height: 40px;
+    font-size: 14px;
+    margin-right: 15px;
+}
+.shade .shade-con .panel-body .panel-body-lr .xuan-tian .con-box .con-ni {
+    display: inline-block;
+}
+.shade .shade-con .panel-body .panel-body-lr .xuan-tian .con-box .con-ni span {
+    display: inline-block;
+    line-height: 40px;
+}
+.shade .shade-con .panel-body .panel-body-lr .xuan-tian .con-box .con-ni i {
+    line-height: 45px;
+    cursor: pointer;
+}
+.shade .shade-con .panel-body .panel-body-lr .xuan-tian .con-box .con-ni input {
+    display: inline-block;
+    width: 80px;
+    height: 38px;
+    padding-left: 10px;
+    background-color: #f5f5f5;
+    font-size: 14px;
+    cursor: text;
+}
+.shade .shade-con .panel-body .panel-body-right {
+    padding-top: 62px;
+}
+.shade .shade-con .panel-foot {
+
+}
+.shade .shade-con .panel-foot .shade-btn {
+    width: 100px;
+    height: 30px;
+    line-height: 30px;
+    background-color: #D9D9D9;
+    color: #ffffff;
+    margin-right: 8px;
+}
+.shade .shade-con .panel-foot .search-btn {
+    margin-left: 440px;
+    background-color: #29D9C2;
+}

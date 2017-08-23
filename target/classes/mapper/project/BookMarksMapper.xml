@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 书签信息 -->
+<mapper namespace="BookMarksMapper">
+	<select id="selectBookMark" parameterType="map" resultType="String">
+		SELECT value 
+		FROM tab_bookmarks
+		WHERE 1 = 1
+		  AND project_id = #{projectId}
+		  AND user_id = #{userId}
+		  AND type = #{type}
+	</select>
+	
+	<!-- 根据项目ID删除数据 -->
+	<delete id="deleteByProjectId" parameterType="String">
+		DELETE FROM tab_bookmarks where project_id = #{projectId}
+	</delete>
+	
+	<!-- 删除书签 -->
+	<delete id="deleteBookMark" parameterType="map">
+		DELETE FROM tab_bookmarks where project_id = #{projectId} AND type = #{type} AND user_id = #{userId}
+	</delete>
+	
+	<!-- 新增一条记录 -->
+	<insert id="insertOne" parameterType="BookMarks">
+		INSERT INTO tab_bookmarks(
+			id, project_id, 
+			user_id, type, value)
+		VALUES
+			(#{id}, #{project.id}, #{user.id}, #{type}, #{value})
+	</insert>
+</mapper>

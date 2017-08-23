@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv=Content-Type content="text/html;charset=utf-8">
+    <!--指明当前的页面在IE浏览器渲染的时候使用最新的渲染引擎来渲染-->
+    <meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1">
+    <!--网站的关键字-->
+    <meta name="keywords" content="广告植入">
+    <!--网站主要内容-->
+    <meta name="description" content="小土科技">
+    <title>头</title>
+    <style>
+        .header {
+            width: 100%; height: 100px; border-bottom: 1px solid #ededed; position: relative; background-color: #ffffff;
+        }
+        .header .center-margin{
+            width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 100px;
+        }
+        .header .center-margin img {
+            width: 212px;
+            height: 38px;
+            display: inline-block;
+            margin-bottom: 3px;
+        }
+        .header .center-margin .header-content {
+            width: 778px;
+            line-height: 100px; text-align: center;
+            display: inline-block;
+        }
+        .header .center-margin .header-content h2 {
+              display: inline-block;
+              font-size: 18px;
+          }
+        .header .center-margin .header-content .header-name {
+            margin-left: 56px;
+        }
+        .header .center-margin .header-content .header-name a {
+            color: #29d9c2;
+        }
+        .header .center-margin .header-content h2 a:hover {
+            color: #29d9c2;
+        }
+        .header .center-margin .header-icon {
+            display: inline-block;
+            width: 200px;
+            height: 55px;
+            line-height: 55px;
+            font-size: 20px;
+            padding-top: 21px;
+        }
+        .header .center-margin .header-icon .seter-info {
+            margin-left: 70px;
+        }
+        .header .center-margin .header-icon .seter-info li:hover{
+            background-color: #29d9c2;
+        }
+        .header .center-margin .header-icon .seter-info .seter-con{
+            display: none;
+        }
+        .header .center-margin .header-icon .seter-info:hover .seter-con{
+            display: block;
+        }
+        .header .center-margin .header-icon .user-info {
+            margin-left: 70px;
+        }
+        .header .center-margin .header-icon .user-info .user-con {
+            display: none;
+            /*border-bottom-left-radius: 5px;*/
+        }
+        .header .center-margin .header-icon .user-info:hover .user-con {
+            display: block;
+        }
+        .header .center-margin .header-icon .user-info .user-con li {
+            transition: background-color .2s ease;
+        }
+        .header .center-margin .header-icon .user-info .user-con li:hover {
+            background-color: #29d9c2;
+        }
+        .header .center-margin .header-icon .user-info .user-con li:hover a {
+            color: #ffffff;
+        }
+        .header .center-margin .header-icon i {
+            font-size: 20px;
+            color: #333;
+            line-height: 22px;
+            margin-top: 6px;
+        }
+        .header .center-margin .header-icon i:hover {
+            cursor: pointer;
+            opacity: 0.8;
+        }
+        .header .center-margin .header-icon .search {
+            font-size: 18px;
+        }
+
+        .header .center-margin .header-icon .info {
+            display: block;
+            position: relative;
+            float: right;
+        }
+        .header .center-margin .header-icon .info .con {
+            position: absolute;
+            width: 150px;
+            left: -120px;
+            top: 50px;
+            background-color: #ffffff;
+            z-index: 11;
+            box-shadow: 2px 2px 4px #dedede,-2px -2px 4px #dedede;
+        }
+        .header .center-margin .header-icon .info .con li {
+            width: 150px;
+            height: 50px;
+            line-height: 50px;
+        }
+        .header .center-margin .header-icon .info .con li a {
+            display: block;
+            width: 150px;
+            height: 50px;
+            line-height: 50px;
+            padding-left: 30px;
+            font-size: 14px;
+            color: rgb(41,41,41);
+        }
+        .header .center-margin .header-icon .user-info .con li:nth-child(1) a{
+            font-weight: bold;
+        }
+        .header .center-margin .header-icon .info .con li:nth-child(1) {
+            border-bottom: 1px solid #ededed;
+        }
+        .header .center-margin .header-icon .info .con li:nth-child(3) {
+            border-bottom: 1px solid #ededed;
+        }
+        .header .center-margin .header-icon .info .con li:nth-child(4) {
+            border-bottom: 1px solid #ededed;
+        }
+        .header .center-margin .header-icon .info .con li:nth-child(6) {
+            border-bottom: 1px solid #ededed;
+        }
+        .header .center-margin .header-icon .info .seter-con li {
+            transition: background-color .2s ease;
+        }
+        .header .center-margin .header-icon .info .seter-con li:hover {
+            background-color: #29d9c2;
+        }
+        .header .center-margin .header-icon .info .seter-con li:hover a {
+            color: #ffffff;
+        }
+        .header .center-margin .header-icon .info .seter-con li a {
+            font-size: 14px;
+            color: rgb(41,41,41);
+        }
+        .header .center-margin .header-icon .info .seter-con li:nth-child(1) {
+            border-bottom:none;
+        }
+        .header .center-margin .header-icon .info .seter-con li:nth-child(3) {
+            border-bottom: none;
+        }
+        .header .center-margin .header-icon .info .user-con .topTriangle {
+            position: absolute;
+            top: -8px;
+            right: 11px;
+            width: 15px;
+            height: 15px;
+            border-top: 1px solid #ededed;
+            border-left: 1px solid #ededed;
+            border-bottom: none;
+            border-right: none;
+            background-color: #ffffff;
+            transform: rotate(45deg);
+            z-index: 10;
+        }
+        .header .center-margin .header-icon .info .user-con li {
+            z-index: 11;
+        }
+
+        .header-search {
+            position: relative;
+            display: none;
+        }
+        .header-search input {
+            position: absolute;
+            top: -75px;
+            left: 340px;
+            width: 590px;
+            height: 50px;
+            border-radius: 50px;
+            border: 1px solid #ededed;
+            padding-left: 50px;
+        }
+        .header-search i {
+            cursor: pointer;
+        }
+        .header-search .search {
+            position: absolute;
+            top: -60px;
+            left: 355px;
+            font-size: 20px;
+        }
+        .header-search .cha {
+            position: absolute;
+            top: -61px;
+            left: 898px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+<div class="header">
+    <div class="center-margin">
+        <a href="/base/forward/project/projectList">
+        	<img src="${basePath}/static/images/logo/header_logo.png" alt="logo">
+        </a>
+        <div class="header-content">
+            <h2 class="header-play"><a href="/base/forward/project/projectList">我的项目</a></h2>
+            <!--<h2 class="header-name"><a href="${basePath}/base/forward/playManage/basicInfo"></a></h2>-->
+            <h2 class="header-name">
+	            <a href="/base/forward/playManage/basicInfo">
+	                <#if PROJECT ??>
+	                    ${PROJECT.name}
+	                </#if>
+	            </a>
+            </h2>
+        </div>
+        
+        <div class="header-icon">
+            <div class="info seter-info">
+                <i class="icon iconfont user"><a href="/base/forward/user/userManage">&#xe612;</a></i>
+                <ul class="con seter-con">
+                	<#if menuList ? exists>
+                        <#list menuList as menus>
+                        	<#if menus.cssName ?? && menus.menuLv ??>
+	                                <#if menus.cssName == "user_settings" && menus.menuLv==1>
+	                                    <li><a href="${basePath}${menus.menuURL}">${menus.menuName}</a></li>
+	                                </#if>
+                                </#if>
+                        </#list>
+	    			</#if>
+                </ul>
+            </div>
+            <div class="info user-info">
+                <i class="icon iconfont user"><a href="/base/forward/user/myMessage">&#xe631;</a></i>
+                <ul class="con user-con">
+                    <#if menuList ? exists>
+                        <#list menuList as menus>
+                        <#if menus.cssName ?? && menus.menuLv ??>
+                            <#if menus.cssName == "user_center" && menus.menuLv==1>
+                                <li><a href="${basePath}${menus.menuURL}">${menus.menuName}</a></li>
+                            </#if>
+                        </#if>
+                        </#list>
+                    </#if>
+                </ul>
+            </div>
+            <div class="info search-info">
+                <i class="icon iconfont search">&#xe647;</i>
+            </div>
+        </div>
+        <div class="header-search">
+            <input type="text">
+            <i class="icon iconfont search">&#xe647;</i>
+            <i class="icon iconfont cha">&#xe617;</i>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+
+        //获取URL地址  删除个人中心与设置项目名称
+        var xturl=document.location.href;
+        var xtsubstr = "/user";
+        if(xturl.indexOf(xtsubstr) >= 0){
+            $(".header .center-margin .header-content .header-name a").html("");
+        }
+
+//        搜索
+        $(".header .header-icon>.search-info>.search").click(function () {
+            $(this).hide(200)
+            $(".header .header-search").show(100)
+        })
+        $(".header .header-search>.cha").click(function () {
+            $(".header .header-search").hide(100)
+            $(".header .header-icon>.search-info>.search").show(200)
+        })
+//        键盘搜索
+        $(".header .center-margin .header-search input").keydown(function (event) {
+            if (event.keyCode && event.keyCode == 13) {
+                var inputVal = $(this).val().trim();
+                if (!inputVal) {
+                    return;
+                }
+                window.location.href = basePath + '/base/forward/project/projectList?name=' + inputVal;
+            };
+        })
+//        点击搜索
+        $(".header .center-margin .header-search .search").click(function() {
+            var inputVal = $(this).siblings("input").val().trim();
+            if (!inputVal) {
+                return;
+            }
+            window.location.href = basePath + '/base/forward/project/projectList?name=' + inputVal;
+        })
+
+        if (!$(".header .center-margin .header-icon .seter-info .seter-con li")[0]) {
+            $(".header .center-margin .header-icon .seter-info").hide()
+        }
+    })
+</script>
+</body>
+</html>

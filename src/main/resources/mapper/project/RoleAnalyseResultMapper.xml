@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 角色分析结果 -->
+<mapper namespace="RoleAnalyseResultMapper">
+	<!-- 批量新增 -->
+	<insert id="insertBatch">
+		INSERT INTO tab_role_analyse_result(id, project_id, round_id, rolename)
+		VALUES 
+		<foreach collection="list" separator="," item="r">
+			(#{r.id}, #{r.project.id}, #{r.round.id}, #{r.roleName})
+		</foreach>
+	</insert>
+	
+	<!-- 根据项目ID删除数据 -->
+	<delete id="deleteByProjectId" parameterType="String">
+		DELETE FROM tab_role_analyse_result where project_id = #{projectId}
+	</delete>
+	
+	<!-- 根据角色名称列表查询分析结果数据 -->
+	<select id="selectByNames" parameterType="map" resultType="RoleAnalyseResult">
+		SELECT round_id as 'round.id', rolename
+		FROM tab_role_analyse_result
+		WHERE project_id = #{projectId}
+		<if test="roleNameList != null">
+		AND rolename IN
+			<foreach collection="roleNameList" item="name" open="(" close=")" separator=",">
+				#{name}
+			</foreach>
+		</if>
+	</select>
+</mapper>

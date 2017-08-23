@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 维护项目基本信息 -->
+<mapper namespace="ProjectMapper">
+
+	<!-- 新建一个项目 -->
+	<insert id="insertProject" parameterType="Project">
+		INSERT INTO tab_project (
+			id,
+			name,
+			type,
+			subject_id,
+			company,
+			majoractors,
+			director,
+			playwriter,
+			producer,
+			introduction,
+			create_userid,
+			createtime
+		)
+		VALUES
+			(#{id}, 
+			#{name}, 
+			#{type}, 
+			#{subject.id}, 
+			#{company}, 
+			#{majorActors}, 
+			#{director}, 
+			#{playWriter}, 
+			#{producer}, 
+			#{introduction}, 
+			#{user.id}, 
+			#{createTime})
+	</insert>
+	
+	<!-- 更新项目信息 -->
+	<update id="updateProject" parameterType="Project">
+		UPDATE tab_project SET 
+			name = #{name}, 
+			type = #{type}, 
+			subject_id = #{subject.id}, 
+			company = #{company}, 
+			majoractors = #{majorActors}, 
+			director = #{director}, 
+			playwriter = #{playWriter},
+			producer = #{producer},
+			introduction = #{introduction}
+		WHERE 
+			id = #{id}
+	</update>
+	
+	<!-- 根据创建人查询项目列表 -->
+	<select id="selectProject" parameterType="map" resultType="map">
+		SELECT
+			tp.id,
+			tp.name,
+			tp.type,
+			tp.subject_id AS 'subject.id',
+			ts.name AS 'subject.name',
+			tp.company,
+			tp.createtime,
+			tiaj.status analyseStatus
+		FROM
+			tab_project tp
+		LEFT JOIN tab_subject ts ON tp.subject_id = ts.id
+		LEFT JOIN tab_implant_analyse_job tiaj ON tiaj.project_id = tp.id
+		WHERE
+			tp.create_userid = #{createUserId}
+		  <if test="type != null">
+		  AND tp.type = #{type}
+		  </if>
+		  <if test="name != null">
+		  AND tp.name = #{name}
+		  </if>
+		  <if test="likeName != null">
+		  AND tp.name like CONCAT('%', #{likeName}, '%')
+		  </if>
+		ORDER BY createtime desc
+	</select>
+	
+	<!-- 获取项目详细信息 -->
+	<select id="selectProjectDetail" parameterType="String" resultType="Project">
+		SELECT 
+			tp.id,
+			tp.name, 
+			tp.type, 
+			tp.subject_id as 'subject.id',
+			ts.name as 'subject.name',
+			tp.company,
+			tp.majoractors,
+			tp.director,
+			tp.playwriter,
+			tp.producer,
+			tp.introduction,
+			tp.createtime
+		  FROM 
+		  	tab_project tp
+		LEFT JOIN tab_subject ts ON tp.subject_id = ts.id
+		WHERE
+			tp.id = #{id}
+	</select>
+	
+	<!-- 根据ID删除项目信息 -->
+	<delete id="deleteById" parameterType="String">
+		DELETE FROM tab_project where id = #{id}
+	</delete>
+	
+	<!-- 根据创建人查询项目总数 -->
+	<select id="selectProjectCount" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+		SELECT
+			COUNT(*)
+		FROM
+			tab_project tp
+		LEFT JOIN tab_subject ts ON tp.subject_id = ts.id
+		LEFT JOIN tab_implant_analyse_job tiaj ON tiaj.project_id = tp.id
+		WHERE
+			tp.create_userid = #{createUserId}
+	</select>
+	
+	<!-- 根据创建人查询分析成功项目总数 -->
+	<select id="selectProjectSucessCount" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+		SELECT
+			count(*)
+		FROM
+			tab_project tp
+		LEFT JOIN tab_subject ts ON tp.subject_id = ts.id
+		LEFT JOIN tab_implant_analyse_job tiaj ON tiaj.project_id = tp.id
+		WHERE
+			tiaj.status='0' AND tp.create_userid = #{createUserId}
+	</select>
+</mapper>

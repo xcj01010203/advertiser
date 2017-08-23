@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 广告植入自动分析结果 -->
+<mapper namespace="ImplantAnalyseResultMapper">
+
+	<!-- 分析结果按项目删除 -->
+	<delete id="deleteResultByProject" parameterType="String">
+		DELETE FROM tab_implant_analyse_result WHERE project_id=#{id}
+	</delete>
+	
+	<!-- 分析结果-关联词 按项目删除 -->
+	<delete id="deleteWordByProject" parameterType="String">
+		DELETE FROM tab_implant_analyse_word
+		 WHERE result_id IN (SELECT id FROM tab_implant_analyse_result rt WHERE rt.project_id=#{id})
+	</delete>
+	
+	<!-- 分析结果-关联词对应角色 按项目删除 -->
+	<delete id="deleteMapByProject" parameterType="String">
+		DELETE FROM tab_implant_analyse_word_role_map
+		 WHERE word_id IN
+		 (
+		 	SELECT wd.id
+		 	  FROM tab_implant_analyse_word wd 
+		INNER JOIN tab_implant_analyse_result rt ON wd.result_id=rt.id
+		     WHERE rt.project_id=#{id}
+		 )
+	</delete>
+	
+	<!-- 根据场次ID列表删除分析结果 -->
+	<delete id="deleteBatchResultByRoundIds">
+		DELETE FROM tab_implant_analyse_result WHERE round_id IN 
+		<foreach collection="list" open="(" close=")" separator="," item="roundId">
+			#{roundId}
+		</foreach>
+	</delete>
+	<!-- 根据场次ID列表删除分析结果-关联词 -->
+	<delete id="deleteBatchWordByRoundIds">
+		DELETE FROM tab_implant_analyse_word
+		 WHERE result_id IN (SELECT id FROM tab_implant_analyse_result rt WHERE rt.round_id IN 
+		<foreach collection="list" open="(" close=")" separator="," item="roundId">
+			#{roundId}
+		</foreach>)
+	</delete>
+	<!-- 根据场次ID列表删除分析结果-关联词 -->
+	<delete id="deleteBatchMapByRoundIds">
+		DELETE FROM tab_implant_analyse_word_role_map
+		 WHERE word_id IN
+		 (
+		 	SELECT wd.id
+		 	  FROM tab_implant_analyse_word wd 
+		INNER JOIN tab_implant_analyse_result rt ON wd.result_id=rt.id
+		     WHERE round_id IN 
+			<foreach collection="list" open="(" close=")" separator="," item="roundId">
+				#{roundId}
+			</foreach>
+		 )
+	</delete>
+	
+	
+	<!-- 分析结果批量插入 -->
+	<insert id="insertResult" parameterType="list">
+		INSERT INTO tab_implant_analyse_result(id,project_id,round_id,goods_id,position,weight)
+		<foreach collection="list" open="VALUES " separator="," item="result">
+			(#{result.id},#{result.project.id},#{result.round.id},#{result.goods.id},#{result.position},#{result.weight})
+		</foreach>
+	</insert>
+	
+	<!-- 分析结果-关联词 批量插入 -->
+	<insert id="insertWord" parameterType="list">
+		INSERT INTO tab_implant_analyse_word(id,result_id,play_word,position,weight)
+		<foreach collection="list" open="VALUES " separator="," item="word">
+			(#{word.id},#{word.result.id},#{word.word},#{word.position},#{word.weight})
+		</foreach>
+	</insert>
+	
+	<!-- 分析结果-关联词对应角色 批量插入 -->
+	<insert id="insertWordRoleMap" parameterType="list">
+		INSERT INTO tab_implant_analyse_word_role_map(id,role_id,word_id)
+		<foreach collection="list" open="VALUES " separator="," item="wr">
+			(#{wr.id},#{wr.role.id},#{wr.word.id})
+		</foreach>
+	</insert>
+	
+	
+	
+
+	<!-- 获取按角色分类的广告统计信息 -->
+	<select id="selectRoleImplant" parameterType="map" resultType="map">
+		SELECT
+			tpr.id roleId,
+			tpr.`name` roleName,
+			tg.id goodsId,
+			tg.goods goods,
+			count(DISTINCT tiar.round_id) roundCount
+		FROM
+			tab_implant_analyse_result tiar,
+			tab_implant_analyse_word tiaw,
+			tab_implant_analyse_word_role_map tiawrm,
+			tab_play_role tpr,
+			tab_goods tg
+		WHERE tiar.id = tiaw.result_id
+		AND tiawrm.word_id = tiaw.id
+		AND tiawrm.role_id = tpr.id
+		AND tiar.goods_id = tg.id
+		AND tiar.project_id = #{projectId}
+		<if test="goodsIdList != null">
+			AND tg.id IN
+			<foreach collection="goodsIdList" item="goodsId" open="(" separator="," close=")">
+				#{goodsId}
+			</foreach>
+		</if>
+		GROUP BY
+			tpr.id,
+			tpr.`name`,
+			tg.id,
+			tg.goods
+		ORDER BY tpr.type, tpr.order
+	</select>
+	
+	<!-- 获取按产品分类的广告统计信息 -->
+	<select id="selectGoodsImplant" parameterType="map" resultType="map">
+		SELECT
+			tg.id,
+			tg.goods goods,
+			count(DISTINCT tiar.round_id) roundCount
+		FROM
+			tab_implant_analyse_result tiar,
+			tab_goods tg
+		WHERE tiar.goods_id = tg.id
+		AND tiar.project_id = #{projectId}
+		<if test="goodsIdList != null">
+			AND tg.id IN
+			<foreach collection="goodsIdList" item="goodsId" open="(" separator="," close=")">
+				#{goodsId}
+			</foreach>
+		</if>
+		GROUP BY
+			tg.id,
+			tg.goods
+	</select>
+	
+	<!-- 查询广告植入分析结果列表 -->
+	<select id="selectImplant" parameterType="map" resultType="map">
+		SELECT tiar.id, 
+			tpr.id as 'roundId', 
+			tpr.seriesNo,
+			tpr.roundNo,
+			tpr.atmosphere,
+			tpr.site,
+			tpr.firstLocation,
+			tg.goods,
+			tiar.position,
+			tiar.weight,
+			tmp.roleIds
+		FROM tab_implant_analyse_result tiar, 
+			tab_play_round tpr
+		
+			-- 角色信息
+			LEFT JOIN (
+				SELECT
+					tiar.round_id,
+					GROUP_CONCAT(DISTINCT tiawrm.role_id) roleIds
+				FROM
+					tab_implant_analyse_word_role_map tiawrm,
+					tab_implant_analyse_word tiaw,
+					tab_implant_analyse_result tiar
+				WHERE
+					tiar.id = tiaw.result_id
+				AND tiaw.id = tiawrm.word_id
+				AND tiar.project_id = #{projectId}
+				<if test="goodsIdList != null">
+					AND tiar.goods_id IN
+					<foreach collection="goodsIdList" item="goodsId" open="(" separator="," close=")">
+						#{goodsId}
+					</foreach>
+				</if>
+				GROUP BY
+					tiar.round_id
+			) tmp ON tmp.round_id = tpr.id, 
+			tab_goods tg
+		
+		WHERE tiar.round_id = tpr.id
+		AND tiar.goods_id = tg.id
+		AND tiar.project_id = #{projectId}
+		<if test="roleId != null">
+			AND tmp.roleIds like '%${roleId}%'
+		</if>
+		<if test="seriesNoList != null">
+			AND tpr.seriesno IN
+			<foreach collection="seriesNoList" item="seriesNo" open="(" separator="," close=")">
+				#{seriesNo}
+			</foreach>
+		</if>
+		<if test="goodsIdList != null">
+			AND tg.id IN
+			<foreach collection="goodsIdList" item="goodsId" open="(" separator="," close=")">
+				#{goodsId}
+			</foreach>
+		</if>
+		ORDER BY tpr.seriesNo, ABS(tpr.roundNo), tpr.roundNo
+	</select>
+	
+	<!-- 查询场次对应的分析结果 -->
+	<select id="selectRoundResult" parameterType="map" resultType="map">
+		SELECT
+			tiaw.play_word word,
+			GROUP_CONCAT(tg.goods, '(', tiaw.weight * 100, '%)' SEPARATOR ' | ') tag
+		FROM
+			tab_implant_analyse_result tiar,
+			tab_implant_analyse_word tiaw,
+			tab_goods tg
+		WHERE
+			tiar.round_id = #{roundId}
+		AND tiar.ID = tiaw.result_id
+		AND tiar.goods_id = tg.ID
+		AND tiar.weight >= #{minWeight}
+		GROUP BY
+			play_word
+	</select>
+</mapper>

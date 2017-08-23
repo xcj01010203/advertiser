@@ -1,0 +1,9 @@
+mysql.jdbc.driver=com.mysql.jdbc.Driver
+mysql.jdbc.url=jdbc\:mysql\://192.168.10.250\:3306/advertiser?useUnicode\=true&characterEncoding\=UTF-8&allowMultiQueries\=true
+mysql.jdbc.username=root
+mysql.jdbc.password=xiaotu1208cbaNBA
+
+pg.jdbc.driver=org.postgresql.Driver
+pg.jdbc.url=jdbc:postgresql://192.168.10.150:5432/taxi?characterEncoding=UTF-8&characterSetResults=UTF-8
+pg.jdbc.username=writer
+pg.jdbc.password=qq573719929

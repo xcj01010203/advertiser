@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="RoleMapper">
+	
+	<!-- 插入角色信息 -->
+	<insert id="insertRole" parameterType="RoleModel">
+		INSERT INTO advertiser.tab_role (id,roleName,roleExplain,creator,createTime,lastEditor,lastEditTime)
+		VALUES(#{id},#{roleName},#{roleExplain},#{creator},#{createTime},#{creator},#{createTime})
+	</insert>
+	<!-- 修改角色信息 -->
+	<update id="updateRole" parameterType="RoleModel"  >
+		update advertiser.tab_role
+		<set>
+			<if test="roleName != null and roleName !=''">
+				roleName = #{roleName},
+			</if>
+			<if test="roleExplain != null and roleExplain !=''">
+				roleExplain = #{roleExplain},
+			</if>
+			<if test="lastEditor != null and lastEditor !=''">
+				lastEditor = #{lastEditor},
+			</if>
+			<if test="lastEditTime != null and lastEditTime !=''">
+				lastEditTime = #{lastEditTime},
+			</if>
+			
+		</set>
+			where id = #{id}
+	</update>
+	
+	<!-- 根据 id 和名称查询角色-->
+	<select id="selectRole" resultType="RoleModel" parameterType="RoleModel">
+		SELECT * FROM advertiser.tab_role where 1=1
+        <if test="roleName != null and roleName !=''">
+            and roleName = #{roleName}
+        </if>
+	</select>
+	
+	<select id="selectRoleForUpdate" resultType="RoleModel" parameterType="RoleModel">
+		SELECT * FROM advertiser.tab_role where 1=1
+        <if test="rolename != null">
+            and rolename = #{rolename}
+        </if>
+        and roleid !=#{roleid}
+	</select>
+	
+	<!-- 删除角色信息 -->	
+	<delete id="deleteRole"  parameterType="java.util.List">
+		delete from advertiser.tab_role where id in
+		<foreach collection="list" item="id" open="(" separator="," close=")">
+			#{id}
+		</foreach> 
+	</delete>
+	
+	<!-- 删除角色的时候删除与之关联的   菜单和功能信息-->
+	<delete id="deleteUserRole2"  parameterType="java.util.List">
+		DELETE FROM advertiser.tab_role_menu_map 
+		WHERE  roleid in
+		<foreach collection="list" item="id" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+	
+	
+	<!-- 查询用户未选角色-->
+	<select id="selectUserDoRole" resultType="RoleModel" parameterType="String">
+		SELECT * from advertiser.tab_role tr where tr.id not in (select roleId from tab_user_role_map where userId= #{userId})
+	</select>
+	
+	<!-- 查询用户已选角色-->
+	<select id="selectUserRole" resultType="RoleModel" parameterType="String">
+		select r.* from advertiser.tab_role r LEFT join tab_user_role_map ur on r.id = ur.roleid where ur.userId=#{userId}
+	</select>
+	
+	<!-- 删除用户关联的角色-->
+	<delete id="deleteUserRole"  parameterType="java.util.Map">
+		delete from advertiser.tab_user_role_map where 1=1
+		
+		<if test="userId !=null and userId !=''">
+			and userId = #{userId}
+		</if>
+		<if test="roleIdList !=null and roleIdList.size>0">
+			and roleId in 
+			<foreach collection="roleIdList" item="roleId" open="(" separator="," close=")">
+				#{roleId}
+			</foreach>
+		</if>
+	</delete>
+	
+	
+	<!-- 赋予用户角色 -->
+	<insert id="insertUserRole" parameterType="java.util.Map">
+		insert into advertiser.tab_user_role_map values
+		<foreach collection="list" item="roleId" separator=",">
+			<trim prefix="(" suffix=")" suffixOverrides=",">
+				#{userId},#{roleId}
+			</trim>
+		</foreach>
+	</insert>
+	
+	<!-- 通过角色id查询用户 -->
+	<select id="selectUserByRoleId" parameterType="Map"  resultType="String">
+		SELECT u.userName 
+		FROM advertiser.tab_user  u 
+		LEFT JOIN advertiser.tab_user_role_map u1
+		ON u1.userId = u.id 
+		WHERE u1.roleId=#{roleId} 
+	</select>
+</mapper>

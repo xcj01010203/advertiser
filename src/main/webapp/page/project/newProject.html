@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv=Content-Type content="text/html;charset=utf-8">
+    <!--指明当前的页面在IE浏览器渲染的时候使用最新的渲染引擎来渲染-->
+    <meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1">
+    <!--网站的关键字-->
+    <meta name="keywords" content="广告植入">
+    <!--网站主要内容-->
+    <meta name="description" content="小土科技">
+    <title>新建项目</title>
+    <#include "../common/context.html"/>
+    <link rel="stylesheet" href="${basePath}/static/css/project/newProject.css">
+    <script src="${basePath}/static/js/project/newProject.js"></script>
+</head>
+<body>
+<#include '../component/header.html'/>
+	<div class="center content new-project clearfix">
+        <div class="left clearfix">
+            <div class="left_content">新建项目</div>
+        </div>
+        <div class="right clearfix">
+        	<form id="projectForm">
+	            <div class="panel panel-default">
+	                <div class="panel-heading">
+	                    <h4><#include '../component/dobuleBias.html'/>项目信息</h4>
+	                </div>
+	                <div class="panel-body project-content">
+	                    <div class="project-content-block">
+	                        <span>项目名称</span>
+	                        <input name="name" type="text">
+	                    </div>
+	                    <div class="project-content-block clearfix">
+	                        <span>项目类型</span>
+	                        <div class="single">
+	                            <label><input name="type" value="1" type="radio" checked/><span>电视剧</span></label>
+	                            <label><input name="type" value="2" type="radio"/><span>电影</span></label>
+	                            <label><input name="type" value="3" type="radio"/><span>网剧</span></label>
+	                            <label><input name="type" value="6" type="radio"/><span>网大</span></label>
+	                        </div>
+	                    </div>
+	                    <div class="project-content-block clearfix">
+	                        <span>题材</span>
+	                        <div id="subjectDiv" class="single">
+	                            
+	                        </div>
+	                    </div>
+	                    <div class="project-content-block">
+	                        <span>制片公司</span>
+	                        <input name="company" type="text">
+	                    </div>
+	                </div>
+	            </div>
+	            <div class="panel panel-default">
+	                <div class="panel-heading">
+	                    <h4><#include '../component/dobuleBias.html'/>主创人员</h4>
+	                </div>
+	                <div class="panel-body project-content">
+	                    <div class="project-content-block">
+	                        <span>主演</span>
+	                        <input name="majorActors" type="text">
+	                    </div>
+	                    <div class="project-content-block">
+	                        <span>导演</span>
+	                        <input name="director" type="text">
+	                    </div>
+	                    <div class="project-content-block">
+	                        <span>编剧</span>
+	                        <input name="playWriter" type="text">
+	                    </div>
+	                    <div class="project-content-block">
+	                        <span>制片人</span>
+	                        <input name="producer" type="text">
+	                    </div>
+	                </div>
+	            </div>
+	            <div class="panel panel-default">
+	                <div class="panel-heading">
+	                    <h4><#include '../component/dobuleBias.html'/>项目简介</h4>
+	                </div>
+	                <div class="panel-body project-content">
+	                    <textarea name="introduction"></textarea>
+	                </div>
+	            </div>
+            </form>
+            <button class="btn btn-primary" onclick="saveProject()">保存</button>
+        </div>
+	</div>
+<#include '../component/footer.html'/>
+</body>
+</html>

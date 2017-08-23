@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv=Content-Type content="text/html;charset=utf-8">
+    <!--指明当前的页面在IE浏览器渲染的时候使用最新的渲染引擎来渲染-->
+    <meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1">
+    <!--网站的关键字-->
+    <meta name="keywords" content="广告植入">
+    <!--网站主要内容-->
+    <meta name="description" content="小土科技">
+    <title>数据分析组件</title>
+    <link rel="stylesheet" href="${basePath}/static/css/datePicker/font-awesome.css">
+    <link rel="stylesheet" href="${basePath}/static/component/bootstrap-datepicker/css/bootstrap-datepicker3.css">
+    <link rel="stylesheet" href="${basePath}/static/css/common/reset.css">
+    <link rel="stylesheet" href="${basePath}/static/css/component/areaTimePicker.css">
+    
+    <script src="${basePath}/static/component/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+    <script src="${basePath}/static/component/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js"></script>
+    <script src="${basePath}/static/js/component/areaTimePicker.js"></script>
+    
+</head>
+<body>
+<div class="project-list-five hide">
+    <div class="five-content center">
+        <div class="five-siblings contracting-area clearfix">
+            <span>收视地区</span>
+            <div class="select-area">
+                <div class="select">
+                	<span id="selectedAreaName">选择地区</span>
+                	<input id="selectedAreaId" type="hidden" value="">
+                	<i class="icon iconfont down">&#xe604;</i>
+                	<i class="icon iconfont top hide">&#xe608;</i>
+                </div>
+                <div class="five-siblings-con area clearfix hide">
+                    <div class="province">
+                    	<ul id="province">
+                    		<!--<li><a href="javascript:showChildren();">29省网</a></li>-->
+                        	<!--<li><a href="javascript:showChildren();">24城市组</a></li>-->
+                    	</ul>
+                    </div>
+                    <div class="city" id="city">
+                    	<!--<ul>-->
+                    		<!--<li><a href="javascript:;">29省网</a></li>-->
+                        	<!--<li><a href="javascript:;">24城市组</a></li>-->
+                    	<!--</ul>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="five-siblings broadcast-channel clearfix">
+            <span>播出频道</span>
+            <div class="select-channel">
+                <div class="select">
+	                <span>选择频道</span>
+                    <input id="channelLevelList" type="hidden" value="">
+                    <input id="channelIdList" type="hidden" value="">
+	                <i class="icon iconfont down">&#xe604;</i>
+	                <i class="icon iconfont top hide">&#xe608;</i>
+	                <p class="selected-channel text-primary over-hide" id="channelNames"></p>
+                </div>
+                <div class="five-siblings-con channel clearfix hide">
+                    <ul class="channel-top">
+                        <li class="active" onclick="switchChannelTab(this, 1)"><a href="javascript:;">央视</a></li>
+                        <li onclick="switchChannelTab(this, 2)"><a href="javascript:;">卫视</a></li>
+                        <li onclick="switchChannelTab(this, 3)"><a href="javascript:;">省级地面</a></li>
+                        <li onclick="switchChannelTab(this, 4)"><a href="javascript:;">市级地面</a></li>
+                        <a href="javascript:confirmChannel();" class="confirm">确定</a>
+                    </ul>
+                    <!--央视-->
+                    <div class="channel-con" id="cctvDiv">
+                        <ul>
+                            <li class="select-all-li" id="cctvAll" onclick="selectAllChannel(this)">
+	                            <a href="javascript:;">全选</a>
+	                            <i class="icon iconfont">&#xe600;</i>
+                            </li>
+                        </ul>
+                        <ul id="cctvChannels">
+                            <!-- <li><a href="javascript:;">CCTV1</a><i class="icon iconfont">&#xe600;</i></li>
+                            <li><a href="javascript:;">CCTV1</a><i class="icon iconfont">&#xe600;</i></li>
+                            <li><a href="javascript:;">CCTV1</a><i class="icon iconfont">&#xe600;</i></li> -->
+                        </ul>
+                    </div>
+                    <!--卫视-->
+                    <div class="channel-con hidden" id="satelliteTvDiv" >
+                    	<ul>
+                            <li class="select-all-li" id="satelliteTvAll" onclick="selectAllChannel(this)">
+	                            <a href="javascript:;">全选</a>
+	                            <i class="icon iconfont">&#xe600;</i>
+                            </li>
+                        </ul>
+                        <ul id="satelliteTvChannels">
+                            <!-- <li><a href="javascript:;">CCTV1</a><i class="icon iconfont">&#xe600;</i></li>
+                            <li><a href="javascript:;">CCTV1</a><i class="icon iconfont">&#xe600;</i></li>
+                            <li><a href="javascript:;">CCTV1</a><i class="icon iconfont">&#xe600;</i></li> -->
+                        </ul>
+                    </div>
+                    <!--省级地面-->
+                    <div class="channel-con hidden" id="provinceChannelDiv">
+                    	<ul>
+                            <li class="select-all-li" onclick="selectAllChannel(this)">
+	                            <a href="javascript:;">全选</a>
+	                            <i class="icon iconfont">&#xe600;</i>
+                            </li>
+                        </ul>
+                        <ul id="provinceChannels">
+                            <!-- <li><a href="javascript:;">CCTV1</a><i class="icon iconfont">&#xe600;</i></li>
+                            <li><a href="javascript:;">CCTV1</a><i class="icon iconfont">&#xe600;</i></li>
+                            <li><a href="javascript:;">CCTV1</a><i class="icon iconfont">&#xe600;</i></li> -->
+                        </ul>
+                    </div>
+                    <!--市级地面-->
+                    <div class="channel-con hidden" id="cityChannelDiv">
+                    	<ul>
+                            <li class="select-all-li" onclick="selectAllChannel(this)">
+	                            <a href="javascript:;">全选</a>
+	                            <i class="icon iconfont">&#xe600;</i>
+                            </li>
+                        </ul>
+                        <ul id="cityChannels">
+                            <!-- <li><a href="javascript:;">CCTV1</a><i class="icon iconfont">&#xe600;</i></li>
+                            <li><a href="javascript:;">CCTV1</a><i class="icon iconfont">&#xe600;</i></li>
+                            <li><a href="javascript:;">CCTV1</a><i class="icon iconfont">&#xe600;</i></li> -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="five-siblings broadcast-date clearfix">
+            <span>播出日期</span>
+            <div class="select-date">
+                <div class="select">
+	                <span>选择日期</span>
+	                <i class="icon iconfont down">&#xe604;</i>
+	                <i class="icon iconfont top hide">&#xe608;</i>
+                </div>
+                <div class="five-siblings-con date clearfix hide">
+                    <ul class="date-ul">
+                        <li class="date-li" onclick="quickSetDate(this, 0)">最近一天</li>
+                        <li class="date-li" onclick="quickSetDate(this, 1)">最近一周</li>
+                        <li class="date-li" onclick="quickSetDate(this, 2)">最近一月</li>
+                        <li class="date-li" onclick="quickSetDate(this, 3)">最近一季</li>
+                        <li class="date-li" onclick="quickSetDate(this, 4)">最近半年</li>
+                        <li class="date-li" onclick="quickSetDate(this, 5)">最近一年</li>
+                        <li class="date-li" onclick="quickSetDate(this, -1)">自定义</li>
+                    </ul>
+                </div>
+            </div>
+            <span>开始日期</span>
+            <div class="start-date">
+                <div class="select-start-date">
+                	<input type="text" class="start-date-one" id="startDate">
+                </div>
+            </div>
+            <span>结束日期</span>
+            <div class="end-date">
+                <div class="select-end-date">
+                	<input type="text" class="end-date-two" id="endDate">
+                </div>
+            </div>
+        </div>
+        <div class="five-siblings broadcast-time clearfix">
+            <span>播出时间</span>
+            <div class="select-time">
+                <div class="select">
+	                <span>选择时段</span>
+	                <i class="icon iconfont down">&#xe604;</i>
+	                <i class="icon iconfont top hide">&#xe608;</i>
+                </div>
+                <div class="five-siblings-con time clearfix hide">
+                    <ul class="time-ul">
+                        <li class="time-li" onclick="selectTime(this, '19:30', '22:00')">黄金时段</li>
+                        <li class="time-li" onclick="selectTime(this, '06:00', '18:00')">白天时段</li>
+                        <li class="time-li" onclick="selectTime(this, '08:00', '12:00')">上午时段</li>
+                        <li class="time-li" onclick="selectTime(this, '12:00', '18:00')">下午时段</li>
+                        <li class="time-li" onclick="selectTime(this, '18:00', '24:00')">晚间时段</li>
+                    </ul>
+                </div>
+            </div>
+            <span>开始时间</span>
+            <div class="start-time">
+                <input class="select-start-time" id="startTime" disabled>
+            </div>
+            <span>结束时间</span>
+            <div class="end-time">
+                <input class="select-end-time" id="endTime" disabled>
+            </div>
+        </div>
+        <button class="confirm btn btn-primary" onclick="queryData()">确定</button>
+    </div>
+</div>
+</body>
+</html>

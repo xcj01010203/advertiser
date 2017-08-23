@@ -1,0 +1,879 @@
+th{
+    font-weight: normal;
+}
+/*左侧 start*/
+.new-project {
+    margin-top: 20px;
+}
+.new-project .left{
+    float: left;
+}
+.new-project .left a .leftMenu{
+    width: 210px;
+    height: 52px;
+    padding: 10px 0;
+}
+.new-project .left a .leftMenu div{
+    line-height:32px;
+    padding-left:25px;
+}
+.new-project .left a .left_content {
+    height: 32px;
+    line-height: 32px;
+    font-size: 14px;
+    padding-left: 30px;
+    color: #1a1a1a;
+}
+.new-project .left a:nth-of-type(4){
+    border-bottom: solid 1px #ededed;
+}
+.new-project .left a:nth-of-type(1) .leftMenu .user_settings{
+	border-left:3px solid #29d9c2;
+}
+.new-project .left a{
+    width: 210px;
+    height: 52px;
+    background-color:#ffffff;
+    display: block;
+}
+.new-project .left a:hover{
+    background-color:#29d9c2;
+}
+/*左侧  end*/
+
+
+/*右侧 start*/
+.new-project .center .right {
+    float: right;
+    width: 970px;
+}
+.new-project .center .right .project-info {
+    background-color: #ffffff;
+    margin-bottom: 10px;
+}
+.new-project .center .right .project-info .project-info-top {
+    height: 56px;
+    padding-left: 30px;
+    border-bottom: 1px solid #ededed;
+}
+.new-project .center .right .project-info .project-info-top .project-info-top-title h4{
+    display: inline-block;
+    font-size: 14px;
+    color: #1a1a1a;
+}
+.new-project .center .right .project-info .project-info-top .project-info-top-title{
+    float: left;
+    margin-top: 17px;
+}
+.new-project .center .right .project-info .project-info-top .search{
+    float: right;
+    margin-right: 30px;
+}
+.new-project .center .right .project-info .project-info-top .search .btn{
+    width: 102px;
+    height: 32px;
+    margin-top:12px;
+    margin-bottom: 12px;
+    background-color: #29d9c2;
+    color:#FFFFFF;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius:0;
+}
+
+.new-project .center .right .project-info .project-info-top .search .box{
+    width: 330px;
+    height: 32px;
+    margin-top:13px;
+    margin-bottom: 13px;
+    background-color: #ffffff;
+    color:#666666;
+    border: 1px solid #cccccc;
+    padding-left: 16px;
+}
+.new-project .center .right .project-info .userManage-box {
+    padding-left: 30px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    background-color: #ffffff;
+    border-bottom: 1px solid #ededed;
+}
+.new-project .center .right .project-info .userManage-box .userManage-box-btn{
+    padding-top: 6px;
+    padding-bottom: 6px;
+    padding-left: 8px;
+    padding-right: 8px;
+    background-color: #ffffff;
+    color:#333333;
+    border: 1px solid #333333;
+    margin-right: 10px;
+    font-size: 12px;
+}
+.new-project .center .right .project-info .usrManage-table-th{
+    height: 50px;
+    font-size: 14px;
+    color: #292929;
+    padding-left: 30px;
+    padding-right: 30px;
+    border-bottom: 1px solid #ededed;
+    text-align: center;
+    background-color:#e9fbf9;
+
+}
+.new-project .center .right .project-info .usrManage-table-th li{
+    float: left;
+    line-height: 50px;
+}
+.new-project .center .right .project-info .usrManage-table-th li:first-of-type{
+    width: 28px;
+    text-align: left;
+}
+.new-project .center .right .project-info .usrManage-table-th li:nth-of-type(2){
+    width: 92px;
+    text-align: left;
+    margin-left: 8px;
+    border-right: 1px solid #ededed;
+}
+.new-project .center .right .project-info .usrManage-table-th li:nth-of-type(3){
+    width:90px;
+    border-right: 1px solid #ededed;
+}
+.new-project .center .right .project-info .usrManage-table-th li:nth-of-type(4){
+    width:50px;
+    border-right: 1px solid #ededed;
+}
+.new-project .center .right .project-info .usrManage-table-th li:nth-of-type(5){
+    width:180px;
+    border-right: 1px solid #ededed;
+}
+.new-project .center .right .project-info .usrManage-table-th li:nth-of-type(6){
+    width:200px;
+    border-right: 1px solid #ededed;
+}
+.new-project .center .right .project-info .usrManage-table-th li:nth-of-type(7){
+    width:140px;
+    border-right: 1px solid #ededed;
+}
+.new-project .center .right .project-info .usrManage-table-th li:nth-of-type(8){
+    width:80px;
+}
+.new-project .center .right .project-info .usrManage-table-td{
+    width: 910px;
+    margin-left: 30px;
+    font-size: 14px;
+    color: #292929;
+    font-weight: normal;
+    text-align: center;
+    display: block;
+    height: 510px;
+
+}
+.new-project .center .right .project-info .usrManage-table-td .userManage-data{
+    overflow: hidden;
+    width:910px;
+    height:50px;
+}
+.new-project .center .right .project-info .usrManage-table-td .userManage-data .userManage-data-in{
+    overflow: hidden;
+    border-bottom: 1px solid #ededed;
+    width:910px;
+    height:50px;
+}
+.new-project .center .right .project-info .usrManage-table-td .userManage-data .userManage-data-in li{
+    float: left;
+    line-height: 50px;
+}
+.new-project .center .right .project-info .usrManage-table-td .userManage-data .userManage-data-in li:first-of-type{
+    width: 28px;
+    text-align: left;
+    height: 50px;
+}
+.new-project .center .right .project-info .usrManage-table-td .userManage-data .userManage-data-in li:nth-of-type(2){
+    width: 92px;
+    text-align: left;
+    margin-left: 8px;
+    border-right: 1px solid #ededed;
+    height: 50px;
+}
+.new-project .center .right .project-info .usrManage-table-td .userManage-data .userManage-data-in li:nth-of-type(3){
+    width: 90px;
+    border-right: 1px solid #ededed;
+    height: 50px;
+}
+.new-project .center .right .project-info .usrManage-table-td .userManage-data .userManage-data-in li:nth-of-type(4){
+    width: 50px;
+    border-right: 1px solid #ededed;
+    height: 50px;
+}
+.new-project .center .right .project-info .usrManage-table-td .userManage-data .userManage-data-in li:nth-of-type(5){
+    width: 180px;
+    border-right: 1px solid #ededed;
+    height: 50px;
+}
+.new-project .center .right .project-info .usrManage-table-td .userManage-data .userManage-data-in li:nth-of-type(6){
+    width: 200px;
+    border-right: 1px solid #ededed;
+    height: 50px;
+}
+.new-project .center .right .project-info .usrManage-table-td .userManage-data .userManage-data-in li:nth-of-type(7){
+    width: 140px;
+    border-right: 1px solid #ededed;
+    height: 50px;
+}
+.new-project .center .right .project-info .usrManage-table-td .userManage-data .userManage-data-in li:nth-of-type(8){
+    width: 80px;
+    height: 50px;
+
+}
+.new-project .center .right .project-info .userManange-table-directions{
+    padding-left: 30px;
+    font-size: 14px;
+    color: #999999;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+/*右侧 end*/
+
+
+/*透明遮罩*/
+.shade{
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top:0;
+    left: 0;
+    background-color:rgba(0,0,0,0.2)
+
+}
+/*透明遮罩*/
+
+/*新增用户*/
+
+.pop{
+    width: 970px;
+    height: 620px;
+    position: fixed;
+    z-index: 10001;
+    top:140px;
+    left: 50%;
+    margin-left: -485px;
+    background-color: #ffffff;
+    border-radius: 4px;
+}
+.pop .project-info-top {
+    padding-top: 17px;
+    padding-left: 30px;
+    padding-bottom: 17px;
+    border-bottom: 1px solid #ededed;
+}
+.pop .project-info-top h4 {
+    display: inline-block;
+    font-size: 14px;
+    color: #1a1a1a;
+}
+.pop .project-info-top .close{
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top:19px;
+    right:30px;
+    display: block;;
+}
+.pop .project-info-top .close .iconfont{
+    font-family: "iconfont" !important;
+    font-size: 20px;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -webkit-text-stroke-width: 0.2px;
+    -moz-osx-font-smoothing: grayscale;
+}
+.pop .project-info-top .close i:hover {
+    cursor: pointer;
+    opacity: 0.8;
+}
+.pop .project-content {
+    padding:5px 30px;
+    background-color: #ffffff;
+}
+.pop .project-content .project-content-block {
+    margin-top: 20px;
+}
+.pop .project-content .project-content-block:nth-child(1) {
+    margin-top: 0;
+}
+.pop .project-content .project-content-block span {
+    color: rgb(179, 179, 179);
+    font-size: 14px;
+    display: inline-block;
+    width: 60px;
+}
+.pop .project-content .project-content-block > input {
+    width: 380px;
+    height: 40px;
+    border: 1px solid #dedede;
+    background-color: #f5f5f5;
+    padding-left: 20px;
+}
+.pop .project-content .project-content-block .pass-point {
+			position: absolute;
+            display: block;
+            width: 250px;
+            height: 38px;
+            top: 67px;
+            left: 95px;
+}
+.pop .project-content .project-content-block .newpass-point {
+			color:red;
+			position: absolute;
+            display: block;
+            width: 250px;
+            height: 38px;
+            top: 111px;
+            left: 502px;
+}
+.pop .project-content .project-content-block .tnewpass-point {
+			color:red;
+			position: absolute;
+            display: block;
+            width: 250px;
+            height: 38px;
+            top: 171px;
+            left: 502px;
+}
+.pop .project-content .project-content-block .tel-point {
+			color:red;
+			position: absolute;
+            display: block;
+            width: 250px;
+            height: 38px;
+            top: 437px;
+            left: 492px;
+}
+.pop .project-content .project-content-block .email-point {
+			color:red;
+			position: absolute;
+            display: block;
+            width: 250px;
+            height: 38px;
+            top: 497px;
+            left: 492px;
+}
+.pop .project-content .project-content-block .userName-point {
+			color:red;
+			position: absolute;
+            display: block;
+            width: 250px;
+            height: 38px;
+            top: 89px;
+            left: 492px;
+}
+
+.pop .project-content .project-content-block span {
+    color: rgb(179, 179, 179);
+    font-size: 14px;
+    display: inline-block;
+    width: 60px;
+}
+.pop .project-content .project-content-block > label {
+    margin-left:40px;
+}
+
+.pop .btn-ok {
+    width: 120px;
+    height: 36px;
+    background-color: #29d9c2;
+    color: #ffffff;
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+.pop .btn-cancel {
+    width: 120px;
+    height: 36px;
+    background-color: #d9d9d9;
+    color: #ffffff;
+    margin-top: 20px;
+    margin-bottom: 30px;
+    margin-left: 10px;
+
+}
+/*新增用户*/
+
+/*分配角色*/
+.pop .pop-head{
+    width: 100%;
+    height: 50px;
+    border-bottom: 1px solid #ededed;
+
+}
+.pop .have{
+    margin-top: 40px;
+    border-top: 1px solid #ededed;
+}
+.pop .pop-head .pop-head-title{
+    font-size: 14px;
+    color: #292929;
+    font-weight: bold;
+    padding-left: 30px;
+    line-height: 50px;
+    float: left;
+
+}
+.pop .pop-head .userManage-box {
+    float: left;
+    margin-top: 10px;
+    margin-left: 40px;
+}
+.pop .pop-head .userManage-box .userManage-box-btn{
+    padding:6px 8px;
+    background-color: #ffffff;
+    color:#333333;
+    border: 1px solid #333333;
+    margin-right: 10px;
+    font-size: 12px;
+}
+.pop .usrManage-table-th{
+    height: 50px;
+    font-size: 14px;
+    color: #292929;
+    padding-left: 30px;
+    padding-right: 30px;
+    border-bottom: 1px solid #ededed;
+    text-align: center;
+
+}
+.pop .usrManage-table-th li{
+    float: left;
+    line-height: 50px;
+}
+.pop .usrManage-table-th li:first-of-type{
+    width: 32px;
+    text-align: left;
+}
+.pop .usrManage-table-th li:nth-of-type(2){
+    width:200px;
+    text-align: left;
+    margin-left: 8px;
+    border-right: 1px solid #ededed;
+}
+.pop .usrManage-table-th li:nth-of-type(3){
+    width:338px;
+    border-right: 1px solid #ededed;
+}
+.pop .usrManage-table-th li:nth-of-type(4){
+    width:150px;
+    border-right: 1px solid #ededed;
+}
+.pop .usrManage-table-th li:nth-of-type(5){
+    width:170px;
+}
+
+.pop .usrManage-table-td{
+    width: 910px;
+    margin-left: 30px;
+    font-size: 14px;
+    color: #292929;
+    font-weight: normal;
+    text-align: center;
+
+}
+.pop .usrManage-table-td .userManage-data{
+    overflow: hidden;
+}
+.pop .usrManage-table-td .userManage-data .userManage-data-in{
+    overflow: hidden;
+    border-bottom: 1px solid #ededed;
+}
+.pop .usrManage-table-td .userManage-data .userManage-data-in li{
+    float: left;
+    line-height: 50px;
+}
+.pop .usrManage-table-td .userManage-data .userManage-data-in li:first-of-type{
+    width: 32px;
+    text-align: left;
+}
+.pop .usrManage-table-td .userManage-data .userManage-data-in li:nth-of-type(2){
+    width: 200px;
+    text-align: left;
+    margin-left: 8px;
+    border-right: 1px solid #ededed;
+}
+.pop .usrManage-table-td .userManage-data .userManage-data-in li:nth-of-type(3){
+    width:338px;
+    border-right: 1px solid #ededed;
+}
+.pop .usrManage-table-td .userManage-data .userManage-data-in li:nth-of-type(4){
+    width: 150px;
+    border-right: 1px solid #ededed;
+}
+.pop .usrManage-table-td .userManage-data .userManage-data-in li:nth-of-type(5){
+    width: 170px;
+}
+
+.new-project .center .right .project-info .usrManage-table-user{
+    height: 50px;
+    font-size: 14px;
+    color: #292929;
+    padding-left: 30px;
+    padding-right: 30px;
+    border-bottom: 1px solid #ededed;
+    text-align: center;
+
+}
+.new-project .center .right .project-info .usrManage-table-user li{
+    float: left;
+    line-height: 50px;
+}
+.new-project .center .right .project-info .usrManage-table-user li:first-of-type{
+    width: 40px;
+    text-align: left;
+}
+.new-project .center .right .project-info .usrManage-table-user li:nth-of-type(2){
+    width: 80px;
+    text-align: left;
+    margin-left: 8px;
+    border-right: 1px solid #ededed;
+}
+.new-project .center .right .project-info .usrManage-table-user li:nth-of-type(3){
+    width:90px;
+    border-right: 1px solid #ededed;
+}
+.new-project .center .right .project-info .usrManage-table-user li:nth-of-type(4){
+    width:50px;
+    border-right: 1px solid #ededed;
+}
+.new-project .center .right .project-info .usrManage-table-user li:nth-of-type(5){
+    width:180px;
+    border-right: 1px solid #ededed;
+}
+.new-project .center .right .project-info .usrManage-table-user li:nth-of-type(6){
+    width:200px;
+    border-right: 1px solid #ededed;
+}
+.new-project .center .right .project-info .usrManage-table-user li:nth-of-type(7){
+    width:140px;
+    border-right: 1px solid #ededed;
+}
+.new-project .center .right .project-info .usrManage-table-user li:nth-of-type(8){
+    width:80px;
+}
+
+.pop .usrManage-table-user{
+    height: 50px;
+    font-size: 14px;
+    color: #292929;
+    padding-left: 30px;
+    padding-right: 30px;
+    border-bottom: 1px solid #ededed;
+    text-align: center;
+    background-color:#e9fbf9;
+
+}
+.pop .usrManage-table-user li{
+    float: left;
+    line-height: 50px;
+}
+.pop .usrManage-table-user li:first-of-type{
+    width: 32px;
+    text-align: left;
+}
+.pop .usrManage-table-user li:nth-of-type(2){
+    width:200px;
+    text-align: left;
+    margin-left: 40px;
+    border-right: 1px solid #ededed;
+}
+.pop .usrManage-table-user li:nth-of-type(3){
+    width:338px;
+    border-right: 1px solid #ededed;
+}
+.pop .usrManage-table-user li:nth-of-type(4){
+    width:150px;
+    border-right: 1px solid #ededed;
+}
+.pop .usrManage-table-user li:nth-of-type(5){
+    width:170px;
+}
+
+.new-project .center .right .project-info .usrManage-table-user-role{
+    width: 910px;
+    margin-left: 30px;
+    font-size: 14px;
+    color: #292929;
+    font-weight: normal;
+    text-align: center;
+    display: block;
+    height: 510px;
+
+}
+.new-project .center .right .project-info .usrManage-table-user-role .userManage-data{
+    overflow: hidden;
+}
+.new-project .center .right .project-info .usrManage-table-user-role .userManage-data .userManage-data-in{
+    overflow: hidden;
+    border-bottom: 1px solid #ededed;
+}
+.new-project .center .right .project-info .usrManage-table-user-role .userManage-data .userManage-data-in li{
+    float: left;
+    line-height: 50px;
+}
+.new-project .center .right .project-info .usrManage-table-user-role .userManage-data .userManage-data-in li:first-of-type{
+    width: 40px;
+    text-align: left;
+}
+.new-project .center .right .project-info .usrManage-table-user-role .userManage-data .userManage-data-in li:nth-of-type(2){
+    width: 80px;
+    text-align: left;
+    margin-left: 8px;
+    border-right: 1px solid #ededed;
+}
+.new-project .center .right .project-info .usrManage-table-user-role .userManage-data .userManage-data-in li:nth-of-type(3){
+    width: 90px;
+    border-right: 1px solid #ededed;
+}
+.new-project .center .right .project-info .usrManage-table-user-role .userManage-data .userManage-data-in li:nth-of-type(4){
+    width: 50px;
+    border-right: 1px solid #ededed;
+}
+.new-project .center .right .project-info .usrManage-table-user-role .userManage-data .userManage-data-in li:nth-of-type(5){
+    width: 180px;
+    border-right: 1px solid #ededed;
+}
+.new-project .center .right .project-info .usrManage-table-user-role .userManage-data .userManage-data-in li:nth-of-type(6){
+    width: 200px;
+    border-right: 1px solid #ededed;
+}
+.new-project .center .right .project-info .usrManage-table-user-role .userManage-data .userManage-data-in li:nth-of-type(7){
+    width: 140px;
+    border-right: 1px solid #ededed;
+}
+.new-project .center .right .project-info .usrManage-table-user-role .userManage-data .userManage-data-in li:nth-of-type(8){
+    width: 80px;
+
+}
+.pop .usrManage-table-user-role{
+    width: 910px;
+    margin-left: 30px;
+    font-size: 14px;
+    color: #292929;
+    font-weight: normal;
+    text-align: center;
+    display: block;
+
+}
+.pop .usrManage-table-user-role .userManage-data{
+    overflow: hidden;
+}
+.pop .usrManage-table-user-role .userManage-data .userManage-data-in{
+    overflow: hidden;
+    border-bottom: 1px solid #ededed;
+}
+.pop .usrManage-table-user-role .userManage-data .userManage-data-in li{
+    float: left;
+    line-height: 50px;
+}
+.pop .usrManage-table-user-role .userManage-data .userManage-data-in li:first-of-type{
+    width: 32px;
+    text-align: left;
+}
+.pop .usrManage-table-user-role .userManage-data .userManage-data-in li:nth-of-type(2){
+    width: 200px;
+    text-align: left;
+    margin-left: 8px;
+    border-right: 1px solid #ededed;
+}
+.pop .usrManage-table-user-role .userManage-data .userManage-data-in li:nth-of-type(3){
+    width:338px;
+    border-right: 1px solid #ededed;
+}
+.pop .usrManage-table-user-role .userManage-data .userManage-data-in li:nth-of-type(4){
+    width: 150px;
+    border-right: 1px solid #ededed;
+}
+.pop .usrManage-table-user-role .userManage-data .userManage-data-in li:nth-of-type(5){
+    width: 170px;
+}
+
+.new-project .center .right .project-info .usrManage-table-user2{
+    height: 50px;
+    font-size: 14px;
+    color: #292929;
+    padding-left: 30px;
+    padding-right: 30px;
+    border-bottom: 1px solid #ededed;
+    text-align: center;
+
+}
+.new-project .center .right .project-info .usrManage-table-user2 li{
+    float: left;
+    line-height: 50px;
+}
+.new-project .center .right .project-info .usrManage-table-user2 li:first-of-type{
+    width: 40px;
+    text-align: left;
+}
+.new-project .center .right .project-info .usrManage-table-user2 li:nth-of-type(2){
+    width: 80px;
+    text-align: left;
+    margin-left: 8px;
+    border-right: 1px solid #ededed;
+}
+.new-project .center .right .project-info .usrManage-table-user2 li:nth-of-type(3){
+    width:90px;
+    border-right: 1px solid #ededed;
+}
+.new-project .center .right .project-info .usrManage-table-user2 li:nth-of-type(4){
+    width:50px;
+    border-right: 1px solid #ededed;
+}
+.new-project .center .right .project-info .usrManage-table-user2 li:nth-of-type(5){
+    width:180px;
+    border-right: 1px solid #ededed;
+}
+.new-project .center .right .project-info .usrManage-table-user2 li:nth-of-type(6){
+    width:200px;
+    border-right: 1px solid #ededed;
+}
+.new-project .center .right .project-info .usrManage-table-user2 li:nth-of-type(7){
+    width:140px;
+    border-right: 1px solid #ededed;
+}
+.new-project .center .right .project-info .usrManage-table-user2 li:nth-of-type(8){
+    width:80px;
+}
+
+.pop .usrManage-table-user2{
+    height: 50px;
+    font-size: 14px;
+    color: #292929;
+    padding-left: 30px;
+    padding-right: 30px;
+    border-bottom: 1px solid #ededed;
+    text-align: center;
+    background-color:#e9fbf9;
+
+}
+.pop .usrManage-table-user2 li{
+    float: left;
+    line-height: 50px;
+}
+.pop .usrManage-table-user2 li:first-of-type{
+    width: 32px;
+    text-align: left;
+}
+.pop .usrManage-table-user2 li:nth-of-type(2){
+    width:200px;
+    text-align: left;
+    margin-left: 40px;
+    border-right: 1px solid #ededed;
+}
+.pop .usrManage-table-user2 li:nth-of-type(3){
+    width:338px;
+    border-right: 1px solid #ededed;
+}
+.pop .usrManage-table-user2 li:nth-of-type(4){
+    width:150px;
+    border-right: 1px solid #ededed;
+}
+.pop .usrManage-table-user2 li:nth-of-type(5){
+    width:170px;
+}
+
+.new-project .center .right .project-info .usrManage-table-user2-role2{
+    width: 910px;
+    margin-left: 30px;
+    font-size: 14px;
+    color: #292929;
+    font-weight: normal;
+    text-align: center;
+    display: block;
+    height: 510px;
+
+}
+.new-project .center .right .project-info .usrManage-table-user2-role2 .userManage-data{
+    overflow: hidden;
+}
+.new-project .center .right .project-info .usrManage-table-user2-role2 .userManage-data .userManage-data-in{
+    overflow: hidden;
+    border-bottom: 1px solid #ededed;
+}
+.new-project .center .right .project-info .usrManage-table-user2-role2 .userManage-data .userManage-data-in li{
+    float: left;
+    line-height: 50px;
+}
+.new-project .center .right .project-info .usrManage-table-user2-role2 .userManage-data .userManage-data-in li:first-of-type{
+    width: 40px;
+    text-align: left;
+}
+.new-project .center .right .project-info .usrManage-table-user2-role2 .userManage-data .userManage-data-in li:nth-of-type(2){
+    width: 80px;
+    text-align: left;
+    margin-left: 8px;
+    border-right: 1px solid #ededed;
+}
+.new-project .center .right .project-info .usrManage-table-user2-role2 .userManage-data .userManage-data-in li:nth-of-type(3){
+    width: 90px;
+    border-right: 1px solid #ededed;
+}
+.new-project .center .right .project-info .usrManage-table-user2-role2 .userManage-data .userManage-data-in li:nth-of-type(4){
+    width: 50px;
+    border-right: 1px solid #ededed;
+}
+.new-project .center .right .project-info .usrManage-table-user2-role2 .userManage-data .userManage-data-in li:nth-of-type(5){
+    width: 180px;
+    border-right: 1px solid #ededed;
+}
+.new-project .center .right .project-info .usrManage-table-user2-role2 .userManage-data .userManage-data-in li:nth-of-type(6){
+    width: 200px;
+    border-right: 1px solid #ededed;
+}
+.new-project .center .right .project-info .usrManage-table-user2-role2 .userManage-data .userManage-data-in li:nth-of-type(7){
+    width: 140px;
+    border-right: 1px solid #ededed;
+}
+.new-project .center .right .project-info .usrManage-table-user2-role2 .userManage-data .userManage-data-in li:nth-of-type(8){
+    width: 80px;
+
+}
+.pop .usrManage-table-user2-role2{
+    width: 910px;
+    margin-left: 30px;
+    font-size: 14px;
+    color: #292929;
+    font-weight: normal;
+    text-align: center;
+    display: block;
+
+}
+.pop .usrManage-table-user2-role2 .userManage-data{
+    overflow: hidden;
+}
+.pop .usrManage-table-user2-role2 .userManage-data .userManage-data-in{
+    overflow: hidden;
+    border-bottom: 1px solid #ededed;
+}
+.pop .usrManage-table-user2-role2 .userManage-data .userManage-data-in li{
+    float: left;
+    line-height: 50px;
+}
+.pop .usrManage-table-user2-role2 .userManage-data .userManage-data-in li:first-of-type{
+    width: 32px;
+    text-align: left;
+}
+.pop .usrManage-table-user2-role2 .userManage-data .userManage-data-in li:nth-of-type(2){
+    width: 200px;
+    text-align: left;
+    margin-left: 8px;
+    border-right: 1px solid #ededed;
+}
+.pop .usrManage-table-user2-role2 .userManage-data .userManage-data-in li:nth-of-type(3){
+    width:338px;
+    border-right: 1px solid #ededed;
+}
+.pop .usrManage-table-user2-role2 .userManage-data .userManage-data-in li:nth-of-type(4){
+    width: 150px;
+    border-right: 1px solid #ededed;
+}
+.pop .usrManage-table-user2-role2 .userManage-data .userManage-data-in li:nth-of-type(5){
+    width: 170px;
+}
+

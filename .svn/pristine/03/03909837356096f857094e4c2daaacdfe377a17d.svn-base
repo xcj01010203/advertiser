@@ -1,0 +1,20 @@
+file.encode=UTF-8
+
+#开发环境
+#fileupload.path = E:\\advertiser_attachment\\
+#openOfficeInstallPath =C:\\Program Files (x86)\\OpenOffice 4\\
+#winrarInstallPath =D:\\Program Files (x86)\\WinRAR\\WinRAR.exe
+
+#134环境
+fileupload.path = /u3/advertiser/attachment
+openOfficeInstallPath =/opt/openoffice4
+winrarInstallPath =/usr/local/bin/rar
+
+autoModel.ip=192.168.10.134
+autoModel.port=8001
+
+# 图标统计中归类为"其他"的最大比例
+otherRate = 0.01
+
+# 场次中显得的广告分析最小权重
+roundMinWeight = 0.4

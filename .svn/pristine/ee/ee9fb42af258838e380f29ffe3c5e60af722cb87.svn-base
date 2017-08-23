@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 维护剧本文件相关信息 -->
+<mapper namespace="PlayMapper">
+	<insert id="insertPlay" parameterType="Play">
+		INSERT INTO tab_play (
+			id,
+			project_id,
+			NAME,
+			storepath,
+			uploadTime,
+			create_userid,
+			succeed,
+			uploadDesc,
+			scriptRule
+		)
+		VALUES
+			(
+				#{id}, 
+				#{project.id}, 
+				#{name}, 
+				#{storepath}, 
+				#{uploadTime}, 
+				#{user.id}, 
+				#{succeed}, 
+				#{uploadDesc}, 
+				#{scriptRule}
+			)
+	</insert>
+	
+	<!-- 查询剧本列表 -->
+	<select id="selectPlay" parameterType="String" resultType="map">
+		SELECT name, uploadTime, storePath
+		FROM tab_play
+		WHERE 1 = 1
+		AND project_id = #{projectId}
+		AND succeed = 1
+		ORDER BY uploadTime DESC
+	</select>
+	
+	<!-- 根据项目ID删除数据 -->
+	<delete id="deleteByProjectId" parameterType="String">
+		DELETE FROM tab_play where project_id = #{projectId}
+	</delete>
+</mapper>

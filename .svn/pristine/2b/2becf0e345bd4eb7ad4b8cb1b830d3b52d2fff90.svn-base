@@ -1,0 +1,260 @@
+var xiaotuObj = {
+    prevNum: 1,
+    nextNum: 1
+}
+
+$(function () {
+
+    //集次的展开和隐藏
+    clickShowOrHide($(".project-list-four .four-content .four-middle"), $(".project-list-five"));
+
+    //加载集次列表
+    loadSeriesNoList();
+
+    // 高级搜索
+    highSearch()
+
+    // 关闭高级搜索
+    closeHighSearch()
+
+});
+
+//加载集次列表
+function loadSeriesNoList() {
+    var url = "/playRound/querySeriesNoList";
+    var successFn = function (response) {
+        if (response.status == 1) {
+            modelWindow(response.message, 0);
+            return;
+        }
+
+        var seriesNoList = response.data.seriesNoList;
+        var seriesNoLiArray = [];
+        $.each(seriesNoList, function (index, item) {
+            if (index == 0) {
+                seriesNoLiArray.push("<li class='active' seriesNo=" + item + " onclick='clickSeriesNo(this)'>");
+                seriesNoLiArray.push("<i class='icon iconfont'>&#xe600;</i>");
+            } else {
+                seriesNoLiArray.push("<li seriesNo=" + item + " onclick='clickSeriesNo(this)'>");
+            }
+            seriesNoLiArray.push("<span>第" + item + "集</span>");
+            seriesNoLiArray.push("</li>");
+
+        });
+
+        $("#seriesNoUl").html(seriesNoLiArray.join(''));
+
+        loadViewList();
+    };
+    doPost(url, {}, successFn);
+}
+
+//集次点击事件
+function clickSeriesNo(own) {
+    $(own).siblings("li").removeClass("active");
+    if ($(own).hasClass("active")) {
+        $(own).find("i").remove();
+    } else {
+        $(own).append("<i class='icon iconfont'>&#xe600;</i>");
+    }
+    $(own).toggleClass("active");
+
+    loadViewList();
+}
+
+//加载场景列表
+function loadViewList() {
+    var selectedSeriesNo = $("#seriesNoUl").find("li.active");
+    var seriesNoList = [];
+    if (selectedSeriesNo) {
+        $.each(selectedSeriesNo, function (index, item) {
+            seriesNoList.push($(item).attr("seriesNo"));
+        });
+    }
+
+    $("#tcdPageCode").createPage({
+        url: "/playRound/querySeriesRoundList",
+        data: {seriesNoList: seriesNoList},
+        pageSize: 20,
+        successFn: function (response) {
+            if (response.status == 1) {
+                alert(response.message);
+                return;
+            }
+
+            var roundListTrArray = [];
+            var roundList = response.data.roundList;
+            for (var key in roundList) {
+                var seriesNo = key;
+                var viewList = roundList[key];
+
+                $("#seriesTitle").text("第" + seriesNo + "集");
+
+                $.each(viewList, function (index, item) {
+                    roundListTrArray.push("			<tr>");
+                    roundListTrArray.push("				<td width='5%'><a class='text-primary' roundId=\"" + item.id + "\" href='javascript:void(0)' onclick='showViewDetail(this)'>" + item.seriesNo + "-" + item.roundNo + "</a></td>");
+                    roundListTrArray.push("				<td width='5%' class='over-hide'>" + filterNull(item.atmosphere) + "</td>");
+                    roundListTrArray.push("				<td width='5%' class='over-hide'>" + filterNull(item.site) + "</td>");
+                    roundListTrArray.push("				<td width='15%' class='over-hide' title='" + filterNull(item.firstLocation) + "'>" + filterNull(item.firstLocation) + "</td>");
+                    roundListTrArray.push("				<td width='20%' class='over-hide' title='" + filterNull(item.majorRoleNameList.join("|")) + "'>" + filterNull(item.majorRoleNameList.join("|")) + "</td>");
+                    roundListTrArray.push("				<td width='10%' class='over-hide' title='" + filterNull(item.guestRoleNameList.join("|")) + "'>" + filterNull(item.guestRoleNameList.join("|")) + "</td>");
+                    roundListTrArray.push("				<td width='10%' class='over-hide' title='" + filterNull(item.massRoleNameList.join("|")) + "'>" + filterNull(item.massRoleNameList.join("|")) + "</td>");
+                    roundListTrArray.push("				<td width='20%' class='over-hide' title='" + filterNull(item.propNameList.join("|")) + "'>" + filterNull(item.propNameList.join("|")) + "</td>");
+                    roundListTrArray.push("				<td width='10%' class='over-hide' title='" + filterNull(item.remark) + "'>" + filterNull(item.remark) + "</td>");
+                    roundListTrArray.push("			</tr>");
+                });
+            }
+            $("#seriesViewListTbody").html(roundListTrArray.join(""));
+            if (xiaotuObj.prevNum == 2) {
+                // 如果为2或者3，说明是在模态窗点击的
+                // 2 找当前集的上一页
+                $("#seriesViewListTbody tr:last-child td:first-child a").click()
+                xiaotuObj.prevNum = 1;
+            } else if (xiaotuObj.prevNum == 3) {
+                // 如果为2或者3，说明是在模态窗点击的
+                // 3 找上一集的最后一页的最后一条数据
+                if ($("#tcdPageCode a.weiye")[0]) {
+                    $("#tcdPageCode a.weiye").click()
+                    xiaotuObj.prevNum = 4
+                }else {
+                    $("#seriesViewListTbody tr:last-child td:first-child a").click()
+                    xiaotuObj.prevNum = 1;
+                }
+            } else if (xiaotuObj.prevNum == 4) {
+                $("#seriesViewListTbody tr:last-child td:first-child a").click()
+                xiaotuObj.prevNum = 1;
+            } else {
+            }
+
+            if (xiaotuObj.nextNum == 2) {
+                // 如果为2或者3，说明是在模态窗点击的
+                // 2 找当前集的下一页
+                $("#seriesViewListTbody tr:first-child td:first-child a").click()
+                xiaotuObj.nextNum = 1;
+            } else if (xiaotuObj.nextNum == 3) {
+                // 如果为2或者3，说明是在模态窗点击的
+                // 3 找下一集的第一页的第一条数据
+                $("#seriesViewListTbody tr:first-child td:first-child a").click()
+                xiaotuObj.nextNum = 1;
+            } else {
+            }
+        }
+    });
+}
+
+//显示场次详情弹窗
+function showViewDetail(own) {
+    var roundId = $(own).attr("roundId");
+
+    xiaotuObj.roundId = roundId;
+    // 获取剧本内容信息
+    getPlayContentInfo(roundId);
+
+    //给对应的tr添加active标识
+    $("#seriesViewListTbody").find("tr.active").removeClass("active");
+    $(own).parent("td").parent("tr").addClass("active");
+
+    //打开弹窗
+    $("#viewDetailDiv").modal("show");
+    $("#seriesRoundNo").text($(own).text());
+}
+
+//上一场
+function preView() {
+    //找到有active标识的tr
+    var activeTr = $("#seriesViewListTbody").find("tr.active");
+    var prevTr = activeTr.prev("tr");
+    var activeGather = $(".project-list-five .five-content .five-content-gather li.active");
+    var prevGather = activeGather.prev("li");
+
+    if (prevTr[0]) {
+        prevTr.find("td").eq(0).find("a").click();
+    } else if ($("#tcdPageCode a.prevPage")[0]) {
+        xiaotuObj.prevNum = 2;
+        $("#tcdPageCode a.prevPage").click()
+    } else if (prevGather[0]) {
+        prevGather.click();
+        xiaotuObj.prevNum = 3;
+    } else {
+        alert("已经是第一场了");
+    }
+
+    $(".anal-content .anal-left .anal-color .anal-color-keyword").removeClass("active");
+}
+
+//下一场
+function nextView() {
+    //找到有active标识的tr
+    var activeTr = $("#seriesViewListTbody").find("tr.active");
+    var nextTr = activeTr.next("tr");
+    var activeGather = $(".project-list-five .five-content .five-content-gather li.active");
+    var nextGather = activeGather.next("li");
+
+    if (nextTr[0]) {
+        nextTr.find("td").eq(0).find("a").click();
+    } else if ($("#tcdPageCode a.nextPage")[0]) {
+        xiaotuObj.nextNum = 2;
+        $("#tcdPageCode a.nextPage").click()
+    } else if (nextGather[0]) {
+        nextGather.click();
+        xiaotuObj.nextNum = 3;
+    } else {
+        alert("已经是最后一场了");
+    }
+
+    $(".anal-content .anal-left .anal-color .anal-color-keyword").removeClass("active");
+}
+
+// 高级搜索
+function highSearch() {
+    $(".project-list-four .four-content .four-right .high-search").click(function () {
+        $(".shade").css({
+            "backgroundColor": "rgba(0,0,0,0.5)",
+            "opacity": "1",
+            "transition": "all 0.15s ease-in",
+            "zIndex": "100"
+        })
+        $(".shade .shade-con").css({
+            "opacity": "1",
+            "top": "50%",
+            "marginTop": "-300px",
+            "transition": "all 0.3s ease-in",
+            "zIndex": "100"
+        })
+    })
+}
+
+// 关闭高级搜索
+function closeHighSearch() {
+    $(".shade .shade-con .panel-heading h4 i").click(function () {
+        $(".shade").css({
+            "backgroundColor": "transparent",
+            "opacity": "0",
+            "transition": "all 0.15s ease-in"
+        })
+        $(".shade .shade-con").css({
+            "opacity": "0",
+            "top": "-600px",
+            "marginTop": "0px",
+            "transition": "all 0.3s ease-in",
+            "zIndex": "-111"
+        })
+        setTimeout(function () {
+            $(".shade").css({
+                "zIndex": "-111"
+            })
+        }, 150)
+    })
+}
+
+
+// 返回数字
+// function isInteger(obj) {
+//     return (obj | 0) === obj
+// }
+// isInteger(3) // true
+// isInteger(3.3) // false
+// isInteger('') // false
+// isInteger('3') // false
+// isInteger(true) // false
+// isInteger([]) // false

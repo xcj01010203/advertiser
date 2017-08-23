@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 场次角色相关信息 -->
+<mapper namespace="PlayRoleMapper">
+	<!-- 查询角色列表 -->
+	<select id="selectPlayRoleList" parameterType="map" resultType="PlayRole">
+		SELECT tpr.id, tpr.name, tpr.type
+		FROM tab_play_role tpr
+		<if test="roundId != null">
+		INNER JOIN tab_play_round_role_map tprrm 
+		   ON tprrm.play_roleid = tpr.id
+		  AND tprrm.round_id = #{roundId}
+		</if>
+		WHERE 1 = 1
+		  AND tpr.project_id = #{projectId}
+		<if test="roleNameList != null">
+		  AND tpr.name IN 
+		  <foreach collection="roleNameList" open="(" separator="," close=")" item="name">
+		  	#{name}
+		  </foreach>
+		</if>
+	</select>
+	
+	<!-- 查询角色列表，带有每个角色的对应的场次信息 -->
+	<select id="selectRoleListWithRoundInfo" parameterType="map" resultType="map">
+		SELECT
+			tpr.id,
+			tpr.name,
+			tpr.type,
+			GROUP_CONCAT(tprd.seriesno, '-', tprd.roundno ORDER BY tprd.seriesno, ABS(tprd.roundno), tprd.roundno) seriesRoundNos,
+			count(tprd.id) roundCount
+		FROM
+			tab_play_role tpr
+		LEFT JOIN tab_play_round_role_map tprrm ON tprrm.play_roleid = tpr.id
+		LEFT JOIN tab_play_round tprd ON tprd.id = tprrm.round_id
+		WHERE
+			tpr.project_id = #{projectId}
+		GROUP BY
+			tpr.id,
+			tpr. NAME,
+			tpr.type
+		ORDER BY
+			roundCount DESC,
+			tpr.type,
+			tpr.order
+	</select>
+	
+	<!-- 查询角色列表，带有每个角色标记信息 -->
+	<select id="selectRoleListWithMarkInfo" parameterType="String" resultType="map">
+		SELECT tpr.id, tpr.name, tpr.type, tpm.id as playMarkId
+		FROM tab_play_role tpr, tab_play_mark_role_map tpmrm, tab_play_mark tpm
+		WHERE tpmrm.play_roleid = tpr.id
+		  AND tpmrm.play_markid = tpm.id
+		  <if test="roundId != null">
+		  AND tpm.round_id = #{roundId}
+		</if>
+		<if test="projectId != null">
+		  AND tpm.project_id = #{projectId}
+		</if>
+	</select>
+	
+	<!-- 查询角色列表，带有每个角色所属的广告信息 -->
+	<select id="selectRoleListWithImplantInfo" parameterType="map" resultType="map">
+		SELECT tpr.id, tpr.name, tpr.type, tir.id as implantId
+		FROM tab_play_role tpr, tab_implant_role_map tirm, tab_implant_record tir
+		WHERE tirm.record_id = tir.id
+		  AND tirm.play_roleid = tpr.id
+		  <if test="roundId != null">
+		  	AND tir.round_id = #{roundId}
+		  </if>
+	</select>
+	
+	<!-- 批量新增数据 -->
+	<insert id="insertBatch">
+		INSERT INTO tab_play_role(
+			id, project_id, name, 
+			type, `order`, createtime, 
+			lastupdatetime
+		)
+		VALUES
+		<foreach collection="list" separator="," item="pr">
+			(#{pr.id}, #{pr.project.id}, #{pr.name}, #{pr.type}, #{pr.order}, #{pr.createTime}, #{pr.lastUpdateTime})
+		</foreach>
+	</insert>
+	
+	<!-- 批量更新数据 -->
+	<insert id="updateBatch">
+		INSERT INTO tab_play_role(
+			id, project_id, name, 
+			type, `order`, createtime, 
+			lastupdatetime
+		)
+		VALUES
+		<foreach collection="list" separator="," item="pr">
+			(#{pr.id}, #{pr.project.id}, #{pr.name}, #{pr.type}, #{pr.order}, #{pr.createTime}, #{pr.lastUpdateTime})
+		</foreach>
+		 ON DUPLICATE KEY UPDATE type = VALUES(type), lastupdatetime = VALUES(lastupdatetime)
+	</insert>
+	
+	<!-- 根据项目ID删除数据 -->
+	<delete id="deleteByProjectId" parameterType="String">
+		DELETE FROM tab_play_role where project_id = #{projectId}
+	</delete>
+</mapper>

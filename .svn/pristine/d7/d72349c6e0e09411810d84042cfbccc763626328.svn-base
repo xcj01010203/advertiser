@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="UserBackReplyMapper">
+	
+	<!-- 插入反馈记录 -->
+	<insert id="insertUserBackReply" parameterType="UserBackReply">
+		INSERT INTO advertiser.tab_user_back_reply (id,userid,content,replystatus,replycontent,createtime) 
+		values(#{id},#{userid},#{content},#{replystatus},#{replycontent,},NOW())
+	</insert>	
+	
+	<!-- 查询反馈信息列表 -->
+	<select id="selectUserBackReply" parameterType="UserBackReply" resultType="UserBackReply">
+		select 
+	     	 uf.id,
+	     	 uf.content,
+	     	 uf.replystatus,
+	     	 uf.replycontent,
+	     	 uf.createtime,
+	     	 uu.username,
+			 uu.tel,
+	     	 uu.id as userid
+		 from advertiser.tab_user_back_reply uf 
+		 left join advertiser.tab_user uu on uf.userid = uu.id
+		 where 1=1 and uu.username is not null
+		 order by uf.createtime desc
+	</select>
+	
+	<!-- 回复反馈意见 -->
+	<update id="updateReplyContent" parameterType="UserBackReply">
+		update advertiser.tab_user_back_reply 
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="replycontent != null">
+				replycontent = #{replycontent},
+			</if>
+			<if test="replystatus != null">
+				replystatus = #{replystatus},
+			</if>
+		</trim>
+			where id = #{id}
+	</update>
+	
+	<!-- 添加消息信息 -->
+	<insert id="insertMessage" parameterType="Message" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO advertiser.tab_message (id,userid,messageinfo,messagetype,replycontent,createtime) 
+		values(#{id},#{userid},#{messageinfo},#{messagetype},#{replycontent},NOW())
+	</insert>
+	
+	<!-- 添加用户和消息对应关系 -->
+	<insert id="insertUserMessage" parameterType="java.util.Map">
+		INSERT INTO advertiser.tab_user_message values
+		<foreach collection="list" item="userId" separator=",">
+			<trim prefix="(" suffix=")" suffixOverrides=",">
+				#{userId},#{messageId}
+			</trim>
+		</foreach>
+	</insert>
+	
+	<!-- 查询历史消息信息 -->
+	<select id="selectMessageUserId" parameterType="Message" resultType="Message">
+		SELECT
+			id
+		FROM
+			advertiser.tab_message
+		WHERE
+			1 = 1
+		<if test="userid != null">
+           and userid = #{userid}
+        </if>
+		ORDER BY
+			createtime DESC LIMIT 1
+	</select>
+	
+	<!-- 根据消息ID获取用户ID -->
+	<select id="selectBackReplyUserId" parameterType="UserBackReply" resultType="UserBackReply">
+		SELECT 
+	     	 uf.userid 
+		FROM 
+		 	advertiser.tab_user_back_reply uf 
+		WHERE uf.id = #{id}
+	</select>
+</mapper>

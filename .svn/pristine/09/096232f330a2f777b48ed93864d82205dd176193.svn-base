@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv=Content-Type content="text/html;charset=utf-8">
+    <!--指明当前的页面在IE浏览器渲染的时候使用最新的渲染引擎来渲染-->
+    <meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1">
+    <!--网站的关键字-->
+    <meta name="keywords" content="广告植入">
+    <!--网站主要内容-->
+    <meta name="description" content="小土科技">
+    <title>剧本管理</title>
+    <#include "../common/context.html"/>
+    <link rel="stylesheet" href="${basePath}/static/css/playManage/uploadPlay.css">
+    <script src="${basePath}/static/js/playManage/uploadPlay.js"></script>
+</head>
+<body>
+<#include '../component/header.html'/>
+<#include '../component/levelThreeLinkage.html'>
+    <div class="project-list-four">
+        <!--上传剧本-->
+        <div class="play four-content center">
+            <div class="four-left">
+                项目管理-剧本管理
+            </div>
+            <div class="four-right">
+                <button class="upload-play upload-play-t">上传剧本</button>
+            </div>
+        </div>
+    </div>
+    <div class="center content">
+    	<input class="btn btn-primary btn-ananlyse" id="ananlyseBtn" type="button" value="智能解析" onclick="autoAnalyse()" disabled>
+    	<div class="alert hidden" id="analyseStatus" role="alert">
+		  <strong>提示：</strong> <span>正在解析，请稍候...</span>
+		</div>
+        <div class="panel panel-default">
+        	<div class="panel-heading">
+        		<h4><#include '../component/dobuleBias.html'/>剧本列表</h4>
+        	</div>
+        	<table class="table table-hover table-bordered">
+        		<thead>
+        			<tr>
+	        			<td>序号</td>
+	        			<td>文件名称</td>
+	        			<td>上传时间</td>
+        			</tr>
+        		</thead>
+        		<tbody id="playListTbody">
+        			<!-- <tr>
+	        			<td>1</td>
+	        			<td>《呵呵搭》</td>
+	        			<td>2017-01-01</td>
+        			</tr> -->
+        			
+        		</tbody>
+        	</table>
+        </div>
+        <div class="tcdPageCode" id="playPage"></div>
+    </div>
+    <#include '../component/footer.html'/>
+
+    <div class="shade">
+        <div class="shade-con">
+            <div class="file-box">
+                <#include '../component/uploadFile.html'/>
+            </div>
+            <div class="result-box hide">
+                <#include '../component/resultContent.html'/>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

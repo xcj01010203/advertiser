@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv=Content-Type content="text/html;charset=utf-8">
+    <!--指明当前的页面在IE浏览器渲染的时候使用最新的渲染引擎来渲染-->
+    <meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1">
+    <!--网站的关键字-->
+    <meta name="keywords" content="广告植入">
+    <!--网站主要内容-->
+    <meta name="description" content="小土科技">
+    <title>菜单管理</title>
+    <#include "/common/context.html"/>
+    <link rel="stylesheet" href="${basePath}/static/css/user/menuManage.css" type="text/css">
+    <script src="${basePath}/static/js/user/menuManage.js"></script>
+    <script src="${basePath}/static/component/bootstrap-treeview.min.js"></script>
+    <script src="${basePath}/static/js/user/alertify.js"></script>
+</head>
+<body>
+<#include '/component/header.html'/>
+<div class="new-project clearfix">
+    <div class="center">
+        <div class="left">
+            <#if menuList ? exists>
+		    	<#list menuList as menus>  
+		    	<#if menus.cssName ?? && menus.menuLv ??>
+		    		<#if menus.cssName == "user_settings" && menus.menuLv==1>
+		    		<a href="${basePath}${menus.menuURL}">
+		                <div class="leftMenu">
+		                    <div class="${menus.cssName}">${menus.menuName}</div>
+		                </div>
+		            </a>
+		    		</#if>
+		    </#if>
+		    	</#list>
+    		</#if>
+        </div>
+        <div class="right clearfix">
+            <div class="project-info project-message">
+                <div class="project-info-top">
+                    <#include '/component/dobuleBias.html'/>
+                    <h4>菜单管理</h4>
+                </div>
+                <div class="userManage-box">
+                    <button class="userManage-box-btn" onclick="addButton('userManage-box-btn')">新增菜单</button>
+                    <button class="userManage-box-btn" onclick="updateButton('userManage-box-btn')">修改菜单</button>
+                    <button class="userManage-box-btn" onclick="deleteButton()">删除菜单</button>
+                    <button class="close-all userManage-box-btn">关闭所有</button>
+                    <button class="open-all userManage-box-btn">打开所有</button>
+                </div>
+                <ul class="userManage-menu userManage-th">
+                    <!--<li class="menu-num"><input name="project-type" value="type1" type="checkbox"/>菜单编号</li>-->
+                    <li class="menu-num">菜单编号</li>
+                    <li class="menu-name" style="text-align: left;padding-left: 10px;">菜单名称</li>
+                    <li class="menu-describe">菜单描述</li>
+                    <li class="menu-url">菜单URL</li>
+                    <li class="menu-icon">菜单图标样式</li><!-- 
+                    <li class="follow-menu">是否有二级菜单</li>
+                    <li class="menu-position">菜单显示位置</li>
+                    <li class="func-control">是否进行功能控制</li> -->
+                </ul>
+                
+                <div class="trend-draw"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<#include '/component/footer.html'/>
+
+<!-- 新增菜单 -->
+<div id="addShade" class="shade hide">
+	<div id="addPop" class="pop">
+    <div class="project-info-top">
+        <#include '/component/dobuleBias.html'/>
+        <h4>新增菜单</h4>
+        <div class="close"><i class="icon iconfont"><button onclick="addButton('icon iconfont')">X</button></i></div>
+    </div>
+    <br>
+    <div class="project-content">
+        <div class="project-content-block">
+            <span>菜单编号</span>
+            <input type="text" id="menuId" name="menuId">
+        </div>
+        <div class="project-content-block">
+            <span>菜单名称</span>
+            <input type="text" id="menuName" name="menuName">
+        </div>
+        <div class="project-content-block">
+            <span>描述</span>
+            <input type="text" id="menuExplain" name="menuExplain">
+        </div>
+        <div class="project-content-block">
+            <span>上级菜单</span>
+            <input type="text" id="fid" name="fid">
+        </div>
+        <div class="project-content-block">
+            <span>URL</span>
+            <input type="text" id="menuURL" name="menuURL">
+        </div>
+        <div class="project-content-block">
+            <span>菜单图标样式</span>
+            <input type="text" id="cssName" name="cssName">
+        </div>
+        <button class="btn-ok" onclick="addMenu()">确定</button>
+        <button class="btn-cancel" onclick="addButton('btn-cancel')">取消</button>
+    </div>
+</div>
+</div>
+
+<!-- 修改菜单 -->
+<div id="updateShade" class="shade" style="display: none">
+	<div id="updatePop" class="pop"  style="display: none">
+    <div class="project-info-top">
+        <#include '/component/dobuleBias.html'/>
+        <h4>修改菜单</h4>
+        <div class="close"><i class="icon iconfont"><button onclick="updateButton('icon iconfont')">X</button></i></div>
+    </div>
+    <br>
+    <div class="project-content">
+        <div class="project-content-block">
+            <span>菜单编号</span>
+            <input type="text" id="menuIds" name="menuId">
+        </div>
+        <div class="project-content-block">
+            <span>菜单名称</span>
+            <input type="text" id="menuNames" name="menuName">
+        </div>
+        <div class="project-content-block">
+            <span>描述</span>
+            <input type="text" id="menuExplains" name="menuExplain">
+        </div>
+        <div class="project-content-block">
+            <span>上级菜单</span>
+            <input type="text" id="fids" name="fid">
+        </div>
+        <div class="project-content-block">
+            <span>URL</span>
+            <input type="text" id="menuURLs" name="menuURL">
+        </div>
+        <div class="project-content-block">
+            <span>菜单图标样式</span>
+            <input type="text" id="cssNames" name="cssName">
+        </div>
+        <button class="btn-ok" onclick="updateMenu()">确定</button>
+        <button class="btn-cancel" onclick="updateButton('btn-cancel')">取消</button>
+    </div>
+</div>
+</div>
+
+</body>
+</html>

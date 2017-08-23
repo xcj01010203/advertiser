@@ -1,0 +1,286 @@
+th{
+    font-weight: normal;
+}
+/*��� start*/
+.new-project {
+    margin-top: 20px;
+}
+.new-project .left{
+    float: left;
+}
+.new-project .left a .leftMenu{
+    width: 210px;
+    height: 52px;
+    padding: 10px 0;
+}
+.new-project .left a .leftMenu div{
+    line-height:32px;
+    padding-left:25px;
+}
+.new-project .left a .left_content {
+    height: 32px;
+    line-height: 32px;
+    font-size: 14px;
+    padding-left: 30px;
+    color: #1a1a1a;
+}
+
+.new-project .left a .left_content {
+    height: 32px;
+    line-height: 32px;
+    font-size: 14px;
+    padding-left: 30px;
+    color: #1a1a1a;
+}
+.new-project .left a .left_content_select{
+    border-left: 3px solid #29d9c2;
+}
+.new-project .left a:nth-of-type(4){
+    border-bottom: solid 1px #ededed;
+}
+.new-project .left a:nth-of-type(3) .leftMenu .user_settings{
+	border-left:3px solid #29d9c2;
+}
+.new-project .left a{
+    width: 210px;
+    height: 52px;
+    background-color:#ffffff;
+    display: block;
+}
+.new-project .left a:hover{
+    background-color:#29d9c2;
+}
+/*���  end*/
+
+/*�Ҳ� start*/
+.new-project .center .right {
+    float: right;
+    width: 970px;
+}
+.new-project .center .right .project-info {
+    background-color: #ffffff;
+    margin-bottom: 20px;
+    min-height: 500px;
+}
+.new-project .center .right .project-info .project-info-top {
+    padding-top: 17px;
+    padding-left: 30px;
+    padding-bottom: 17px;
+    border-bottom: 1px solid #ededed;
+}
+.new-project .center .right .project-info .project-info-top h4{
+    display: inline-block;
+    font-size: 14px;
+    color: #1a1a1a;
+}
+.new-project .center .right .project-info .userManage-box {
+    padding-left: 30px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    background-color: #ffffff;
+    border-bottom: 1px solid #ededed;
+}
+.new-project .center .right .project-info .userManage-box .userManage-box-btn{
+    padding-top: 6px;
+    padding-bottom: 6px;
+    padding-left: 8px;
+    padding-right: 8px;
+    background-color: #ffffff;
+    color:#333333;
+    border: 1px solid #333333;
+    margin-right: 10px;
+    font-size: 12px;
+}
+.new-project .center .right .project-info .userManage-menu{
+    height: 50px;
+    font-size: 14px;
+    color: #292929;
+    margin-left: 30px;
+    margin-right: 30px;
+    border-bottom: 1px solid #ededed;
+    text-align: center;
+
+}
+.new-project .center .right .project-info .userManage-menu li{
+    float: left;
+    text-align: center;
+    height: 50px;
+    line-height: 50px;
+    border-right: 1px solid #ededed;
+    overflow: hidden;
+}
+.new-project .center .right .project-info .userManage-menu li input{
+    vertical-align: text-top;
+    margin-right: 5px;
+}
+.new-project .center .right .project-info .userManage-menu li a{
+    text-decoration: none;
+    color: #292929;
+    position: relative;
+    padding-left: 13px;
+}
+.new-project .center .right .project-info .userManage-menu li a i{
+    position: absolute;
+    left: -2px;
+    vertical-align: baseline;
+}
+.new-project .center .right .project-info .userManage-menu .menu-num {
+    width: 89px;
+}
+.new-project .center .right .project-info .userManage-menu .menu-name {
+    width:250px;
+    text-align: left;
+}
+.new-project .center .right .project-info .userManage-menu .menu-describe {
+    width:105px;
+}
+.new-project .center .right .project-info .userManage-menu .menu-url {
+    width:320px;
+}
+.new-project .center .right .project-info .userManage-menu .menu-icon {
+    width:135px;
+    border-right: none;
+}
+.new-project .center .right .project-info .userManage-menu .follow-menu {
+    width:61px;
+    height: 50px;
+    line-height: 25px;
+}
+.new-project .center .right .project-info .userManage-td .follow-menu {
+    line-height: 50px;
+}
+.new-project .center .right .project-info .userManage-menu .menu-position {
+    width: 116px;
+}
+.new-project .center .right .project-info .userManage-menu .func-control {
+    width:72px;
+    line-height: 25px;
+    height: 50px;
+    border-right: none;
+}
+.new-project .center .right .project-info .userManage-td .func-control {
+    line-height: 50px;
+}
+
+.new-project .center .right .project-info .one .menu-name {
+    padding-left: 10px;
+}
+.new-project .center .right .project-info .two .menu-name {
+    padding-left: 42px;
+}
+.new-project .center .right .project-info .three .menu-name {
+    padding-left: 74px;
+}
+.new-project .center .right .project-info .four .menu-name {
+    padding-left: 106px;
+}
+
+.new-project .center .right .project-info .userManage-td .follow-menu {
+    line-height: 50px;
+}
+/*�Ҳ� end*/
+
+
+/*͸������*/
+.shade{
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    z-index: 10001;
+    top:0;
+    left: 0;
+    background-color:rgba(0,0,0,0.2);
+
+}
+/*͸������*/
+
+/*�����û�*/
+
+.pop{
+    width: 970px;
+    height: 620px;
+    position: fixed;
+    z-index: 10001;
+    top:50px;
+    left: 50%;
+    margin-left: -485px;
+    background-color: #ffffff;
+    border-radius: 4px;
+}
+.pop .project-info-top {
+    padding-top: 17px;
+    padding-left: 30px;
+    padding-bottom: 17px;
+    border-bottom: 1px solid #ededed;
+}
+.pop .project-info-top h4 {
+    display: inline-block;
+    font-size: 14px;
+    color: #1a1a1a;
+}
+.pop .project-info-top .close{
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top:19px;
+    right:30px;
+    display: block;;
+}
+.pop .project-info-top .close .iconfont{
+    font-family: "iconfont" !important;
+    font-size: 20px;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -webkit-text-stroke-width: 0.2px;
+    -moz-osx-font-smoothing: grayscale;
+}
+.pop .project-info-top .close i:hover {
+    cursor: pointer;
+    opacity: 0.8;
+}
+.pop .project-content {
+    padding:5px 30px;
+    background-color: #ffffff;
+}
+.pop .project-content .project-content-block {
+    margin-top: 20px;
+}
+.pop .project-content .project-content-block:nth-child(1) {
+    margin-top: 0;
+}
+.pop .project-content .project-content-block span {
+    color: rgb(179, 179, 179);
+    font-size: 14px;
+    display: inline-block;
+    width: 130px;
+}
+.pop .project-content .project-content-block > input {
+    width: 750px;
+    height: 40px;
+    border: 1px solid #dedede;
+    background-color: #f5f5f5;
+    padding-left: 20px;
+}
+
+.pop .project-content .project-content-block > label {
+    margin-left:40px;
+}
+
+.pop .btn-ok {
+    width: 120px;
+    height: 36px;
+    background-color: #29d9c2;
+    color: #ffffff;
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+.pop .btn-cancel {
+    width: 120px;
+    height: 36px;
+    background-color: #d9d9d9;
+    color: #ffffff;
+    margin-top: 20px;
+    margin-bottom: 30px;
+    margin-left: 10px;
+
+}

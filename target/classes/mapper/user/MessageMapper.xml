@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="MessageMapper">
+	
+	<!-- 添加消息信息 -->
+	<insert id="insertMessage" parameterType="Message" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO advertiser.tab_message (id,userid,messageinfo,messagetype,replycontent,createtime) 
+		values(#{id},#{userid},#{messageinfo},#{messagetype},#{replycontent},NOW())
+	</insert>
+	
+	<!-- 添加用户和消息对应关系 -->
+	<insert id="insertUserMessage" parameterType="java.util.Map">
+		INSERT INTO advertiser.tab_user_message values
+		<foreach collection="list" item="userId" separator=",">
+			<trim prefix="(" suffix=")" suffixOverrides=",">
+				#{userId},#{messageId}
+			</trim>
+		</foreach>
+	</insert>
+	
+	<!-- 查询所有的历史消息 -->
+	<select id="selectHistoryMessage" parameterType="Message" resultType="Message">
+		SELECT
+			tm.id,
+			tm.messagetype,
+			tm.messageinfo,
+			tm.replycontent,
+			tm.createtime,
+			tum.userid,
+			uu.username as userName
+		FROM
+			advertiser.tab_message tm
+			LEFT JOIN advertiser.tab_user_message tum on tm.id = tum.messageid
+			LEFT JOIN advertiser.tab_user uu on tum.userid = uu.id 
+		WHERE 1=1 and uu.username is NOT NULL 
+		<if test="messagetype != null and messagetype != ''">
+           and tm.messagetype = #{messagetype}
+        </if>
+		ORDER BY
+			tm.createtime DESC
+	</select>
+	
+	<!-- 个人用户消息列表 -->
+	<select id="selectUserMessage" parameterType="Message" resultType="Message">
+		SELECT
+			m.id,
+			m.userid,
+			m.messagetype,
+			m.messageinfo,
+			m.replycontent,
+			m.createtime
+		FROM
+			advertiser.tab_message m ,advertiser.tab_user_message um
+		WHERE
+			1 = 1 and m.id=um.messageid
+        <if test="userid != null">
+           and um.userid = #{userid}
+        </if>
+		ORDER BY
+			m.createtime DESC
+	</select>
+	
+	<!-- 获取用户信息 -->
+	<select id="selectUserList" parameterType="UserModel" resultType="UserModel">
+		select * from advertiser.tab_user where 1=1
+	</select>
+		
+	<!-- 查询历史消息信息 -->
+	<select id="selectMessageUserId" parameterType="Message" resultType="Message">
+		SELECT
+			id
+		FROM
+			advertiser.tab_message
+		WHERE
+			1 = 1
+		<if test="userid != null">
+           and userid = #{userid}
+        </if>
+		ORDER BY
+			createtime DESC LIMIT 1
+	</select>
+</mapper>

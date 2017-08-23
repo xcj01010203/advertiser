@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv=Content-Type content="text/html;charset=utf-8">
+    <!--指明当前的页面在IE浏览器渲染的时候使用最新的渲染引擎来渲染-->
+    <meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1">
+    <!--网站的关键字-->
+    <meta name="keywords" content="广告植入">
+    <!--网站主要内容-->
+    <meta name="description" content="小土科技">
+    <title>产品分类</title>
+    <#include "../common/context.html"/>
+    <link rel="stylesheet" href="${basePath}/static/css/adImport/roleClass.css">
+    <script src="${basePath}/static/js/adImport/roleClass.js"></script>
+</head>
+<body>
+<#include '../component/header.html'/>
+<#include '../component/levelThreeLinkage.html'>
+    <div class="project-list-four">
+        <!--按产品分类-->
+        <div class="pero four-content center">
+            <div class="four-left"> 广告分析-按角色分类</div>
+            <div class="four-middle">产品分类<i class="icon iconfont down">&#xe604;</i><i class="icon iconfont top hide">&#xe608;</i>
+            </div>
+        </div>
+    </div>
+    <div class="project-list-five hide">
+        <div class="five-content center">
+            <ul class="five-content-gather clearfix" id="goodsListUl">
+                <!-- <li onclick=""><a href="javascript:;">鞋子</a></li> -->
+            </ul>
+            <button class="btn btn-primary" onclick="loadRoleImplant()">确定</button>
+        </div>
+    </div>
+    
+    <div class="center content role-class">
+        <!-- <div class="panel panel-default">
+        	<div class="panel-heading">
+        		<h4><#include '../component/dobuleBias.html'/>奇异博士——产品分类</h4>
+        	</div>
+        	<div class="panel-body" id="doctor">
+        		
+        	</div>
+        </div> -->
+        <div id="roleListDiv"></div>
+        <div class="tcdPageCode" id="tcdPageCode"></div>
+    </div>
+    
+    
+    <!-- 场景表弹窗 -->
+	<div id="roundListDiv" class="view-list modal fade" tabindex="-1" role="dialog">
+	  <div class="modal-dialog modal-lg" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	      	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	      	<div class="modal-title">
+	      		<div class="pull-left">
+	      			<h4 class="modal-title">
+			      		<div><#include '../component/dobuleBias.html'/>场景表</div>
+			      	</h4>
+	      		</div>
+	      		<div class="xt-green text-center round-title" id="roundTitle">
+	      			
+	      		</div>
+	      	</div>
+	      	
+	      </div>
+	      <div class="modal-body">
+	      	<table class="table table-hover table-implant">
+				<thead>
+					<tr>
+						<th>集-场</th>
+						<th class="over-hide">气氛</th>
+						<th class="over-hide">内外景</th>
+						<th class="over-hide">主场景</th>
+						<th class="over-hide">主要角色</th>
+						<th class="over-hide">产品分类</th>
+						<th class="over-hide">出现的位置</th>
+						<th class="over-hide">匹配度</th>
+					</tr>
+				</thead>
+				<tbody id="roundListTbody">
+					<!-- <tr>
+						<td width="5%">1-1</td>
+						<td width="5%" class="over-hide">日</td>
+						<td width="5%" class="over-hide">外</td>
+						<td width="15%" class="over-hide">北戴河</td>
+						<td width="20%" class="over-hide" title='大道'>秋明、个军均、吴佩孚秋明、个军均、吴佩孚秋明、个军均、吴佩孚秋明、个军均、吴佩孚</td>
+						<td width="10%" class="over-hide">秋明、个军均、吴佩孚</td>
+						<td width="10%" class="over-hide">秋明、个军均、吴佩孚</td>
+						<td width="20%" class="over-hide">手枪，大炮</td>
+						<td width="10%" class="over-hide">很重要的一出戏</td>
+					</tr> -->
+				</tbody>
+			</table>
+			<div id="roundListPage" class="tcdPageCode"></div>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+    <#include '../component/footer.html'/>
+</body>
+</html>

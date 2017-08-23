@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv=Content-Type content="text/html;charset=utf-8">
+    <!--指明当前的页面在IE浏览器渲染的时候使用最新的渲染引擎来渲染-->
+    <meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1">
+    <!--网站的关键字-->
+    <meta name="keywords" content="广告植入">
+    <!--网站主要内容-->
+    <meta name="description" content="小土科技">
+    <title>反馈信息处理</title>
+    <#include "/common/context.html"/>
+    <link rel="stylesheet" href="${basePath}/static/css/user/feedbackMsg.css">
+    <script src="${basePath}/static/js/common/base.js"></script>
+    <script src="${basePath}/static/js/user/feedbackMsg.js"></script>
+    <script src="${basePath}/static/js/user/alertify.js"></script>
+</head>
+<body>
+<#include '/component/header.html'/>
+<div class="new-project clearfix">
+    <div class="center">
+        <div class="left">
+            <#if menuList ? exists>
+                <#list menuList as menus>
+                <#if menus.cssName ?? && menus.menuLv ??>
+                    <#if menus.cssName == "user_settings" && menus.menuLv==1>
+                        <a href="${basePath}${menus.menuURL}">
+                            <div class="leftMenu">
+                                <div class="${menus.cssName}">${menus.menuName}</div>
+                            </div>
+                        </a>
+                    </#if>
+                 </#if>
+                </#list>
+            </#if>
+        </div>
+        <div class="right clearfix">
+            <div class="project-info project-message">
+                <div class="project-info-top">
+                    <#include '/component/dobuleBias.html'/>
+                    <h4>反馈信息处理</h4>
+                </div>
+                <!--表头-->
+                <ul class="usrManage-table-th">
+                    <li class="feed-user-title">用户</li>
+                    <li class="feed-tell-title">联系方式</li>
+                    <li class="feed-back-title">反馈意见</li>
+                    <li class="feed-time-title">反馈时间</li>
+                    <li class="feed-style-title">状态</li>
+                    <li class="feed-content-title">回复内容</li>
+                </ul>
+                <!--表头结束-->
+                <ul class="usrManage-table-td"></ul>
+                <!--分页-->
+    			<div class="tcdPageCode" id="tcdPageCode"></div>
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<#include '/component/footer.html'/>
+<!--回复-->
+<div  id="addReplyShade" class="shade"  style="display:none;">
+    <div id="addReplyPop" class="pop">
+        <div class="project-info-top">
+            <#include '/component/dobuleBias.html'/>
+            <h4>回复</h4>
+            <div class="close"><i class="icon iconfont"><button onclick="addReplyContent('iconfont')">X</button></i></div>
+        </div>
+        <br>
+        <div class="project-content">
+            <div class="project-content-block">
+                <textarea id="text-area" class="text-area" placeholder="还能输入300字符" maxlength="300"></textarea>
+            </div>
+
+            <button class="btn-ok" onclick="addBeedRepltyContent()">确定</button>
+            <button class="btn-cancel" onclick="addReplyContent('btn-cancel')">取消</button>
+        </div>
+    </div>
+</div>
+<!--回复-->
+
+<!--反馈意见-->
+<div  id="replyContentShade" class="shade" style="display: none;" >
+    <div id="replyContentPop" class="pop-feed">
+        <div class="project-info-top">
+            <div class="close"><i class="icon iconfont"><button onclick="over('iconfont')">X</button></i></div>
+        </div>
+        <div class="project-content">
+            <div class="project-content-block"><p class="feed-text"></p></div>
+        </div>
+    </div>
+</div>
+<!--反馈意见-->
+</body>
+</html>

@@ -1,0 +1,203 @@
+/*导航条  start*/
+.project-list {
+    width: 100%;
+    height: 60px;
+    border-bottom: 1px solid #ededed;
+    background-color: #ffffff;
+}
+.project-list .center {
+}
+.project-list ul li {
+    float: left;
+    margin-top: 10px;
+    margin-left: 30px;
+    border-radius: 5px;
+}
+.project-list ul li a {
+    font-size: 14px;
+    padding: 10px;
+    color: rgb(51, 51, 51);
+    display: inline-block;
+}
+.project-list ul li:nth-child(1) {
+    margin-left: 0;
+}
+.project-list ul li.active {
+    background-color: #29d9c2;
+}
+.project-list ul li.active a {
+    color: #fff;
+}
+.project-list ul li:hover {
+    background-color: #29d9c2;
+}
+.project-list ul li:hover a {
+    color: #fff;
+}
+/*导航条  end*/
+
+/*内容区域  start*/
+.project-content .project-con {
+    position: relative;
+    float: left;
+    width: 277px;
+    height: 460px;
+    background-color: #ffffff;
+    margin-right: 30px;
+    margin-bottom: 30px;
+}
+.project-content .project-con:nth-child(3) {
+    margin-right: 0;
+    margin-bottom: 30px;
+}
+.project-content .project-con:nth-child(7) {
+    margin-right: 0;
+    margin-bottom: 30px;
+}
+.project-content .project-con .project-con-top {
+    height: 220px;
+    border-bottom: 1px dashed #b9b9b9;
+    padding-top: 40px;
+}
+/*添加项目 删除项目*/
+.project-content .project-con-first .project-con-top i {
+    font-size: 85px;
+    margin-left: 98px;
+    color: #29d9c2;
+}
+.project-content .project-con-first .project-con-top i:hover {
+    cursor: pointer;
+    opacity: 0.8;
+}
+.project-content .project-con-first .project-con-top p {
+    text-align: center;
+    font-size: 16px;
+    color: #333333;
+    margin-top: 10px;
+}
+.project-content .project-con .project-con-bottom {
+    padding-top: 30px;
+    padding-bottom: 68px;
+}
+.project-content .project-con-first .project-con-bottom i {
+    font-size: 85px;
+    margin-left: 98px;
+    color: #d9d9d9;
+}
+.project-content .project-con-first .project-con-bottom i:hover {
+    cursor: pointer;
+    color:#a6a6a6;
+}
+.project-content .project-con-first .project-con-bottom p {
+    text-align: center;
+    font-size: 16px;
+    color: #333333;
+    margin-top: 10px;
+}
+/*列表 */
+.project-content .project-con .project-con-top {
+
+}
+.project-content .project-con .project-con-top .if-analyse {
+    text-align: center;
+    font-weight: bold;
+    font-size: 14px;
+}
+.project-content .project-con .project-con-top .if-analyse p {
+    display: inline-block;
+    color: #29d9c2;
+}
+.project-content .project-con .project-con-top .project-name {
+    color: #333;
+    font-weight:bold;
+    text-align: center;
+    margin-top: 16px;
+    font-size: 30px;
+    font-family: "Microsoft YaHei";
+    padding: 0 12px;
+}
+.project-content .project-con .project-con-top .cut-off-rule {
+    background-color: #333333;
+    width: 100px;
+    height: 5px;
+    margin: 30px 0 30px 89px;
+}
+.project-content .project-con .project-con-top .label-type {
+    color: #333333;
+    text-align: center;
+}
+.project-content .project-con .project-con-bottom .tv-company {
+    width: 177px;
+    height: 38px;
+    text-align: center;
+    font-size: 12px;
+    color: #858585;
+    padding-bottom: 20px;
+    margin: 0 50px;
+    border-bottom: 1px dashed #858585;
+}
+.project-content .project-con .project-con-bottom .tv-time {
+    text-align: center;
+    font-size: 12px;
+    color: #858585;
+    margin: 20px 0 30px 0;
+}
+.project-content .project-con .project-con-bottom .see-detail {
+    display: block;
+    width: 150px;
+    height: 38px;
+    text-align: center;
+    line-height: 38px;
+    color: #333333;
+    font-size: 14px;
+    font-weight: bold;
+    border: 1px solid #333333;
+    background-color: #ffffff;
+    margin-left: 63px;
+}
+/*整块 hover的时候*/
+.project-content .project-con .project-con-two:hover .project-con-top {
+    background-color: #29d9c2;
+}
+.project-content .project-con .project-con-two:hover .project-con-top .dobule-bias span {
+    background-color: #fff;
+}
+.project-content .project-con .project-con-two:hover .project-con-top .if-analyse p{
+    color: #ffffff;
+}
+.project-content .project-con .project-con-two:hover .project-con-top .project-name {
+    color: #ffffff;
+}
+.project-content .project-con .project-con-two:hover .project-con-top .cut-off-rule {
+    background-color: #ffffff;
+}
+.project-content .project-con .project-con-two:hover .project-con-top .label-type {
+    color: #ffffff;
+}
+.project-content .project-con .project-con-two:hover .project-con-bottom .see-detail {
+    border: none;
+    color: #ffffff;
+    background-color: #29d9c2;
+}
+/*删除 遮罩*/
+.project-content .project-con .shade {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0, 0.5);
+}
+.project-content .project-con .shade i {
+    position: absolute;
+    font-size: 72px;
+    left: 50%;
+    margin-left: -36px;
+    top: 50%;
+    margin-top: -50px;
+    color: #ffffff;
+}
+.project-content .project-con .shade i:hover {
+    cursor: pointer;
+}
+/*内容区域  end*/

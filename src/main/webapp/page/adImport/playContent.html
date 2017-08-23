@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv=Content-Type content="text/html;charset=utf-8">
+    <!--指明当前的页面在IE浏览器渲染的时候使用最新的渲染引擎来渲染-->
+    <meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1">
+    <!--网站的关键字-->
+    <meta name="keywords" content="广告植入">
+    <!--网站主要内容-->
+    <meta name="description" content="小土科技">
+    <title>剧本类型</title>
+    <#include "../common/context.html"/>
+    <link rel="stylesheet" href="${basePath}/static/css/adImport/playContent.css">
+    <script src="${basePath}/static/js/adImport/playContent.js"></script>
+</head>
+<body>
+<#include '../component/header.html'/>
+<#include '../component/levelThreeLinkage.html'>
+    <div class="project-list-four">
+        <!--按产品分类-->
+        <div class="pero four-content center">
+            <div class="four-left">
+                广告分析-按剧本内容
+            </div>
+            <div class="four-middle">
+                集数选择<i class="icon iconfont down">&#xe604;</i><i class="icon iconfont top hide">&#xe608;</i>
+            </div>
+        </div>
+    </div>
+    <div class="project-list-five hide">
+        <div class="five-content center">
+            <ul class="five-content-gather clearfix" id="seriesNoUl">
+                <li onclick="clickSeriesNo(this)">
+                	<a>第1集</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="center content">
+        <div class="panel panel-default">
+        	<div class="panel-heading">
+        		<h4><#include '../component/dobuleBias.html'/><span id="seriesTitle">第一集</span></h4>
+        	</div>
+        	<table class="table table-hover table-bordered table-implant">
+    			<thead>
+    				<tr>
+    					<th width="10%">集-场</th>
+    					<th width="10%">气氛</th>
+    					<th width="10%">内外景</th>
+    					<th width="14%">主场景</th>
+    					<th width="14%">主要角色</th>
+    					<th width="14%">产品分类</th>
+    					<th width="10%">出现的位置</th>
+    					<th width="18%">相似度</th>
+    				</tr>
+    			</thead>
+    			<tbody id="playContentList">
+    				<!--<tr>-->
+    					<!--<td>1-1</td>-->
+    					<!--<td>夜</td>-->
+    					<!--<td>内</td>-->
+    					<!--<td>天安门外</td>-->
+    					<!--<td>阿三、阿四</td>-->
+    					<!--<td>鞋子</td>-->
+    					<!--<td></td>-->
+    				<!--</tr>-->
+    			</tbody>
+    		</table>
+        </div>
+        <div class="tcdPageCode" id="tcdPageCode"></div>
+    </div>
+    
+    <!-- 场次详细信息弹窗 -->
+	<div id="viewDetailDiv" class="view-detail modal fade" tabindex="-1" role="dialog">
+	  <div class="modal-dialog modal-lg" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	      	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	      	<div class="modal-title">
+		      	<span><#include '../component/dobuleBias.html'/>场次详情</span>
+	      	</div>
+	      </div>
+	      <div class="modal-body">
+	      	<#include '/component/playAnalContent.html'/>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+    <#include '../component/footer.html'/>
+</body>
+</html>

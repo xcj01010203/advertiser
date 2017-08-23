@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="GoodsWordMapMapper">
+
+	<!-- 插入品类与关键词关联信息 -->
+	<insert id="insertGoodsWordMap">
+		INSERT INTO tab_goods_word_map(id,goods_id,word_id,weight) VALUES
+		<foreach collection="list" separator="," item="map">
+ 			(#{map.id},#{map.goods.id},#{map.word.id},#{map.weight})
+ 		</foreach>
+	</insert>
+	
+	<!-- 删除品类与关联词关联信息 -->
+	<delete id="deleteGoodsWordMap">
+		DELETE FROM tab_goods_word_map
+			  WHERE (goods_id,word_id) IN
+			  <foreach collection="list" separator="," open=" (" close=")" item="map">
+			  		(#{map.goods.id},#{map.word.id})
+			  </foreach>
+	</delete>
+</mapper>

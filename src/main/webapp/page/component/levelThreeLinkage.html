@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv=Content-Type content="text/html;charset=utf-8">
+    <!--指明当前的页面在IE浏览器渲染的时候使用最新的渲染引擎来渲染-->
+    <meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1">
+    <!--网站的关键字-->
+    <meta name="keywords" content="广告植入">
+    <!--网站主要内容-->
+    <meta name="description" content="小土科技">
+    <title>三级联动</title>
+    <style>
+        /*导航条  start*/
+        .project-list {
+            width: 100%;
+            height: 60px;
+            background-color: #ffffff;
+        }
+        .project-list-three {
+            height: 60px;
+            border-top: 1px solid #ededed;
+            border-bottom: 1px solid #ededed;
+            background-color: #ffffff;
+            position: absolute;
+            left: 0;
+            top: 160px;
+            width: 100%;
+            display: none;
+        }
+
+        .project-list ul > li {
+            float: left;
+            padding: 10px 0;
+        }
+
+        .project-list ul > li:hover > .project-list-three {
+            display: block;
+        }
+
+        .project-list ul > li > a {
+            display: inline-block;
+            padding: 0 10px;
+            height: 40px;
+            line-height: 40px;
+            font-size: 14px;
+            border-radius: 5px;
+            color: rgb(51, 51, 51);
+            margin-right: 50px;
+            text-decoration: none;
+        }
+
+        .project-list ul > li > a.active {
+            color: #fff;
+            background-color: #29d9c2;
+        }
+
+        .project-list ul > li > a:hover {
+            color: #fff;
+            background-color: #29d9c2;
+        }
+
+
+        .project-list-four {
+            width: 100%;
+            background-color: #ffffff;
+            border-top: 1px solid #ededed;
+        }
+        .project-list-four .four-content {
+            height: 56px;
+            cursor: pointer;
+        }
+        .project-list-four .four-content .four-left {
+            font-size: 12px;
+            color: rgb(153,153,153);
+            line-height: 56px;
+            float: left;
+        }
+        .project-list-four .four-content .four-middle {
+            font-size: 12px;
+            color: rgb(26,26,26);
+            line-height: 56px;
+            float: left;
+            margin-left: 410px;
+        }
+        .project-list-four .four-content .four-middle i {
+            color: rgb(153,153,153);
+        }
+        .project-list-four .four-content .four-middle-right {
+            font-size: 12px;
+            color: rgb(189,189,189);
+            line-height: 56px;
+            float: left;
+            margin-left: 40px;
+        }
+        .project-list-four .four-content .four-middle i {
+            vertical-align: middle;
+        }
+        .project-list-four .four-content .four-right {
+            float: right;
+        }
+        .project-list-four .four-content .four-right .change-play {
+            width: 150px;
+            height: 38px;
+            margin-top: 9px;
+            background-color: #29d9c2;
+            color: #ffffff;
+            font-weight: bold;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .project-list-four .four-content .four-right .change-play:hover{
+            opacity: 0.8;
+        }
+        .project-list-four .four-content .four-right .upload-play {
+            width: 150px;
+            height: 38px;
+            margin-top: 9px;
+            background-color: #ffffff;
+            color: rgb(51,51,51);
+            font-weight: bold;
+            font-size: 14px;
+            border: 1px solid rgb(51,51,51);
+        }
+        .project-list-four .four-content .four-right .upload-play:hover{
+            border: 1px solid rgba(51,51,51,0.6);
+            color: #29d9c2;
+        }
+
+        /*导航条  end*/
+    </style>
+</head>
+<body>
+<div class="project-list project-list-two">
+    <ul class="center">
+        <!--<li>-->
+            <!--<a href="javascript:;" flag="play-manage" class="project-list-li-manage">剧本管理</a>-->
+            <!--<div class="play-manage project-list-three">-->
+                <!--<div class="center">-->
+                    <!--<ul class="play-manage">-->
+                        <!--<li><a href="${basePath}/base/forward/playManage/basicInfo" changeStatus="info">基本信息</a></li>-->
+                        <!--<li><a href="${basePath}/base/forward/playManage/uploadPlay" changeStatus="play">上传剧本</a></li>-->
+                        <!--<li><a href="${basePath}/base/forward/playManage/playAnalyse" changeStatus="anal">剧本解析</a></li>-->
+                        <!--<li><a href="${basePath}/base/forward/playManage/roleForm" changeStatus="pero">角色表</a></li>-->
+                        <!--<li><a href="${basePath}/base/forward/playManage/stageForm" changeStatus="stage">道具表</a></li>-->
+                        <!--<li><a href="${basePath}/base/forward/playManage/sceneForm" changeStatus="scene">场景表</a></li>-->
+                    <!--</ul>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</li>-->
+        <!--<li>-->
+            <!--<a href="javascript:;" flag="ad-import" class="project-list-li-import">广告分析</a>-->
+            <!--<div class="ad-import project-list-three">-->
+                <!--<div class="center">-->
+                    <!--<ul class="ad-import">-->
+                        <!--<li><a href="${basePath}/base/forward/adImport/importAd" changeStatus="info">植入广告</a></li>-->
+                        <!--<li><a href="${basePath}/base/forward/adImport/roleClass" changeStatus="play">按角色分类</a></li>-->
+                        <!--<li><a href="${basePath}/base/forward/adImport/productClass" changeStatus="play">按产品分类</a></li>-->
+                        <!--<li><a href="${basePath}/base/forward/adImport/playContent" changeStatus="anal">按剧本内容</a></li>-->
+                    <!--</ul>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</li>-->
+        <!--<li>-->
+            <!--<a href="javascript:;" flag="data-analyse" class="project-list-li-analyse">数据分析</a>-->
+            <!--<div class="data-analyse project-list-three">-->
+                <!--<div class="center">-->
+                    <!--<ul class="data-analyse">-->
+                        <!--<li><a href="${basePath}/base/forward/dataAnalyse/throwEnvironment" changeStatus="info">投放环境</a></li>-->
+                        <!--<li><a href="${basePath}/base/forward/dataAnalyse/subjectMarket" changeStatus="play">题材市场</a></li>-->
+                        <!--<li><a href="${basePath}/base/forward/dataAnalyse/targetAudiences" changeStatus="anal">目标受众</a></li>-->
+                    <!--</ul>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</li>-->
+    </ul>
+</div>
+</body>
+</html>
+<script>
+    $(function () {
+        threeLinkage()
+    })
+    function threeLinkage() {
+        var url = basePath + '/menu/queryMenu';
+        doPost(url, {}, function (data) {
+            if (data.status == 0) {
+                var menu = data.data.menu, project, play_operate = [];
+                for (var i = 0; i < menu.length; i++) {
+                    if (menu[i].cssName == 'my_project') {
+                        project = menu[i];
+                    }
+                }
+                for (var j = 0; j < project.nodes.length; j++) {
+                    if (project.nodes[j].cssName == '') {
+                        play_operate.push(project.nodes[j])
+                    }
+                }
+                var html = '';
+                for (var k = 0; k < play_operate.length; k++) {
+                    html += '<li><a href="javascript:;">'+play_operate[k].menuName+'</a>';
+                    html += '<div class="project-list-three"><div class="center"><ul class="play-manage">';
+                    for (var h = 0; h < play_operate[k].nodes.length; h++) {
+                        html += '<li><a href="'+play_operate[k].nodes[h].menuURL+'">'+play_operate[k].nodes[h].menuName+'</a></li>';
+                    }
+                    html += '</ul></div></div></li>'
+                }
+                $(".project-list-two > .center").html(html);
+            }
+        })
+    }
+</script>

@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<p>Hello World</p>
+	<form action="/play/uploadPlay" enctype="multipart/form-data" method="post">
+		<input type="file" name="file">
+		<input type="submit" value="提交">
+	</form>
+</body>
+</html>

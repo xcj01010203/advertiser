@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv=Content-Type content="text/html;charset=utf-8">
+    <!--指明当前的页面在IE浏览器渲染的时候使用最新的渲染引擎来渲染-->
+    <meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1">
+    <!--网站的关键字-->
+    <meta name="keywords" content="广告植入">
+    <!--网站主要内容-->
+    <meta name="description" content="小土科技">
+    <title>用户管理</title>
+    <#include "/common/context.html"/>
+    <link rel="stylesheet" href="${basePath}/static/css/user/userManage.css">
+    <script src="${basePath}/static/js/user/userManage.js"></script>
+    <script src="${basePath}/static/js/common/base.js"></script>
+    <script src="${basePath}/static/js/user/alertify.js"></script>
+</head>
+<body>
+<#include '/component/header.html'/>
+<div class="new-project clearfix">
+    <div class="center clearfix">
+        <div class="left">
+        	
+        	
+       	<#if menuList ? exists>
+    	<#list menuList as menus> 
+    	<#if menus.cssName ?? && menus.menuLv ??> 
+    		<#if menus.cssName == "user_settings" && menus.menuLv==1>
+    		<a href="${basePath}${menus.menuURL}">
+                <div class="leftMenu">
+                    <div class="${menus.cssName}">${menus.menuName}</div>
+                </div>
+            </a>
+    		</#if>
+    	</#if>
+    	</#list>
+    	</#if>
+        
+        </div>
+        <div class="right clearfix">
+            <div class="project-info project-message">
+                <div class="project-info-top">
+                    <div class="project-info-top-title">
+                        <#include '/component/dobuleBias.html'/>
+                        <h4>用户管理</h4>
+                    </div>
+                    <fieldset class="search">
+                        <input id="search" type="text" class="box" placeholder="请输入用户名" ><button class="btn" type="button" onclick="search()">查询</button>
+
+                    </fieldset>
+                </div>
+                <div class="userManage-box">
+                    <button class="userManage-box-btn" onclick="addButton('userManage-box-btn')">新增用户</button>
+                    <button class="userManage-box-btn" onclick="updateButton('userManage-box-btn')">修改用户</button>
+                    <button id="deleteUser" class="userManage-box-btn" onclick="deleteButton()">删除用户</button>
+                    <button id="dongjie" class="userManage-box-btn" onclick="removeButton()">冻结用户</button>
+                    <button class="userManage-box-btn" onclick="passWordButton('userManage-box-btn')">重置密码</button>
+                    <button class="userManage-box-btn" onclick="roleUserButton('userManage-box-btn')">分配角色</button>
+                </div>
+                <ul class="usrManage-table-th">
+                    <li><input name="project-type1" id="tot" value="type1" type="checkbox" onclick="selectAll();"/></li>
+                    <li>姓名</li>
+                    <li>真实名称</li>
+                    <li>性别</li>
+                    <li>公司</li>
+                    <li>邮箱</li>
+                    <li>手机号/账号</li>
+                    <li>用户状态</li>
+                </ul>
+                <ul class="usrManage-table-td"></ul> 
+                 <!--分页-->
+    			<div class="tcdPageCode" id="tcdPageCode"></div>
+                <!-- <div class="userManange-table-directions">共<span>45</span>条，显示<span>20</span>条</div> -->
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<div id="addShade" class="shade" style="display: none;"><!--新增用户  -->
+	<div id="addPop" class="pop" style="display: none;">
+    <div class="project-info-top">
+        <#include '/component/dobuleBias.html'/>
+        <h4>新增用户</h4>
+        <div class="close"><i class="icon iconfont"><button onclick="addButton('icon iconfont')">X</button></i></div>
+    </div>
+    <br>
+    <div class="project-content">
+        <div class="project-content-block">
+            <span>用户名</span>
+            <input type="text" id="userName" name="userName" onclick="pass_none();">
+            <span class="userName-point" style="display: none;">用户名不能为空，请重新输入!</span>
+        </div>
+        <div class="project-content-block">
+            <span>密码</span>
+            <input type="password" id="opassword" name="opassWord">
+        </div>
+        <div class="project-content-block">
+            <span>确认密码</span>
+            <input type="password" id="tpassword" name="tpassWord">
+        </div>
+        <div class="project-content-block">
+            <span>真实名称</span>
+            <input type="text" id="realName" name="realName">
+        </div>
+        <div class="project-content-block project-radio">
+            <span>性别</span>
+            <label><input name="sex" value="0" type="radio" checked="checked"/>男</label>
+            <label><input name="sex" value="1" type="radio"/>女</label>
+        </div>
+        <div class="project-content-block">
+            <span>公司</span>
+            <input type="text" id="company" name="company">
+        </div>
+         <div class="project-content-block">
+            <span>手机号</span>
+            <input type="text" id="tel" name="tel" onclick="pass_none();">
+            <span class="tel-point" style="display: none;">手机号不能为空，请重新输入!</span>
+        </div>
+        <div class="project-content-block">
+            <span>邮箱</span>
+            <input type="text" id="email" name="email" onclick="pass_none();">
+            <span class="email-point" style="display: none;">邮箱不能为空，请重新输入!</span>
+        </div>
+        <button class="btn-ok" onclick="addUser()">确定</button><button class="btn-cancel" onclick="addButton('btn-cancel')">取消</button>
+    </div>
+</div>
+</div>
+
+
+<div id="updateShade" class="shade" style="display: none;"><!--修改用户  -->
+	<div id="updatePop" class="pop" style="display: none;">
+    <div class="project-info-top">
+        <#include '/component/dobuleBias.html'/>
+        <h4>修改用户</h4>
+        <div class="close"><i class="icon iconfont"><button onclick="updateButton('icon iconfont')">X</button></i></div>
+    </div>
+    <br>
+    <div class="project-content">
+        <div class="project-content-block">
+            <span>用户名</span>
+            <input type="text" id="uuserName" name="userName">
+        </div>
+        <div class="project-content-block">
+            <span>真实名称</span>
+            <input type="text" id="urealName" name="realName">
+        </div>
+        <div class="project-content-block project-radio">
+            <span>性别</span>
+            <label><input id="sex1" name="sex" value="0" type="radio" checked="checked"/>男</label>
+            <label><input id="sex2" name="sex" value="1" type="radio"/>女</label>
+        </div>
+        <div class="project-content-block">
+            <span>公司</span>
+            <input type="text" id="ucompany" name="company">
+        </div>
+         <div class="project-content-block">
+            <span>手机号</span>
+            <input type="text" id="utel" name="tel">
+        </div>
+        <div class="project-content-block">
+            <span>邮箱</span>
+            <input type="text" id="uemail" name="email">
+        </div>
+        <button class="btn-ok" onclick="updateUser()">确定</button><button class="btn-cancel" onclick="updateButton('btn-cancel')">取消</button>
+    </div>
+</div>
+</div>
+
+<div id="passWordShade" class="shade" style="display: none;">
+	<div id="passWordPop" class="pop" style="display: none;">
+	    <div class="project-info-top">
+	        <#include '/component/dobuleBias.html'/>
+	        <h4>修改密码</h4>
+	        <div class="close"><i class="icon iconfont"><button onclick="passWordButton('icon iconfont')">X</button></i></div>
+	    </div>
+	    <br>
+	    <div class="project-content">
+	        <div class="project-content-block">
+	            <span class="pass-point">默认密码1111,管理员可以随时更改哦!</span>
+	        </div>
+	        <div class="project-content-block">
+	            <span>新密码</span>
+	            <input type="text" id="newpass" name="newpass" value="1111" onclick="pass_none();"/>
+	            <span class="newpass-point" style="display: none;">密码不能为空，请重新输入!</span>
+	        </div>
+	        <div class="project-content-block">
+	            <span>确认密码</span>
+	            <input type="text" id="tnewpass" name="tnewpass" value="1111" onclick="pass_none();"/>
+	            <span class="tnewpass-point" style="display: none;">二次密码不一致，请重新输入!</span>
+	        </div>
+	        <button class="btn-ok" onclick="passWordUser()">确定</button><button class="btn-cancel" onclick="passWordButton('btn-cancel')">取消</button>
+	    </div>
+	</div>
+</div>
+
+<div id="roleUserShade" class="shade" style="display: none;">
+	<div id="roleUserpop" class="pop" style="display: none;">
+    <div class="project-info-top">
+        <#include '/component/dobuleBias.html'/>
+        <h4>分配角色</h4>
+        <div class="close"><i class="icon iconfont"><button onclick="roleUserButton('icon iconfont')">X</button></i></div>
+    </div>
+    <ul class="pop-head">
+        <li id="pop-head-title1" class="pop-head-title">给用户分配角色</li>
+        <li class="userManage-box"><button class="userManage-box-btn" onclick="addRole()">分配角色</button></li>
+
+    </ul>
+    <ul class="usrManage-table-user">
+        <li><!-- <input name="project-type22" id="tot2" value="type1" type="checkbox" onclick="selectAll2();"/> --></li>
+        <li>角色名称</li>
+        <li>角色描述</li>
+        <li>创建人</li>
+        <li>最后修改人</li>
+    </ul>
+    <ul class="usrManage-table-user-role"></ul>
+
+    <ul class="pop-head">
+        <li id="pop-head-title2" class="pop-head-title">用户已有角色</li>
+        <li class="userManage-box"><button class="userManage-box-btn" onclick="removeRole()">解除角色</button></li>
+
+    </ul>
+    <ul class="usrManage-table-user2">
+        <li><!-- <input name="project-type33" id="tot3" value="type1" type="checkbox" onclick="selectAll3();"/> --></li>
+        <li>角色名称</li>
+        <li>角色描述</li>
+        <li>创建人</li>
+        <li>最后修改人</li>
+    </ul>
+    <ul class="usrManage-table-user2-role2"></ul>
+</div>
+</div>
+
+
+<#include '/component/footer.html'/>
+<style>
+</style>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 广告植入和角色的关联 -->
+<mapper namespace="ImplantRoleMapMapper">
+	<!-- 批量新增-->
+	<insert id="insertBatch">
+		INSERT INTO tab_implant_role_map(id, record_id, play_roleid)
+		VALUES
+		<foreach collection="list" separator="," item="tirm">
+			(#{tirm.id}, #{tirm.implantRecord.id}, #{tirm.playRole.id})
+		</foreach> 
+	</insert>
+	
+	<!-- 根据广告植入ID删除记录 -->
+	<delete id="deleteByRecordId" parameterType="String">
+		DELETE FROM tab_implant_role_map WHERE record_id = #{recordId}
+	</delete>
+	
+	<!-- 根据项目ID删除数据 -->
+	<delete id="deleteByProjectId" parameterType="String">
+		DELETE FROM tab_implant_role_map where record_id IN (SELECT id FROM tab_implant_record where project_id = #{projectId})
+	</delete>
+	
+	<!-- 根据项目ID删除数据 -->
+	<delete id="deleteByRoundIds">
+		DELETE FROM tab_implant_role_map where record_id IN (SELECT id FROM tab_implant_record where round_id IN 
+		<foreach collection="list" open="(" close=")" separator="," item="roundId">
+			#{roundId}
+		</foreach>
+		)
+	</delete>
+	
+</mapper>

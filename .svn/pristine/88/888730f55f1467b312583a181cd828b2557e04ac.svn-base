@@ -1,0 +1,64 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>css圆形半分比进度条</title>
+    <style>
+        .circularHalfRadio {
+            width: 90px; height: 90px; position: relative; border-radius: 50%; background: #e7e7e7;
+        }
+        .circularHalfRadio .clip_left,.clip_right{
+            width:90px; height:90px; position: absolute; top: 0px;left: 0px;
+        }
+        .circularHalfRadio .circle_left, .circle_right{
+            width:90px; height:90px; position: absolute; border-radius: 50%; top: 0px; left: 0px; background: #93d9d0;
+        }
+        .circularHalfRadio .circle_right,.clip_right {
+            clip:rect(0,auto,auto,45px);
+        }
+        .circularHalfRadio .circle_left , .clip_left{
+            clip:rect(0,45px,auto,0);
+        }
+        .circularHalfRadio .mask {
+            width: 62px; height: 62px; border-radius: 50%; left: 14px; top: 14px; background: #FFF;
+            position: absolute; text-align: center; line-height: 62px; font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+<!--背景圆-->
+<div class="circularHalfRadio">
+    <!--左半边圆-->
+    <div class="circle_left">
+        <div class="clip_left"></div>
+    </div>
+    <!--右半边圆-->
+    <div class="circle_right">
+        <div class="clip_right"></div>
+    </div>
+    <div class="mask">
+        <span>0</span>%
+    </div>
+</div>
+<script src="../../static/component/jquery-1.10.1.min.js"></script>
+<script>
+    $(function(){
+        circularHalfRadio(90)
+    })
+
+    function circularHalfRadio(num) {
+        if( (100-num) <= 50 ){
+            $('.circle_right').css('transform','rotate('+((100 - num)*3.6)+'deg)');
+        }else{
+            $('.circle_right').css({
+                'transform':'rotate(0deg)',
+                "background":"#e7e7e7"
+            });
+            $('.circle_left').css('transform','rotate('+((100 - num + 50)*3.6)+'deg)');
+        }
+        $(".circularHalfRadio .mask span").text(num);
+    }
+</script>
+</body>
+</html>

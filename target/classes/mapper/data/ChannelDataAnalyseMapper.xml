@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 频道数据分析 -->
+<mapper namespace="ChannelDataAnalyseMapper">
+
+	<!-- 日期时间查询条件 -->
+	<sql id="dateTimeCondition">
+		AND T32.istartdate &lt;= #{endDate}::date
+		AND T32.ienddate &gt;= #{startDate}::date
+		AND CASE
+			WHEN to_timestamp(istoptime, 'HH24MISS') &lt; to_timestamp(#{endTime}, 'HH24MISS') THEN
+				to_timestamp(istoptime, 'HH24MISS')
+			ELSE
+				to_timestamp(#{endTime}, 'HH24MISS')
+			END - CASE
+			WHEN to_timestamp(istarttime, 'HH24MISS') &gt; to_timestamp(#{startTime}, 'HH24MISS') THEN
+				to_timestamp(istarttime, 'HH24MISS')
+			ELSE
+				to_timestamp(#{startTime}, 'HH24MISS')
+			END &gt; (
+				to_timestamp(istoptime, 'HH24MISS') - to_timestamp(istarttime, 'HH24MISS')
+			) * 0.6
+	</sql>
+
+	<!-- 查询频道收视排行 -->
+	<select id="selectChannelRank" parameterType="map" resultType="map">
+		SELECT
+			ichannelId,
+			ichannelLevel,
+			chl.label,
+			AVG (avg_c_0_rate) AS rate,
+			AVG (avg_c_0_rate000) AS rate000,
+			AVG (avg_c_0_market) AS market
+		FROM
+			stat.tab_city_tvprogram_rounds_week T32
+		INNER JOIN dim_channel chl ON T32.ichannelid = chl.chid
+		WHERE
+			T32.ichannellevel IN (1, 2)
+		AND iareaid = #{areaId}
+		
+		<include refid="dateTimeCondition"></include>
+		GROUP BY
+			ichannelid,
+			ichannellevel,
+			chl. LABEL
+		ORDER BY
+			AVG (avg_c_0_rate) IS NULL,
+			rate DESC,
+			ichannelid
+	</select>
+	
+	<!-- 查询频道题材市场 -->
+	<select id="selectChannelSubjectMark" parameterType="map" resultType="map">
+		SELECT 
+			ichannelId,
+			channelName,
+			isubject,
+			subjectName,
+			SUM (
+				to_number(itotalpage, '999999.9999')
+			) totalPage,
+			AVG (avg_c_0_rate) rate,
+			AVG (avg_c_0_rate000) rate000,
+			AVG (avg_c_0_market) market
+		
+		FROM
+		-- 添加嵌套查询，是为了过滤掉电视剧名称相同的数据，这种情况下只取第一条数据
+		(SELECT
+			ichannelId,
+			chl. LABEL AS channelName,
+			isubject,
+			sj. LABEL AS subjectName,
+			itotalpage,
+			avg_c_0_rate,
+			avg_c_0_rate000,
+			avg_c_0_market,
+			ROW_NUMBER () OVER (
+				PARTITION BY iserialno,
+				iname
+			ORDER BY
+				releasetime DESC,
+				tv.tvid
+			) num
+		FROM
+			stat.tab_city_tvprogram_rounds_week T32
+		LEFT JOIN basicinfo.tab_tv_info tv ON T32.iname = tv.tvname AND tvtype = 1
+		INNER JOIN dim_channel chl ON T32.ichannelid = chl.chid
+		INNER JOIN dim_subject sj ON T32.isubject = sj.sid
+		WHERE
+			1 = 1
+		AND T32.iareaid = #{areaId}
+		AND T32.ichannelid IN (#{channelId})
+		<include refid="dateTimeCondition"></include>
+		AND T32.avg_c_0_rate IS NOT NULL) tmp
+		WHERE num = 1
+		GROUP BY
+			ichannelid,
+			isubject,
+			channelName,
+			subjectName
+		ORDER BY
+			ichannelid,
+			isubject
+	</select>
+	
+	<!-- 查询频道分城贡献 -->
+	<select id="selectChannelCity" parameterType="map" resultType="map">
+		SELECT
+			ichannelid,
+			chl. LABEL AS channelName,
+			T32.iareaid,
+			cy. LABEL areaName,
+			AVG (avg_c_0_rate) AS rate,
+			AVG (avg_c_0_rate000) AS rate000,
+			AVG (avg_c_0_market) AS market
+		FROM
+			stat.tab_city_tvprogram_rounds_week T32
+		INNER JOIN dim_channel chl ON chl.chid = T32.ichannelid
+		INNER JOIN dim_city cy ON cy.cid = T32.iareaid
+		WHERE
+			1 = 1
+		AND T32.ichannelid IN (${channelId})
+		<include refid="dateTimeCondition"></include>
+		
+		<if test="cityGroupId">
+			AND (T32.iareaid IN (
+				SELECT
+					UNNEST (cg.cids)
+				FROM
+					dim_city_group cg
+				WHERE
+					cg.cgid = ${cityGroupId}
+			)
+			OR T32.iareaid = ${cityGroupId})
+		</if>
+		<if test="cityId">
+			AND T32.iareaid = ${cityId}
+		</if>
+		
+		GROUP BY
+			ichannelid,
+			chl. LABEL,
+			T32.iareaid,
+			cy. LABEL
+		ORDER BY
+			AVG (avg_c_0_rate) IS NULL,
+			rate DESC,
+			ichannelid
+	</select>
+	
+	<!-- 查询频道的人群年龄分布 -->
+	<select id="selectChannelAgeSpread" parameterType="map" resultType="map">
+		SELECT
+			ID,
+			idDetail,
+			AVG(rate) rate,
+			round(AVG(rate000), 3) rate000
+		FROM
+			(
+				SELECT
+					UNNEST (ARRAY [ 1, 2, 3, 4, 5, 6, 7 ]) AS ID,
+					UNNEST (
+						ARRAY [ '4-14',
+						'15-24',
+						'25-34',
+						'35-44',
+						'45-54',
+						'55-64',
+						'65+' ]
+					) AS idDetail,
+					UNNEST (avg_c_age_rate) rate,
+					UNNEST (avg_c_age_rate000) rate000
+				FROM
+					stat.tab_city_tvprogram_rounds_week T32
+					LEFT JOIN basicinfo.tab_tv_info tv ON T32.iname = tv.tvname AND tvtype = 1
+				WHERE
+					1 = 1
+				AND iareaid = #{areaId}
+				AND ichannelid IN (#{channelId})
+				<include refid="dateTimeCondition"></include>
+			) mytable
+		GROUP BY
+			ID,
+			idDetail
+		ORDER BY
+			ID
+	</select>
+	
+	<!-- 查询频道的人群收入分布 -->
+	<select id="selectChannelEarnSpread" parameterType="map" resultType="map">
+		SELECT
+			ID,
+			idDetail,
+			AVG(rate) rate,
+			round(AVG(rate000), 3) rate000
+		FROM
+			(
+				SELECT
+					UNNEST (ARRAY [ 1, 2, 3, 4 ]) AS ID,
+					UNNEST (
+						ARRAY [ '0-2000',
+						'2000-4000',
+						'4000-6000',
+						'6000+' ]
+					) AS idDetail,
+					UNNEST (avg_c_earn_rate) rate,
+					UNNEST (avg_c_earn_rate000) rate000
+				FROM
+					stat.tab_city_tvprogram_rounds_week T32
+					LEFT JOIN basicinfo.tab_tv_info tv ON T32.iname = tv.tvname AND tvtype = 1
+				WHERE
+					1 = 1
+				AND iareaid = #{areaId}
+				AND ichannelid IN (#{channelId})
+				<include refid="dateTimeCondition"></include>
+			) mytable
+		GROUP BY
+			ID,
+			idDetail
+		ORDER BY
+			ID
+	</select>
+	
+	<!-- 查询频道的人群教育水平分布 -->
+	<select id="selectChannelEduSpread" parameterType="map" resultType="map">
+		SELECT
+			ID,
+			idDetail,
+			AVG(rate) rate,
+			round(AVG(rate000), 3) rate000
+		FROM
+			(
+				SELECT
+					UNNEST (ARRAY [ 1, 2, 3, 4, 5 ]) AS ID,
+					UNNEST (
+						ARRAY [ '未受过正规教育',
+						'小学',
+						'初中',
+						'高中',
+						'大学及以上' ]
+					) AS idDetail,
+					UNNEST (avg_c_edu_rate) rate,
+					UNNEST (avg_c_edu_rate000) rate000
+				FROM
+					stat.tab_city_tvprogram_rounds_week T32
+					LEFT JOIN basicinfo.tab_tv_info tv ON T32.iname = tv.tvname AND tvtype = 1
+				WHERE
+					1 = 1
+				AND iareaid = #{areaId}
+				AND ichannelid IN (#{channelId})
+				<include refid="dateTimeCondition"></include>
+			) mytable
+		GROUP BY
+			ID,
+			idDetail
+		ORDER BY
+			ID
+	</select>
+	
+	<!-- 查询收视率 -->
+	<select id="selectRate"  parameterType="map" resultType="double">
+		SELECT
+			AVG (avg_c_0_rate) AS rate
+		FROM
+			stat.tab_city_tvprogram_rounds_week T32
+		LEFT JOIN basicinfo.tab_tv_info tv ON T32.iname = tv.tvname
+		AND tvtype = 1
+		WHERE
+			1 = 1
+		AND T32.iareaid = #{areaId}
+		<!-- 频道查询条件 -->
+		AND ichannelid IN (#{channelId})
+		<include refid="dateTimeCondition"></include>
+		AND T32.avg_c_0_rate IS NOT NULL
+	</select>
+</mapper>

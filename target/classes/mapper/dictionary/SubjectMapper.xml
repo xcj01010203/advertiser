@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="SubjectMapper">
+
+	<select id="selectSubject" parameterType="map" resultType="Subject">
+		SELECT id, name from tab_subject 
+		WHERE 1 = 1
+		<if test="id != null">
+		  AND id = #{id}
+		</if>
+		ORDER BY abs(id)
+	</select>
+	
+</mapper>

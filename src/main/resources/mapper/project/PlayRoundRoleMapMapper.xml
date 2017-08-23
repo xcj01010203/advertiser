@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 场次与角色关联关系 -->
+<mapper namespace="PlayRoundRoleMapMapper">
+	<!-- 查询关联关系 -->
+	<select id="selectPlayRoundRoleMapList" parameterType="map" resultType="PlayRoundRoleMap">
+		SELECT 
+			id, 
+			round_id as 'playRound.id', 
+			play_roleid 'playRole.id'
+		FROM tab_play_round_role_map
+		WHERE 1 = 1
+		<if test="projectId != null">
+		  AND project_id  = #{projectId}
+		</if>
+		<if test="roundId != null">
+		  AND round_id = #{roundId}
+		</if>
+	</select>
+	
+	<!-- 批量新增数据 -->
+	<insert id="insertBatch">
+		INSERT INTO tab_play_round_role_map(
+			id, project_id, round_id, play_roleid
+		)
+		VALUES
+		<foreach collection="list" separator="," item="prrm">
+			(#{prrm.id}, #{prrm.project.id}, #{prrm.playRound.id}, #{prrm.playRole.id})
+		</foreach>
+	</insert>
+	
+	<!-- 删除多个场次的关联关系 -->
+	<delete id="deleteBatchByRoundIds">
+		DELETE FROM 
+			tab_play_round_role_map 
+		WHERE round_id IN
+		<foreach collection="list" open="(" close=")" separator="," item="roundId">
+			#{roundId}
+		</foreach>
+	</delete>
+	
+	<!-- 根据项目ID删除数据 -->
+	<delete id="deleteByProjectId" parameterType="String">
+		DELETE FROM tab_play_round_role_map where project_id = #{projectId}
+	</delete>
+</mapper>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv=Content-Type content="text/html;charset=utf-8">
+    <!--指明当前的页面在IE浏览器渲染的时候使用最新的渲染引擎来渲染-->
+    <meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1">
+    <!--网站的关键字-->
+    <meta name="keywords" content="广告植入">
+    <!--网站主要内容-->
+    <meta name="description" content="小土科技">
+    <title>消息管理</title>
+    <#include "/common/context.html"/>
+    <link rel="stylesheet" href="${basePath}/static/css/user/msgManage.css">
+    <script src="${basePath}/static/js/common/base.js"></script>
+    <script src="${basePath}/static/js/user/msgManage.js"></script>
+    
+</head>
+<body>
+<#include '/component/header.html'/>
+<div class="new-project clearfix">
+    <div class="center">
+        <div class="left">
+            <#if menuList ? exists>
+                <#list menuList as menus>
+                <#if menus.cssName ?? && menus.menuLv ??>
+                    <#if menus.cssName == "user_settings" && menus.menuLv==1>
+                        <a href="${basePath}${menus.menuURL}">
+                            <div class="leftMenu">
+                                <div class="${menus.cssName}">${menus.menuName}</div>
+                            </div>
+                        </a>
+                    </#if>
+                 </#if>
+                </#list>
+            </#if>
+        </div>
+
+        <div class="right clearfix">
+            <div class="product-con">
+                <div flag="msg-add" class="product-div product-con-story select">
+                	<a href="${basePath}/base/forward/user/msgManage">添加消息</a>
+               	</div>
+                <div flag="msg-history" class="product-div product-con-role">
+                	<a href="${basePath}/base/forward/user/historyMessage">历史消息</a>
+                </div>
+            </div>
+            
+            <div class="msg-div msg-add">
+                <div class="select-add">
+                    <div class="select-msg">请选择类型：
+	                	<select class="select-msg" id="messagetype" name="messagetype" onchange="addMessage()">
+						 	<option value ="1">系统消息</option>
+			  				<option value ="2">个人消息</option>
+						</select>
+					</div>
+                </div>
+                <div class="five-siblings-con date clearfix hide">
+                    <ul class="date-ul">
+                    </ul>
+                </div>
+                <textarea id="msg-add-text" class="msg-add-text" placeholder="还能输入300字符"></textarea>
+                <!--选择用户-->
+                <div id="selectMessage" class="select-user" style="display: none">
+                    <span>请选择用户</span>
+                    <fieldset class="feed-search">
+                        <input id="feed-search" type="text" class="box" placeholder="请输入用户名" ><button class="btn" type="button" onclick="search()">查询</button>
+                    </fieldset>
+                    <!--表头-->
+                    <ul class="usrManage-table-th">
+                        <li class="msg-check-title">&nbsp;</li>
+                        <li class="msg-name-title">姓名</li>
+                        <li class="msg-realName-title">真实姓名</li>
+                        <li class="msg-sex-title">性别</li>
+                        <li class="msg-company-title">公司</li>
+                        <li class="msg-mail-title">邮箱</li>
+                        <li class="msg-phone-title">手机号/账号</li>
+                    </ul>
+                    <!--表头结束-->
+                    <!--表格内容-->
+                    <ul class="usrManage-table-td"> </ul>
+                    
+                    <!--表格内容结束-->
+                </div>
+                <!--选择用户接受-->
+                <button class="msg-btn" onclick="addUserMessage()">提交</button>
+            </div>
+               <!--分页-->
+    			<div class="tcdPageCode" id="tcdPageCode" style="display: none;"></div>
+
+        </div>
+    </div>
+</div>
+
+<#include '/component/footer.html'/>
+</body>
+</html>
