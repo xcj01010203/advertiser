@@ -17,6 +17,26 @@
 		</if>
 	</select>
 	
+	<!-- 查询服装列表，带有每个服装的对应的场次信息 -->
+	<select id="selectClothesListWithRoundInfo" parameterType="map" resultType="map">
+		SELECT
+			tc.id,
+			tc.name,
+			GROUP_CONCAT(tprd.seriesno, '-', tprd.roundno ORDER BY tprd.seriesno, ABS(tprd.roundno), tprd.roundno) seriesRoundNos,
+			count(tprd.id) roundCount
+		FROM
+			tab_clothes tc
+		LEFT JOIN tab_play_round_clothes_map tprcm ON tprcm.clothes_id = tc.id
+		LEFT JOIN tab_play_round tprd ON tprd.id = tprcm.round_id
+		WHERE
+			tc.project_id = #{projectId}
+		GROUP BY
+			tc.id,
+			tc. NAME
+		ORDER BY
+			roundCount DESC
+	</select>
+	
 	<!-- 批量新增 -->
 	<insert id="insertBatch">
 		INSERT INTO tab_clothes(id, project_id, name)

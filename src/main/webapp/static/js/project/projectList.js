@@ -28,13 +28,12 @@ $(function () {
     // $(".header .center-margin > a").css("cursor", "default");
     $(".header .center-margin > a img").css("cursor", "default");
     // 我的项目
-    $(".header .center-margin .header-content .header-play a").attr("href", "javascript:;");
-    $(".header .center-margin .header-content .header-play a").css({
+    $(".header .center-margin .header-content .header-play").attr("href", "javascript:;");
+    $(".header .center-margin .header-content .header-play").css({
+        "backgroundColor": "#25262d",
         "color": "#29d9c2",
         "cursor": "default"
     });
-    // 具体项目名称
-    $(".header .center-margin .header-content .header-name a").css("color", "#333");
 });
 
 //项目列表
@@ -49,7 +48,7 @@ function loadProjectList() {
         pageSize: 7,
         successFn: function (response) {
             if (response.status == 1) {
-                alert(response.message);
+                modelWindow(response.msssage)
                 return;
             }
 
@@ -148,7 +147,7 @@ function enterProject() {
         var url = "/project/enterProject";
         var successCall = function (response) {
             if (response.status == 1) {
-                alert(response.message);
+                modelWindow(response.msssage)
                 return;
             }
             window.location.href = "/base/forward/playManage/basicInfo";

@@ -39,13 +39,13 @@
 
         .project-list ul > li > a {
             display: inline-block;
-            padding: 0 10px;
             height: 40px;
             line-height: 40px;
+            padding: 0 10px;
+            margin: 0 30px;
             font-size: 14px;
             border-radius: 5px;
             color: rgb(51, 51, 51);
-            margin-right: 50px;
             text-decoration: none;
         }
 
@@ -58,7 +58,6 @@
             color: #fff;
             background-color: #29d9c2;
         }
-
 
         .project-list-four {
             width: 100%;
@@ -197,14 +196,29 @@
                 }
                 var html = '';
                 for (var k = 0; k < play_operate.length; k++) {
-                    html += '<li><a href="javascript:;">'+play_operate[k].menuName+'</a>';
+                    html += '<li class="pLi"><a pcFlag="'+k+'" href="javascript:;">'+play_operate[k].menuName+'</a>';
                     html += '<div class="project-list-three"><div class="center"><ul class="play-manage">';
                     for (var h = 0; h < play_operate[k].nodes.length; h++) {
-                        html += '<li><a href="'+play_operate[k].nodes[h].menuURL+'">'+play_operate[k].nodes[h].menuName+'</a></li>';
+                        html += '<li class="cLi"><a pcFlag="'+k+'" href="'+play_operate[k].nodes[h].menuURL+'">'+play_operate[k].nodes[h].menuName+'</a></li>';
                     }
                     html += '</ul></div></div></li>'
                 }
                 $(".project-list-two > .center").html(html);
+
+                var text = $(".project-list-four .four-content .four-left").html().trim()
+                var textArr = text.split("-");
+                $(".project-list-two>.center>.pLi").each(function (index, value) {
+                    var aDom = $(value).find(">a");
+                    if (textArr[0] == aDom.html()) {
+                        aDom.addClass("active")
+                    }
+                })
+                $(".project-list-two>.center>.pLi>.project-list-three>.center>.play-manage>.cLi").each(function (index, value) {
+                    var aDom = $(value).find(">a");
+                    if (textArr[1] == aDom.html()) {
+                        aDom.addClass("active")
+                    }
+                })
             }
         })
     }

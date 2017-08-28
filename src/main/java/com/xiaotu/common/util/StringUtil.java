@@ -259,51 +259,16 @@ public class StringUtil
 	 */
 	public static String numberTransform(String numberStr)
 	{
-		if (numberStr == null || numberStr.equals(""))
-		{
-			return null;
-		}
-		StringBuffer newNumberStr = new StringBuffer();
-		for (int i = 0; i < numberStr.length(); i++)
-		{
-			char ch = numberStr.charAt(i);
-			switch (ch)
-			{
-				case '０':
-					newNumberStr.append(0);
-					break;
-				case '１':
-					newNumberStr.append(1);
-					break;
-				case '２':
-					newNumberStr.append(2);
-					break;
-				case '３':
-					newNumberStr.append(3);
-					break;
-				case '４':
-					newNumberStr.append(4);
-					break;
-				case '５':
-					newNumberStr.append(5);
-					break;
-				case '６':
-					newNumberStr.append(6);
-					break;
-				case '７':
-					newNumberStr.append(7);
-					break;
-				case '８':
-					newNumberStr.append(8);
-					break;
-				case '９':
-					newNumberStr.append(9);
-					break;
-				default:
-					newNumberStr.append(ch);
+		char c[] = numberStr.toCharArray();
+		for (int i = 0; i < c.length; i++) {
+			if (c[i] == '\u3000') {
+				c[i] = ' ';
+			} else if (c[i] > '\uFF00' && c[i] < '\uFF5F') {
+				c[i] = (char) (c[i] - 65248);
 			}
 		}
-		return newNumberStr.toString();
+		String returnString = new String(c);
+		return returnString;
 	}
 	
 	/**
@@ -486,5 +451,20 @@ public class StringUtil
 		map.put("rank", dataMap.get(rankObj).get("rownum"));
 		map.put("total", dataMap.size());
 		return map;
+	}
+	
+	/**
+	 * 把英文符号转为中文符号
+	 * @param separator
+	 * @return
+	 */
+	public static String CHToENSeparator(String separator) {
+		String changedStr = separator
+				.replaceAll(":", "：")
+				.replaceAll(",", "，")
+				.replaceAll(";", "；")
+				.replaceAll("\\)", "）")
+				.replaceAll("\\(", "（");
+		return changedStr;
 	}
 }

@@ -110,6 +110,10 @@ s, i, em {
     text-decoration: none;
 }
 
+input::-webkit-input-placeholder {
+    color: #d1d1d1;
+}
+
 /*公共类*/
 .center {
     /*版心 提取 */

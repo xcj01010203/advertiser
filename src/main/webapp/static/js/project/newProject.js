@@ -9,7 +9,7 @@ function loadSubject() {
 	var url = "/subject/querySubjectList";
 	var successCall = function(response){
 		if(response.status == 1){
-			alert(response.message);
+            modelWindow(response.msssage)
 			return;
 		}
 		var subjectList = response.data.subjectList;
@@ -42,12 +42,12 @@ function saveProject() {
 			$("#modal-body").text(response.message);
 			return;
 		}
-		alert("操作成功");
-		
+        modelWindow("操作成功")
+
 		var url = "/project/enterProject";
 		var enterProjectCall = function(response) {
 			if (response.status == 1) {
-				alert(response.message);
+                modelWindow(response.msssage)
 				return;
 			}
 			window.location.href = "/base/forward/playManage/basicInfo";

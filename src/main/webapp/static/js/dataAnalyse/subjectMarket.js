@@ -35,7 +35,7 @@ function loadSubjectRank(params) {
 	var url = "/subjectDataAnalyse/querySubjectRank";
 	var successFn = function(response) {
 		if (response.status == 1) {
-			alert(response.message);
+            modelWindow(response.msssage)
 			return;
 		}
 		
@@ -114,7 +114,7 @@ function loadSubjectMarketPos(params) {
 	var url = "/subjectDataAnalyse/querySubjectMarketPos";
 	var successFn = function(response) {
 		if (response.status == 1) {
-			alert(response.message);
+            modelWindow(response.msssage)
 			return;
 		}
 		var marketPos = response.data.marketPos;
@@ -303,7 +303,7 @@ function loadChannelCity(params) {
 	var url = "/subjectDataAnalyse/querySubjectCity";
 	var successFn = function(response) {
 		if (response.status == 1) {
-			alert(response.message);
+            modelWindow(response.msssage)
 			return;
 		}
 		
@@ -408,7 +408,7 @@ function loadPeopleSpread(params) {
 	var url = "/subjectDataAnalyse/querySubjectPeopleSpread";
 	var successFn = function(response) {
 		if (response.status == 1) {
-			alert(response.message);
+            modelWindow(response.msssage)
 			return;
 		}
 		

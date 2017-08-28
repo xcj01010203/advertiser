@@ -10,7 +10,7 @@ function loadRoleList() {
 		pageSize: 20,
 		successFn: function(response) {
 			if (response.status == 1) {
-				alert(response.msssage);
+				modelWindow(response.msssage)
 				return;
 			}
 			var roleList = response.data.roleList || [];
@@ -80,7 +80,7 @@ function showRoleViewList(id) {
 		pageSize: 10,
 		successFn: function(response) {
 			if (response.status == 1) {
-				alert(response.message);
+                modelWindow(response.msssage)
 				return;
 			}
 			
@@ -114,7 +114,7 @@ function showRoleViewList(id) {
 	var url = "/playRound/queryRoundStatistic";
 	var successFn = function(response) {
 		if (response.status == 1) {
-			alert(response.message);
+            modelWindow(response.msssage)
 			return ;
 		}
 		

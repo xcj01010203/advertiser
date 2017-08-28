@@ -101,7 +101,7 @@ function loadGoodsList() {
 	var url = "/goods/queryGoodsList";
 	var successFn = function(response) {
 		if (response.status == 1) {
-			alert(response.message);
+            modelWindow(response.msssage)
 			return;
 		}
 		
@@ -132,7 +132,7 @@ function loadGoodsImplant() {
 	var url = "/implantAnalyse/queryGoodsImplant";
 	var successFn = function(response) {
 		if (response.status == 1) {
-			alert(response.message);
+            modelWindow(response.msssage)
 			return;
 		}
 		
@@ -187,7 +187,7 @@ function showRoleViewList(own) {
 		data: {goodsIdList: JSON.parse(idList)},
 		successFn: function(response) {
 			if (response.status == 1) {
-				alert(response.message);
+                modelWindow(response.msssage)
 				return;
 			}
 			

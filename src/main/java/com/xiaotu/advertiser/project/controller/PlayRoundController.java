@@ -6,10 +6,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.xiaotu.advertiser.project.controller.dto.PlayRoundDto;
+import com.xiaotu.advertiser.project.controller.filter.PlayRoundFilter;
 import com.xiaotu.advertiser.project.model.ProjectModel;
 import com.xiaotu.advertiser.project.service.PlayRoundService;
 import com.xiaotu.common.util.SessionUtil;
@@ -102,9 +102,9 @@ public class PlayRoundController {
 	 * @return
 	 */
 	@RequestMapping("/querySeriesRoundList")
-	public Object querySeriesRoundList(@RequestParam(value="seriesNoList[]", required=false) List<Integer> seriesNoList, String roleId, String propId, Integer pageSize, Integer currentPage)
+	public Object querySeriesRoundList(PlayRoundFilter filter, Integer pageSize, Integer currentPage)
 	{
-		return this.playRoundService.querySeriesRoundList(seriesNoList, roleId, propId, pageSize, currentPage);
+		return this.playRoundService.querySeriesRoundList(filter, pageSize, currentPage);
 	}
 	
 	/**
@@ -160,14 +160,14 @@ public class PlayRoundController {
 	 * @author wangyanlong 2017年8月22日
 	 * @return
 	 */
-	@RequestMapping("/querySearchList")
-	public Object querySearchList(Integer startSeriesNo, Integer startRoundNo, Integer endSeriesNo, Integer endRoundNo,Integer seriesNo, Integer roundNo,
-			@RequestParam(value="atmosphereList[]", required=false) List<String> atmosphereList, @RequestParam(value="siteList[]", required=false) List<String> siteList,
-			@RequestParam(value="firstLocationList[]", required=false) List<String> firstLocationList, @RequestParam(value="propIdList[]", required=false) List<String> propIdList, 
-			@RequestParam(value="majorRoleIdList[]", required=false) List<Integer> majorRoleIdList, @RequestParam(value="guestRoleIdList[]", required=false) List<Integer> guestRoleIdList, 
-			@RequestParam(value="massRoleIdList[]", required=false) List<Integer> massRoleIdList,Integer pageSize, Integer currentPage)
-	{
-		return this.playRoundService.querySearchList(startSeriesNo,startRoundNo,endSeriesNo,endRoundNo,seriesNo,roundNo,atmosphereList,siteList, firstLocationList,
-				propIdList,majorRoleIdList,guestRoleIdList,massRoleIdList, pageSize, currentPage);
-	}
+//	@RequestMapping("/querySearchList")
+//	public Object querySearchList(Integer startSeriesNo, Integer startRoundNo, Integer endSeriesNo, Integer endRoundNo,Integer seriesNo, Integer roundNo,
+//			@RequestParam(value="atmosphereList[]", required=false) List<String> atmosphereList, @RequestParam(value="siteList[]", required=false) List<String> siteList,
+//			@RequestParam(value="firstLocationList[]", required=false) List<String> firstLocationList, @RequestParam(value="propIdList[]", required=false) List<String> propIdList, 
+//			@RequestParam(value="majorRoleIdList[]", required=false) List<String> majorRoleIdList, @RequestParam(value="guestRoleIdList[]", required=false) List<String> guestRoleIdList, 
+//			@RequestParam(value="massRoleIdList[]", required=false) List<String> massRoleIdList,Integer pageSize, Integer currentPage)
+//	{
+//		return this.playRoundService.querySearchList(startSeriesNo,startRoundNo,endSeriesNo,endRoundNo,seriesNo,roundNo,atmosphereList,siteList, firstLocationList,
+//				propIdList,majorRoleIdList,guestRoleIdList,massRoleIdList, pageSize, currentPage);
+//	}
 }

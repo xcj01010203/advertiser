@@ -13,22 +13,22 @@
     <link rel="stylesheet" href="${basePath}/static/component/webuploader/uploadScenario.css">
     <script src="${basePath}/static/component/webuploader/webuploader.js"></script>
     <style>
-        .upload-file .header {
+        .upload-file .upload-header {
             width: 100%;
             height: 50px;
             border-bottom: 1px solid #dddddd;
         }
 
-        .upload-file .header .header-con {
+        .upload-file .upload-header .header-con {
             padding: 0 30px;
         }
 
-        .upload-file .header .header-con h4 {
+        .upload-file .upload-header .header-con h4 {
             float: left;
             margin-top: 20px;
         }
 
-        .upload-file .header .header-con i {
+        .upload-file .upload-header .header-con i {
             float: right;
             margin-top: 16px;
             cursor: pointer;
@@ -120,7 +120,7 @@
 </head>
 <body>
 <div class="upload-file panel panel-default">
-    <div class="header">
+    <div class="upload-header">
         <div class="header-con">
             <h4>
                 <#include '../component/dobuleBias.html'/>
@@ -171,7 +171,7 @@
             })
         })
 
-        $(".shade .shade-con .upload-file .header .header-con i").click(function () {
+        $(".shade .shade-con .upload-file .upload-header .header-con i").click(function () {
             doPost(basePath + '/playRoundTmp/chackHasSkipOrReplaceData', {}, function (data) {
                 if (data.status == 0) {
                     if (data.data.hasData == true) {

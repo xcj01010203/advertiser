@@ -11,87 +11,130 @@
     <title>头</title>
     <style>
         .header {
-            width: 100%; height: 100px; border-bottom: 1px solid #ededed; position: relative; background-color: #ffffff;
+            width: 100%;
+            height: 100px;
+            border-bottom: 1px solid #ededed;
+            position: relative;
+            background-color: #353740;
         }
-        .header .center-margin{
+
+        .header .center-margin {
             width: 1200px;
             margin-left: auto;
             margin-right: auto;
             height: 100px;
         }
-        .header .center-margin img {
+
+        .header .center-margin > a {
+            display: inline-block;
+            float: left;
+            width: 212px;
+            height: 70px;
+            margin-top: 30px;
+        }
+
+        .header .center-margin a img {
             width: 212px;
             height: 38px;
             display: inline-block;
             margin-bottom: 3px;
         }
+
         .header .center-margin .header-content {
             width: 778px;
-            line-height: 100px; text-align: center;
+            height: 100px;
+            line-height: 100px;
+            text-align: center;
             display: inline-block;
         }
-        .header .center-margin .header-content h2 {
-              display: inline-block;
-              font-size: 18px;
-          }
+
+        .header .center-margin .header-content a {
+            float: left;
+            width: 150px;
+            height: 99px;
+            line-height: 99px;
+            font-size: 18px;
+            color: #ababab;
+        }
+
+        .header .center-margin .header-content .header-play {
+            margin-left: 370px;
+        }
+
+        .header .center-margin .header-content a:hover {
+            background-color: #25262d;
+            color: #29d9c2;
+        }
+
         .header .center-margin .header-content .header-name {
-            margin-left: 56px;
-        }
-        .header .center-margin .header-content .header-name a {
+            background-color: #25262d;
             color: #29d9c2;
+            cursor: default;
         }
-        .header .center-margin .header-content h2 a:hover {
-            color: #29d9c2;
-        }
+
         .header .center-margin .header-icon {
             display: inline-block;
+            float: right;
             width: 200px;
             height: 55px;
             line-height: 55px;
             font-size: 20px;
             padding-top: 21px;
         }
+
         .header .center-margin .header-icon .seter-info {
             margin-left: 70px;
         }
-        .header .center-margin .header-icon .seter-info li:hover{
+
+        .header .center-margin .header-icon .seter-info li:hover {
             background-color: #29d9c2;
         }
-        .header .center-margin .header-icon .seter-info .seter-con{
+
+        .header .center-margin .header-icon .seter-info .seter-con {
             display: none;
         }
-        .header .center-margin .header-icon .seter-info:hover .seter-con{
+
+        .header .center-margin .header-icon .seter-info:hover .seter-con {
             display: block;
         }
+
         .header .center-margin .header-icon .user-info {
             margin-left: 70px;
         }
+
         .header .center-margin .header-icon .user-info .user-con {
             display: none;
             /*border-bottom-left-radius: 5px;*/
         }
+
         .header .center-margin .header-icon .user-info:hover .user-con {
             display: block;
         }
+
         .header .center-margin .header-icon .user-info .user-con li {
             transition: background-color .2s ease;
         }
+
         .header .center-margin .header-icon .user-info .user-con li:hover {
             background-color: #29d9c2;
         }
+
         .header .center-margin .header-icon .user-info .user-con li:hover a {
             color: #ffffff;
         }
+
         .header .center-margin .header-icon i {
             font-size: 20px;
-            color: #333;
+            color: #bdbdbd;
             line-height: 22px;
             margin-top: 6px;
         }
+
         .header .center-margin .header-icon i:hover {
             cursor: pointer;
             opacity: 0.8;
         }
+
         .header .center-margin .header-icon .search {
             font-size: 18px;
         }
@@ -101,6 +144,7 @@
             position: relative;
             float: right;
         }
+
         .header .center-margin .header-icon .info .con {
             position: absolute;
             width: 150px;
@@ -108,13 +152,15 @@
             top: 50px;
             background-color: #ffffff;
             z-index: 11;
-            box-shadow: 2px 2px 4px #dedede,-2px -2px 4px #dedede;
+            box-shadow: 2px 2px 4px #dedede, -2px -2px 4px #dedede;
         }
+
         .header .center-margin .header-icon .info .con li {
             width: 150px;
             height: 50px;
             line-height: 50px;
         }
+
         .header .center-margin .header-icon .info .con li a {
             display: block;
             width: 150px;
@@ -122,42 +168,54 @@
             line-height: 50px;
             padding-left: 30px;
             font-size: 14px;
-            color: rgb(41,41,41);
+            color: rgb(41, 41, 41);
         }
-        .header .center-margin .header-icon .user-info .con li:nth-child(1) a{
+
+        .header .center-margin .header-icon .user-info .con li:nth-child(1) a {
             font-weight: bold;
         }
+
         .header .center-margin .header-icon .info .con li:nth-child(1) {
             border-bottom: 1px solid #ededed;
         }
+
         .header .center-margin .header-icon .info .con li:nth-child(3) {
             border-bottom: 1px solid #ededed;
         }
+
         .header .center-margin .header-icon .info .con li:nth-child(4) {
             border-bottom: 1px solid #ededed;
         }
+
         .header .center-margin .header-icon .info .con li:nth-child(6) {
             border-bottom: 1px solid #ededed;
         }
+
         .header .center-margin .header-icon .info .seter-con li {
             transition: background-color .2s ease;
         }
+
         .header .center-margin .header-icon .info .seter-con li:hover {
             background-color: #29d9c2;
         }
+
         .header .center-margin .header-icon .info .seter-con li:hover a {
             color: #ffffff;
         }
+
         .header .center-margin .header-icon .info .seter-con li a {
             font-size: 14px;
-            color: rgb(41,41,41);
+            color: rgb(41, 41, 41);
         }
+
         .header .center-margin .header-icon .info .seter-con li:nth-child(1) {
-            border-bottom:none;
+            border-bottom: none;
         }
+
         .header .center-margin .header-icon .info .seter-con li:nth-child(3) {
             border-bottom: none;
         }
+
         .header .center-margin .header-icon .info .user-con .topTriangle {
             position: absolute;
             top: -8px;
@@ -172,6 +230,7 @@
             transform: rotate(45deg);
             z-index: 10;
         }
+
         .header .center-margin .header-icon .info .user-con li {
             z-index: 11;
         }
@@ -180,6 +239,7 @@
             position: relative;
             display: none;
         }
+
         .header-search input {
             position: absolute;
             top: -75px;
@@ -190,15 +250,18 @@
             border: 1px solid #ededed;
             padding-left: 50px;
         }
+
         .header-search i {
             cursor: pointer;
         }
+
         .header-search .search {
             position: absolute;
             top: -60px;
             left: 355px;
             font-size: 20px;
         }
+
         .header-search .cha {
             position: absolute;
             top: -61px;
@@ -211,45 +274,49 @@
 <div class="header">
     <div class="center-margin">
         <a href="/base/forward/project/projectList">
-        	<img src="${basePath}/static/images/logo/header_logo.png" alt="logo">
+            <img src="${basePath}/static/images/logo/header_logo.png" alt="logo">
         </a>
         <div class="header-content">
-            <h2 class="header-play"><a href="/base/forward/project/projectList">我的项目</a></h2>
+            <!--<h2 class="header-play"><a href="/base/forward/project/projectList">我的项目</a></h2>-->
             <!--<h2 class="header-name"><a href="${basePath}/base/forward/playManage/basicInfo"></a></h2>-->
-            <h2 class="header-name">
-	            <a href="/base/forward/playManage/basicInfo">
-	                <#if PROJECT ??>
-	                    ${PROJECT.name}
-	                </#if>
-	            </a>
-            </h2>
+            <a class="header-play" href="/base/forward/project/projectList">我的项目</a>
+            <#if PROJECT ??>
+                <a class="header-name" href="/base/forward/playManage/basicInfo">
+                    ${PROJECT.name}
+                </a>
+            </#if>
+            <!--<#if PROJECT ??>-->
+                <!--<h2 class="header-name"><a href="/base/forward/playManage/basicInfo">-->
+                        <!--${PROJECT.name}-->
+                <!--</a></h2>-->
+            <!--</#if>-->
         </div>
-        
+
         <div class="header-icon">
             <div class="info seter-info">
-                <i class="icon iconfont user"><a href="/base/forward/user/userManage">&#xe612;</a></i>
+                <a href="/base/forward/user/userManage"><i class="icon iconfont user">&#xe612;</i></a>
                 <ul class="con seter-con">
-                	<#if menuList ? exists>
+                    <#if menuList ? exists>
                         <#list menuList as menus>
-                        	<#if menus.cssName ?? && menus.menuLv ??>
-	                                <#if menus.cssName == "user_settings" && menus.menuLv==1>
-	                                    <li><a href="${basePath}${menus.menuURL}">${menus.menuName}</a></li>
-	                                </#if>
+                            <#if menus.cssName ?? && menus.menuLv ??>
+                                <#if menus.cssName == "user_settings" && menus.menuLv==1>
+                                    <li><a href="${basePath}${menus.menuURL}">${menus.menuName}</a></li>
                                 </#if>
+                            </#if>
                         </#list>
-	    			</#if>
+                    </#if>
                 </ul>
             </div>
             <div class="info user-info">
-                <i class="icon iconfont user"><a href="/base/forward/user/myMessage">&#xe631;</a></i>
+                <a href="/base/forward/user/myMessage"><i class="icon iconfont user">&#xe631;</i></a>
                 <ul class="con user-con">
                     <#if menuList ? exists>
                         <#list menuList as menus>
-                        <#if menus.cssName ?? && menus.menuLv ??>
-                            <#if menus.cssName == "user_center" && menus.menuLv==1>
-                                <li><a href="${basePath}${menus.menuURL}">${menus.menuName}</a></li>
+                            <#if menus.cssName ?? && menus.menuLv ??>
+                                <#if menus.cssName == "user_center" && menus.menuLv==1>
+                                    <li><a href="${basePath}${menus.menuURL}">${menus.menuName}</a></li>
+                                </#if>
                             </#if>
-                        </#if>
                         </#list>
                     </#if>
                 </ul>
@@ -269,12 +336,11 @@
     $(function () {
 
         //获取URL地址  删除个人中心与设置项目名称
-        var xturl=document.location.href;
+        var xturl = document.location.href;
         var xtsubstr = "/user";
-        if(xturl.indexOf(xtsubstr) >= 0){
-            $(".header .center-margin .header-content .header-name a").html("");
+        if (xturl.indexOf(xtsubstr) >= 0) {
+            $(".header .center-margin .header-content .header-name").html("");
         }
-
 //        搜索
         $(".header .header-icon>.search-info>.search").click(function () {
             $(this).hide(200)
@@ -292,10 +358,11 @@
                     return;
                 }
                 window.location.href = basePath + '/base/forward/project/projectList?name=' + inputVal;
-            };
+            }
+            ;
         })
 //        点击搜索
-        $(".header .center-margin .header-search .search").click(function() {
+        $(".header .center-margin .header-search .search").click(function () {
             var inputVal = $(this).siblings("input").val().trim();
             if (!inputVal) {
                 return;
@@ -305,6 +372,15 @@
 
         if (!$(".header .center-margin .header-icon .seter-info .seter-con li")[0]) {
             $(".header .center-margin .header-icon .seter-info").hide()
+        }
+
+        if (!$(".header .center-margin .header-content .header-name").html()) {
+            $(".header .center-margin .header-content .header-name").remove()
+        }
+        if ($(".header .center-margin .header-content .header-name")[0]) {
+            $(".header .center-margin .header-content .header-play").css("marginLeft", "280px")
+        }else {
+            $(".header .center-margin .header-content .header-play").css("marginLeft", "370px")
         }
     })
 </script>

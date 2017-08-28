@@ -12,7 +12,7 @@ function loadSubject() {
 	var url = "/subject/querySubjectList";
 	var successCall = function(response){
 		if(response.status == 1){
-			alert(response.message);
+			modelWindow(response.message)
 			return;
 		}
 		var subjectList = response.data.subjectList;
@@ -36,7 +36,7 @@ function loadProjectDetail() {
 	var url = "/project/queryProjectDetail";
 	var successCall = function(response) {
 		if (response.status == 1) {
-			alert(response.message);
+			modelWindow(response.message)
 			return;
 		}
 		
@@ -111,10 +111,10 @@ function saveProject(own) {
 	var url = "/project/saveProject";
 	var successCall = function(response) {
 		if (response.status == 1) {
-			alert(response.message);
+			modelWindow(response.message)
 			return;
 		}
-		alert("操作成功");
+        modelWindow("操作成功")
 		
 		window.location.reload();
 	};

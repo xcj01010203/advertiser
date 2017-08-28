@@ -341,7 +341,6 @@
             var url = basePath + '/playRoundTmp/replaceAll';
             doPost(url, {idList: checkedArr}, function (data) {
                 if (data.status == 0) {
-                    alert(111)
                     modelWindow("跳过成功", 1000)
 
                     // 移除选中的checkbox

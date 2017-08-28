@@ -69,7 +69,7 @@ function loadViewList() {
         pageSize: 10,
         successFn: function (response) {
             if (response.status == 1) {
-                alert(response.message);
+                modelWindow(response.msssage)
                 return;
             }
 

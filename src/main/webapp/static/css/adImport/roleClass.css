@@ -62,13 +62,37 @@
 
 /*场次列表央视*/
 .table-implant tbody td {
-	line-height: 90px !important;
+	/*line-height: 90px !important;*/
 }
 .table-implant .pie-div {
 	width:90px;
-	height:90px;
-	margin: 0 auto;
+	/*height:90px;*/
+	/*margin: 0 auto;*/
 }
 .round-title {
 	width: 88%;	
+}
+
+
+/*百分比*/
+.percentage-box-con {
+    margin: 0 8px;
+}
+.percentage-box-con .percentage-box {
+    position: relative;
+    display: inline-block;
+    width: 130px;
+    height: 12px;
+    border-radius: 8px;
+    background-color: #E7E7E7;
+}
+.percentage-box-con .percentage-box .percentage-box-color {
+    position: absolute;
+    height: 12px;
+    border-radius: 8px;
+    background-color: #29D9C2;
+}
+.percentage-box-con .percentage-box-num {
+    display: inline-block;
+    margin-left: 5px;
 }

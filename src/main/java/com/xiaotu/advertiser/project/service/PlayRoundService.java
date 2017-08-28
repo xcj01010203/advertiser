@@ -1,6 +1,9 @@
 package com.xiaotu.advertiser.project.service;
 
+import java.text.CollationKey;
+import java.text.Collator;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -12,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.xiaotu.advertiser.dictionary.model.GoodsModel;
 import com.xiaotu.advertiser.dictionary.model.ImplantModeModel;
 import com.xiaotu.advertiser.project.controller.dto.PlayRoundDto;
+import com.xiaotu.advertiser.project.controller.filter.PlayRoundFilter;
 import com.xiaotu.advertiser.project.model.ClothesModel;
 import com.xiaotu.advertiser.project.model.PlayRoleModel;
 import com.xiaotu.advertiser.project.model.PlayRoundModel;
@@ -619,75 +623,108 @@ public class PlayRoundService extends BaseService{
 		param.put("projectId", project.getId());
 		
 		List<PlayRoundModel> roundList = this.getList("selectPlayRound", param);
-		List<PlayRoleModel> roleList = this.getList("PlayRoleMapper.selectPlayRoleList", param);
-		List<ClothesModel> clothesList = this.getList("ClothesMapper.selectClothesList", param);
-		List<PropModel> propList = this.getList("PropMapper.selectPropList", param);
+		List<Map<String, Object>> roleList = this.getList("PlayRoleMapper.selectRoleListWithRoundInfo", param);
+		List<Map<String, Object>> clothesList = this.getList("ClothesMapper.selectClothesListWithRoundInfo", param);
+		List<Map<String, Object>> propList = this.getList("PropMapper.selectPropListWithRoundInfo", param);
 		List<GoodsModel> goodsList = this.getList("GoodsMapper.selectGoods");
 		List<ImplantModeModel> implantModeList = this.getList("ImplantModeMapper.selectAll");
 		
 		List<String> atmosphereList = new ArrayList<String>();
 		List<String> siteList = new ArrayList<String>();
 		List<String> firstLocationList = new ArrayList<String>();
-		List<String> majorRoleNameList = new ArrayList<String>();
-		List<String> guestRoleNameList = new ArrayList<String>();
-		List<String> massRoleNameList = new ArrayList<String>();
-		List<String> clothesNameList = new ArrayList<String>();
-		List<String> propNameList = new ArrayList<String>();
+		List<Map<String, Object>> dealedMajorRoleList = new ArrayList<Map<String, Object>>();
+		List<Map<String, Object>> dealedGuestRoleList = new ArrayList<Map<String, Object>>();
+		List<Map<String, Object>> dealedMassRoleList = new ArrayList<Map<String, Object>>();
+		List<Map<String, Object>> dealedClothesList = new ArrayList<Map<String, Object>>();
+		List<Map<String, Object>> dealedPropList = new ArrayList<Map<String, Object>>();
 		
 		for (PlayRoundModel playRound : roundList)
 		{
-			if (!atmosphereList.contains(playRound.getAtmosphere()) && !StringUtils.isBlank(playRound.getAtmosphere()))
+			if (!StringUtils.isBlank(playRound.getAtmosphere()) && !atmosphereList.contains(playRound.getAtmosphere()))
 			{
 				atmosphereList.add(playRound.getAtmosphere());
 			}
-			if (!siteList.contains(playRound.getSite()) && !StringUtils.isBlank(playRound.getSite()))
+			if (!StringUtils.isBlank(playRound.getSite()) && !siteList.contains(playRound.getSite()))
 			{
 				siteList.add(playRound.getSite());
 			}
-			if (!firstLocationList.contains(playRound.getFirstLocation()) && !StringUtils.isBlank(playRound.getFirstLocation()))
+			if (!StringUtils.isBlank(playRound.getFirstLocation()) && !firstLocationList.contains(playRound.getFirstLocation()))
 			{
 				firstLocationList.add(playRound.getFirstLocation());
 			}
 		}
 		
-		for (PlayRoleModel playRole : roleList)
+		//为气氛、内外景、主场景按照拼音排序
+		Collections.sort(atmosphereList, (o1, o2) -> getKey(o1).compareTo(getKey(o2)));
+		Collections.sort(siteList, (o1, o2) -> getKey(o1).compareTo(getKey(o2)));
+		Collections.sort(firstLocationList, (o1, o2) -> getKey(o1).compareTo(getKey(o2)));
+		
+		for (Map<String, Object> playRole : roleList)
 		{
-			if (playRole.getType() == 1)
+			String id = (String) playRole.get("id");
+			String name = (String) playRole.get("name");
+			int type = (int) playRole.get("type");
+			Map<String, Object> myRole = new HashMap<String, Object>();
+			myRole.put("id", id);
+			myRole.put("name", name);
+			
+			if (type == PlayRoleModel.MIAN_ROLE_TYPE)
 			{
-				majorRoleNameList.add(playRole.getName());
+				dealedMajorRoleList.add(myRole);
 			}
-			if (playRole.getType() == 2)
+			if (type == PlayRoleModel.GUEST_ROLE_TYPE)
 			{
-				guestRoleNameList.add(playRole.getName());
+				dealedGuestRoleList.add(myRole);
 			}
-			if (playRole.getType() == 3)
+			if (type == PlayRoleModel.MASS_ROLE_TYPE)
 			{
-				massRoleNameList.add(playRole.getName());
+				dealedMassRoleList.add(myRole);
 			}
 		}
 		
-		for (ClothesModel clothes : clothesList)
+		for (Map<String, Object> clothes : clothesList)
 		{
-			clothesNameList.add(clothes.getName());
+			String id = (String) clothes.get("id");
+			String name = (String) clothes.get("name");
+			Map<String, Object> myClothes = new HashMap<String, Object>();
+			myClothes.put("id", id);
+			myClothes.put("name", name);
+			
+			dealedClothesList.add(myClothes);
 		}
 		
-		for (PropModel prop : propList)
+		for (Map<String, Object> prop : propList)
 		{
-			propNameList.add(prop.getName());
+			String id = (String) prop.get("id");
+			String name = (String) prop.get("name");
+			Map<String, Object> myProp = new HashMap<String, Object>();
+			myProp.put("id", id);
+			myProp.put("name", name);
+			
+			dealedPropList.add(myProp);
 		}
 		
 		
 		resultMap.put("atmosphereList", atmosphereList);
 		resultMap.put("siteList", siteList);
 		resultMap.put("firstLocationList", firstLocationList);
-		resultMap.put("majorRoleNameList", majorRoleNameList);
-		resultMap.put("guestRoleNameList", guestRoleNameList);
-		resultMap.put("massRoleNameList", massRoleNameList);
-		resultMap.put("clothesNameList", clothesNameList);
-		resultMap.put("propNameList", propNameList);
+		resultMap.put("majorRoleNameList", dealedMajorRoleList);
+		resultMap.put("guestRoleNameList", dealedGuestRoleList);
+		resultMap.put("massRoleNameList", dealedMassRoleList);
+		resultMap.put("clothesNameList", dealedClothesList);
+		resultMap.put("propNameList", dealedPropList);
 		resultMap.put("goodsList", goodsList);
 		resultMap.put("implantModeList", implantModeList);
 		return resultMap;
+	}
+	
+	/**
+	 * 把字符串转换为一系列比特
+	 * @param str
+	 * @return
+	 */
+	private CollationKey getKey(String str) {
+		return Collator.getInstance().getCollationKey(str.toLowerCase());
 	}
 	
 	/**
@@ -789,7 +826,7 @@ public class PlayRoundService extends BaseService{
 	 * @param seriesNoList	集次列表
 	 * @return
 	 */
-	public Map<String, Object> querySeriesRoundList(List<Integer> seriesNoList, String roleId, String propId, Integer pageSize, Integer currentPage)
+	public Map<String, Object> querySeriesRoundList(PlayRoundFilter filter, Integer pageSize, Integer currentPage)
 	{
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		
@@ -801,9 +838,9 @@ public class PlayRoundService extends BaseService{
 		 */
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("projectId", project.getId());
-		params.put("seriesNoList", seriesNoList);
-		params.put("roleId", roleId);
-		params.put("propId", propId);
+//		params.put("seriesNoList", seriesNoList);
+//		params.put("roleId", roleId);
+//		params.put("propId", propId);
 		Page page = null;
 		
 		List<Map<String, Object>> roundList = null;
@@ -939,142 +976,150 @@ public class PlayRoundService extends BaseService{
 	 * @author wangyanlong 2017年8月22日
 	 * @return
 	 */
-	public Map<String, Object> querySearchList(Integer seriesNo1, Integer roundNo1, Integer seriesNo2, Integer roundNo2,
-			Integer seriesNo3, Integer roundNo3,List<String> atmosphereList, List<String> siteList,
-			List<String> firstLocationList, List<String> propIdList, List<Integer> majorRoleIdList, 
-			List<Integer> guestRoleIdList, List<Integer> massRoleIdList,Integer pageSize, Integer currentPage)
-	{
-		Map<String, Object> resultMap = new HashMap<String, Object>();
-		
-		ProjectModel project = SessionUtil.getSessionProject();
-		
-		/*
-		 * 需要注意的是，这里查询出的主要角色信息是主要角色的ID，多个用逗号隔开
-		 * 这样处理可以有效避免角色名字中带有“逗号”而导致的结果不正确问题
-		 */
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("projectId", project.getId());
-		params.put("seriesNo1", seriesNo1);
-		params.put("roundNo1", roundNo1);
-		params.put("seriesNo2", seriesNo2);
-		params.put("roundNo2", roundNo2);
-		params.put("seriesNo3", seriesNo3);
-		params.put("roundNo3", roundNo3);
-		params.put("atmosphereList", atmosphereList);
-		params.put("siteList", siteList);
-		params.put("firstLocationList", firstLocationList);
-		params.put("propIdList", propIdList);
-		params.put("majorRoleIdList", majorRoleIdList);
-		params.put("guestRoleIdList", guestRoleIdList);
-		params.put("massRoleIdList", massRoleIdList);
-		Page page = null;
-		
-		List<Map<String, Object>> roundList = null;
-		if (pageSize != null && currentPage != null) 
-		{
-			page = new Page();
-			page.setPageSize(pageSize);
-			page.setCurrentPage(currentPage);
-			roundList = this.queryPageList("selectSearchContent", params, page);
-		} 
-		else 
-		{
-			roundList = this.getList("selectSearchContent", params);
-		}
-		
-		//角色列表、道具列表
-		List<PlayRoleModel> roundRoleList = this.getList("PlayRoleMapper.selectPlayRoleList", params);
-		List<PropModel> propList = this.getList("PropMapper.selectPropList", params);
-		
-		//把角色封装成以roundId为key，角色信息为value的Map形式
-		Map<String, PlayRoleModel> roleMap = new HashMap<String, PlayRoleModel>();
-		for (PlayRoleModel role : roundRoleList)
-		{
-			roleMap.put(role.getId(), role);
-		}
-		//封装道具
-		Map<String, String> propIdNameMap = new HashMap<String, String>();
-		for (PropModel prop : propList)
-		{
-			propIdNameMap.put(prop.getId(), prop.getName());
-		}
-		
-		//封装最后的场次数据，key为集次，value为集次下的场次列表
-		Map<Integer, List<Map<String, Object>>> seriesRoundList = new HashMap<Integer, List<Map<String, Object>>>();
-		for (Map<String, Object> round : roundList)
-		{
-			String roundId = (String) round.get("id");
-			int seriesNo = (int) round.get("seriesNo");
-			
-			//计算该场次的所有角色名称列表
-			String roleIds = (String) round.get("roleIds");
-			List<String> majorRoleNameList = new ArrayList<String>();
-			List<String> guestRoleNameList = new ArrayList<String>();
-			List<String> massRoleNameList = new ArrayList<String>();
-			if (!StringUtils.isBlank(roleIds))
-			{
-				for (String myRoleId : roleIds.split(","))
-				{
-					PlayRoleModel role = roleMap.get(myRoleId);
-					if (role.getType() == 1)
-					{
-						majorRoleNameList.add(role.getName());
-					}
-					if (role.getType() == 2)
-					{
-						guestRoleNameList.add(role.getName());
-					}
-					if (role.getType() == 3)
-					{
-						massRoleNameList.add(role.getName());
-					}
-				}
-			}
-			//计算道具
-			String propIds = (String) round.get("propIds");
-			List<String> propNameList = new ArrayList<String>();
-			if (!StringUtils.isBlank(propIds))
-			{
-				for (String myPropId : propIds.split(","))
-				{
-					propNameList.add(propIdNameMap.get(myPropId));
-				}
-			}
-			
-			
-			Map<String, Object> roundMap = new HashMap<String, Object>();
-			roundMap.put("id", roundId);
-			roundMap.put("seriesNo", seriesNo);
-			roundMap.put("roundNo", round.get("roundNo"));
-			roundMap.put("atmosphere", round.get("atmosphere"));
-			roundMap.put("site", round.get("site"));
-			roundMap.put("firstLocation", round.get("firstLocation"));
-			roundMap.put("remark", round.get("remark"));
-			
-			roundMap.put("majorRoleNameList", majorRoleNameList);
-			roundMap.put("guestRoleNameList", guestRoleNameList);
-			roundMap.put("massRoleNameList", massRoleNameList);
-			roundMap.put("propNameList", propNameList);
-			
-			
-			if (!seriesRoundList.containsKey(seriesNo))
-			{
-				List<Map<String, Object>> myRoundList = new ArrayList<Map<String, Object>>();
-				myRoundList.add(roundMap);
-				seriesRoundList.put(seriesNo, myRoundList);
-			}
-			else
-			{
-				seriesRoundList.get(seriesNo).add(roundMap);
-			}
-		}
-		
-		if (page != null)
-		{
-			resultMap.put("totalPage", page.getTotalPage());
-			resultMap.put("totalRows", page.getTotalRows());
-		}
-		resultMap.put("roundList", seriesRoundList);
-		return resultMap;
-	}
+//	public Map<String, Object> querySearchList(Integer seriesNo1, Integer roundNo1, Integer seriesNo2, Integer roundNo2,
+//			Integer seriesNo3, Integer roundNo3,List<String> atmosphereList, List<String> siteList,
+//			List<String> firstLocationList, List<String> propIdList, List<String> majorRoleIdList, 
+//			List<String> guestRoleIdList, List<String> massRoleIdList,Integer pageSize, Integer currentPage)
+//	{
+//		Map<String, Object> resultMap = new HashMap<String, Object>();
+//		
+//		ProjectModel project = SessionUtil.getSessionProject();
+//		
+//		/*
+//		 * 需要注意的是，这里查询出的主要角色信息是主要角色的ID，多个用逗号隔开
+//		 * 这样处理可以有效避免角色名字中带有“逗号”而导致的结果不正确问题
+//		 */
+//		Map<String, Object> params = new HashMap<String, Object>();
+//		params.put("projectId", project.getId());
+//		params.put("seriesNo1", seriesNo1);
+//		params.put("roundNo1", roundNo1);
+//		params.put("seriesNo2", seriesNo2);
+//		params.put("roundNo2", roundNo2);
+//		params.put("seriesNo3", seriesNo3);
+//		params.put("roundNo3", roundNo3);
+//		params.put("atmosphereList", atmosphereList);
+//		params.put("siteList", siteList);
+//		params.put("firstLocationList", firstLocationList);
+//		if(propIdList !=null && propIdList.size()>0){
+//			params.put("propIdList", propIdList.toString().replace("[", "").replace("]", "").trim());
+//		}
+//		if(majorRoleIdList !=null && majorRoleIdList.size()>0){
+//			params.put("majorRoleIdList", majorRoleIdList.toString().replace("[", "").replace("]", "").trim());
+//		}
+//		if(guestRoleIdList !=null && guestRoleIdList.size()>0){
+//			params.put("guestRoleIdList", guestRoleIdList.toString().replace("[", "").replace("]", "").trim());
+//		}
+//		if(massRoleIdList !=null && massRoleIdList.size()>0){
+//			params.put("massRoleIdList", massRoleIdList.toString().replace("[", "").replace("]", "").trim());
+//		}
+//		Page page = null;
+//		
+//		List<Map<String, Object>> roundList = null;
+//		if (pageSize != null && currentPage != null) 
+//		{
+//			page = new Page();
+//			page.setPageSize(pageSize);
+//			page.setCurrentPage(currentPage);
+//			roundList = this.queryPageList("selectSearchContent", params, page);
+//		} 
+//		else 
+//		{
+//			roundList = this.getList("selectSearchContent", params);
+//		}
+//		
+//		//角色列表、道具列表
+//		List<PlayRoleModel> roundRoleList = this.getList("PlayRoleMapper.selectPlayRoleList", params);
+//		List<PropModel> propList = this.getList("PropMapper.selectPropList", params);
+//		
+//		//把角色封装成以roundId为key，角色信息为value的Map形式
+//		Map<String, PlayRoleModel> roleMap = new HashMap<String, PlayRoleModel>();
+//		for (PlayRoleModel role : roundRoleList)
+//		{
+//			roleMap.put(role.getId(), role);
+//		}
+//		//封装道具
+//		Map<String, String> propIdNameMap = new HashMap<String, String>();
+//		for (PropModel prop : propList)
+//		{
+//			propIdNameMap.put(prop.getId(), prop.getName());
+//		}
+//		
+//		//封装最后的场次数据，key为集次，value为集次下的场次列表
+//		Map<Integer, List<Map<String, Object>>> seriesRoundList = new HashMap<Integer, List<Map<String, Object>>>();
+//		for (Map<String, Object> round : roundList)
+//		{
+//			String roundId = (String) round.get("id");
+//			int seriesNo = (int) round.get("seriesNo");
+//			
+//			//计算该场次的所有角色名称列表
+//			String roleIds = (String) round.get("roleIds");
+//			List<String> majorRoleNameList = new ArrayList<String>();
+//			List<String> guestRoleNameList = new ArrayList<String>();
+//			List<String> massRoleNameList = new ArrayList<String>();
+//			if (!StringUtils.isBlank(roleIds))
+//			{
+//				for (String myRoleId : roleIds.split(","))
+//				{
+//					PlayRoleModel role = roleMap.get(myRoleId);
+//					if (role.getType() == 1)
+//					{
+//						majorRoleNameList.add(role.getName());
+//					}
+//					if (role.getType() == 2)
+//					{
+//						guestRoleNameList.add(role.getName());
+//					}
+//					if (role.getType() == 3)
+//					{
+//						massRoleNameList.add(role.getName());
+//					}
+//				}
+//			}
+//			//计算道具
+//			String propIds = (String) round.get("propIds");
+//			List<String> propNameList = new ArrayList<String>();
+//			if (!StringUtils.isBlank(propIds))
+//			{
+//				for (String myPropId : propIds.split(","))
+//				{
+//					propNameList.add(propIdNameMap.get(myPropId));
+//				}
+//			}
+//			
+//			
+//			Map<String, Object> roundMap = new HashMap<String, Object>();
+//			roundMap.put("id", roundId);
+//			roundMap.put("seriesNo", seriesNo);
+//			roundMap.put("roundNo", round.get("roundNo"));
+//			roundMap.put("atmosphere", round.get("atmosphere"));
+//			roundMap.put("site", round.get("site"));
+//			roundMap.put("firstLocation", round.get("firstLocation"));
+//			roundMap.put("remark", round.get("remark"));
+//			
+//			roundMap.put("majorRoleNameList", majorRoleNameList);
+//			roundMap.put("guestRoleNameList", guestRoleNameList);
+//			roundMap.put("massRoleNameList", massRoleNameList);
+//			roundMap.put("propNameList", propNameList);
+//			
+//			
+//			if (!seriesRoundList.containsKey(seriesNo))
+//			{
+//				List<Map<String, Object>> myRoundList = new ArrayList<Map<String, Object>>();
+//				myRoundList.add(roundMap);
+//				seriesRoundList.put(seriesNo, myRoundList);
+//			}
+//			else
+//			{
+//				seriesRoundList.get(seriesNo).add(roundMap);
+//			}
+//		}
+//		
+//		if (page != null)
+//		{
+//			resultMap.put("totalPage", page.getTotalPage());
+//			resultMap.put("totalRows", page.getTotalRows());
+//		}
+//		resultMap.put("roundList", seriesRoundList);
+//		return resultMap;
+//	}
 }

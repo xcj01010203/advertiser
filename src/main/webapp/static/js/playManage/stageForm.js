@@ -10,7 +10,7 @@ function loadPropList() {
 		pageSize: 20,
 		successFn: function(response) {
 			if (response.status == 1) {
-				alert(response.msssage);
+                modelWindow(response.msssage)
 				return;
 			}
 			var propList = response.data.propList || [];
@@ -41,7 +41,7 @@ function showPropViewList(id) {
 		pageSize: 10,
 		successFn: function(response) {
 			if (response.status == 1) {
-				alert(response.message);
+                modelWindow(response.msssage)
 				return;
 			}
 			
@@ -76,7 +76,7 @@ function showPropViewList(id) {
 	var url = "/playRound/queryRoundStatistic";
 	var successFn = function(response) {
 		if (response.status == 1) {
-			alert(response.message);
+            modelWindow(response.msssage)
 			return ;
 		}
 		

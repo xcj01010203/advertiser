@@ -84,7 +84,7 @@
 			tpr.roundno
 	</select>
 	
-	<!-- 查询场次的完整信息，带有角色、道具） -->
+	<!-- 查询场次的完整信息，带有角色、道具，不带有内容-->
 	<select id="selectFullWithoutContent" parameterType="map" resultType="map">
 		SELECT
 			tpr.id,
@@ -147,7 +147,7 @@
 			tpr.roundno
 	</select>
 	
-	<!-- 查询场次的统计信息，带有角色、道具） -->
+	<!-- 查询场次的统计信息，带有总场数、内景场数、外景场数 -->
 	<select id="selectRoundStatistic" parameterType="map" resultType="map">
 		SELECT
 			count(tpr.id) totalCount,
@@ -360,16 +360,16 @@
 			  </foreach>
 			</if>
 			<if test="propIdList != null">
-			 AND tprpm.propIds like concat('%',#{propIds},'%')
+			 AND tprpm.propIds like concat('%',#{propIdList},'%')
 			</if>
 			<if test="majorRoleIdList != null">
-			 AND tprrm.roleIds like concat('%',#{majorRoleIds},'%')
+			 AND tprrm.roleIds like concat('%',#{majorRoleIdList},'%')
 			</if>
 			<if test="guestRoleIdList != null">
-			 AND tprrm.roleIds like concat('%',#{guestRoleIds},'%')
+			 AND tprrm.roleIds like concat('%',#{guestRoleIdList},'%')
 			</if>
 			<if test="massRoleIdList != null">
-			 AND tprrm.roleIds like concat('%',#{massRoleIds},'%')
+			 AND tprrm.roleIds like concat('%',#{massRoleIdList},'%')
 			</if>
 			ORDER BY
 			tpr.seriesno,

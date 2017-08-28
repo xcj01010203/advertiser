@@ -10,7 +10,7 @@ function loadPlayList() {
 		pageSize: 10,
 		successFn: function(response) {
 			if (response.status == 1) {
-				alert(response.message);
+                modelWindow(response.msssage)
 				return;
 			}
 			
@@ -59,7 +59,7 @@ function checkAnalyseStatus() {
 	var url = "/analyseResult/queryAnalysisJob";
 	var successFn = function(response) {
 		if (response.status == 1) {
-			alert(response.message);
+            modelWindow(response.msssage)
 			return;
 		}
 		var result = response.data;

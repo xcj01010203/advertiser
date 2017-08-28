@@ -15,7 +15,7 @@ $(function () {
 //查询数据
 function parentQueryData(params) {
 	if (params.channelLevelList.length > 0 || params.channelIdList.length > 1) {
-		alert("只能选择一个频道");
+        modelWindow("只能选择一个频道")
 		return;
 	}
 	
@@ -41,7 +41,7 @@ function loadChannelRank(params) {
 	var url = "/channelDataAnalyse/queryChannelRank";
 	var successFn = function(response) {
 		if (response.status == 1) {
-			alert(response.message);
+            modelWindow(response.msssage)
 			return;
 		}
 		
@@ -131,7 +131,7 @@ function loadChannelSubjectMarket(params) {
 	var url = "/channelDataAnalyse/queryChannelSubjectMark";
 	var successFn = function(response) {
 		if (response.status == 1) {
-			alert(response.message);
+            modelWindow(response.msssage)
 			return;
 		}
 		var subjectMark = response.data.subjectMark;
@@ -352,7 +352,7 @@ function loadChannelCity(params) {
 	var url = "/channelDataAnalyse/queryChannelCity";
 	var successFn = function(response) {
 		if (response.status == 1) {
-			alert(response.message);
+            modelWindow(response.msssage)
 			return;
 		}
 		
@@ -453,7 +453,7 @@ function loadPeopleSpread(params) {
 	var url = "/channelDataAnalyse/queryChannelPeopleSpread";
 	var successFn = function(response) {
 		if (response.status == 1) {
-			alert(response.message);
+            modelWindow(response.msssage)
 			return;
 		}
 		

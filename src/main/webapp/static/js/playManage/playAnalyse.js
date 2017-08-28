@@ -364,49 +364,76 @@ function getDropdownSceneInfo(that) {
     doPost(basePath + '/playRound/queryAllDropDownList', {}, function (data) {
         if (data.status == 0) {
             if (data.data) {
-                var data = data.data[lrdropdownlist];
-                var html = '';
-                $(".anal-content .anal-right .anal-search .single-radio").addClass("hide");
-                $(".anal-content .anal-right .anal-search .multiple-checkbox").addClass("hide");
+                var data = data.data[lrdropdownlist], html = '', singleRadio = $(".anal-content .anal-right .anal-search .single-radio"),
+                    multipleCheckbox = $(".anal-content .anal-right .anal-search .multiple-checkbox");
+                singleRadio.addClass("hide");
+                multipleCheckbox.addClass("hide");
                 if (sdtype == "radio") {
                     // 单选
                     if (lrdropdownlist == "goodsList") {
+                        // 产品列表
                         for (var i = 0; i < data.length; i++) {
-                            html += '<div class="single-radio-con"><input name="single-r" type="radio"><span gid="' + data[i].id + '">' + data[i].goods + '</span></div>'
+                            html += '<div class="single-radio-con"><input name="single-r" type="radio">' +
+                                '<span gid="' + data[i].id + '">' + data[i].goods + '</span></div>'
                         }
                     } else if (lrdropdownlist == 'implantModeList') {
+                        // 广告植入手法列表
                         for (var i = 0; i < data.length; i++) {
-                            html += '<div class="single-radio-con"><input name="single-r" type="radio"><span gid="' + data[i].id + '">' + data[i].name + '</span></div>'
+                            html += '<div class="single-radio-con"><input name="single-r" type="radio">' +
+                                '<span gid="' + data[i].id + '">' + data[i].name + '</span></div>'
                         }
                     } else {
                         for (var i = 0; i < data.length; i++) {
                             html += '<div class="single-radio-con"><input name="single-r" type="radio"><span>' + data[i] + '</span></div>'
                         }
                     }
-                    $(".anal-content .anal-right .anal-search .single-radio").html(html);
-                    $(".anal-content .anal-right .anal-search .single-radio").attr("flag", flag);
-                    $(".anal-content .anal-right .anal-search .single-radio").removeClass("hide");
-                    $(".anal-content .anal-right .anal-search .multiple-checkbox").removeClass("exist");
-                    $(".anal-content .anal-right .anal-search .single-radio").addClass("exist");
+                    singleRadio.html(html);
+                    singleRadio.attr("flag", flag);
+                    singleRadio.removeClass("hide");
+                    multipleCheckbox.removeClass("exist");
+                    singleRadio.addClass("exist");
                 } else if (sdtype == "checkbox") {
+                    // 多选
                     if (lrdropdownlist == "goodsList") {
+                        // 产品列表
                         for (var j = 0; j < data.length; j++) {
-                            html += '<div class="multiple-checkbox-con"><input name="multiple-c" type="checkbox"><span gid="' + data[j].id + '">' + data[j].goods + '</span></div>'
+                            html += '<div class="multiple-checkbox-con"><input name="multiple-c" type="checkbox">' +
+                                '<span gid="' + data[j].id + '">' + data[j].goods + '</span></div>'
                         }
-                    } else if (lrdropdownlist == 'implantModeList') {
-                        for (var j = 0; j < data.length; j++) {
-                            html += '<div class="multiple-checkbox-con"><input name="multiple-c" type="checkbox"><span gid="' + data[j].id + '">' + data[j].name + '</span></div>'
+                    } else if (lrdropdownlist == 'majorRoleNameList') {
+                        // 主要角色列表
+                        for (var i = 0; i < data.length; i++) {
+                            html += '<div class="multiple-checkbox-con"><input name="multiple-c" type="checkbox">' +
+                                '<span gid="' + data[i].id + '">' + data[i].name + '</span></div>'
+                        }
+                    } else if (lrdropdownlist == 'guestRoleNameList') {
+                        // 特约角色列表
+                        for (var i = 0; i < data.length; i++) {
+                            html += '<div class="multiple-checkbox-con"><input name="multiple-c" type="checkbox">' +
+                                '<span gid="' + data[i].id + '">' + data[i].name + '</span></div>'
+                        }
+                    } else if (lrdropdownlist == 'massRoleNameList') {
+                        // 群众角色列表
+                        for (var i = 0; i < data.length; i++) {
+                            html += '<div class="multiple-checkbox-con"><input name="multiple-c" type="checkbox">' +
+                                '<span gid="' + data[i].id + '">' + data[i].name + '</span></div>'
+                        }
+                    } else if (lrdropdownlist == 'propNameList') {
+                        // 道具列表
+                        for (var i = 0; i < data.length; i++) {
+                            html += '<div class="multiple-checkbox-con"><input name="multiple-c" type="checkbox">' +
+                                '<span gid="' + data[i].id + '">' + data[i].name + '</span></div>'
                         }
                     } else {
                         for (var j = 0; j < data.length; j++) {
-                            html += '<div class="multiple-checkbox-con"><input name="multiple-c" type="checkbox"><span>' + data[j] + '</span></div>'
+                            html += '<div class="multiple-checkbox-con"><input name="multiple-c" type="checkbox"><span>' + data[j].name + '</span></div>'
                         }
                     }
-                    $(".anal-content .anal-right .anal-search .multiple-checkbox").html(html);
-                    $(".anal-content .anal-right .anal-search .multiple-checkbox").attr("flag", flag);
-                    $(".anal-content .anal-right .anal-search .multiple-checkbox").removeClass("hide");
-                    $(".anal-content .anal-right .anal-search .single-radio").removeClass("exist");
-                    $(".anal-content .anal-right .anal-search .multiple-checkbox").addClass("exist");
+                    multipleCheckbox.html(html);
+                    multipleCheckbox.attr("flag", flag);
+                    multipleCheckbox.removeClass("hide");
+                    singleRadio.removeClass("exist");
+                    multipleCheckbox.addClass("exist");
                 } else {
                 }
 
