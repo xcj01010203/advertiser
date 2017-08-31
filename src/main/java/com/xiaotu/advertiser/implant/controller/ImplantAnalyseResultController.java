@@ -7,9 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.xiaotu.advertiser.common.util.Constants;
 import com.xiaotu.advertiser.implant.service.ImplantAnalyseResultService;
-import com.xiaotu.common.redis.CacheHandler;
 
 /**
  * 广告植入自动分析结果
@@ -57,11 +55,11 @@ public class ImplantAnalyseResultController {
 	 * @return
 	 */
 	@RequestMapping("/queryRoundGoodsImplant")
-	public Object queryRoundGoodsImplant(@RequestParam(required=false, value="seriesNoList[]") List<String> seriesNoList, 
+	public Object queryRoundGoodsImplant(Integer seriesNo, 
 			@RequestParam(required=false, value="goodsIdList[]") List<String> goodsIdList, String roleId,
 			Integer pageSize, Integer currentPage)
 	{
-		return this.implantAnalyseResultService.queryRoundGoodsImplant(seriesNoList, goodsIdList, roleId, pageSize, currentPage);
+		return this.implantAnalyseResultService.queryRoundGoodsImplant(seriesNo, goodsIdList, roleId, pageSize, currentPage);
 	}
 	
 	/**

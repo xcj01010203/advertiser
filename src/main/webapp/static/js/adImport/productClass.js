@@ -178,7 +178,7 @@ function loadGoodsImplant() {
 	doPost(url, {goodsIdList: goodsIdList}, successFn);
 }
 
-//显示角色场景表
+//显示产品场景表
 function showRoleViewList(own) {
 	var idList = $(own).attr("idList");
 	$("#goodsRoundListPage").createPage({
@@ -191,29 +191,25 @@ function showRoleViewList(own) {
 				return;
 			}
 			
-			var positionJson = {};
-			positionJson["0"] = "台词";
-			positionJson["1"] = "地点";
-			positionJson["2"] = "台词+地点";
+//			var positionJson = {};
+//			positionJson["0"] = "台词";
+//			positionJson["1"] = "地点";
+//			positionJson["2"] = "台词+地点";
 			
 			var roundList = response.data.roundList;
 			var roundTrArray = [];
-			for (var key in roundList) {
-				var viewList = roundList[key];
 				
-				$.each(viewList, function(index, item) {
-					roundTrArray.push("			<tr>");
-					roundTrArray.push("				<td>"+ item.seriesNo + "-" + item.roundNo +"</td>");
-					roundTrArray.push("				<td class='over-hide'>"+ filterNull(item.atmosphere) +"</td>");
-					roundTrArray.push("				<td class='over-hide'>"+ filterNull(item.site) +"</td>");
-					roundTrArray.push("				<td class='over-hide' title='"+ filterNull(item.firstLocation) +"'>"+ filterNull(item.firstLocation) +"</td>");
-					roundTrArray.push("				<td class='over-hide' title='"+ filterNull(item.majorRoleNameList.join("|")) +"'>"+ filterNull(item.majorRoleNameList.join("|")) +"</td>");
-					roundTrArray.push("				<td class='over-hide' title='"+ filterNull(item.goods) +"'>"+ filterNull(item.goods) +"</td>");
-					roundTrArray.push("				<td class='over-hide'>"+ positionJson[item.position] +"</td>");
-					roundTrArray.push("				<td class='over-hide'><div class='pie-div' rate='"+ item.weight +"'></div></td>");
-					roundTrArray.push("			</tr>");
-				});
-			}
+			$.each(roundList, function(index, item) {
+				roundTrArray.push("			<tr>");
+				roundTrArray.push("				<td>"+ item.seriesNo + "-" + item.roundNo +"</td>");
+				roundTrArray.push("				<td class='over-hide'>"+ filterNull(item.atmosphere) +"</td>");
+				roundTrArray.push("				<td class='over-hide'>"+ filterNull(item.site) +"</td>");
+				roundTrArray.push("				<td class='over-hide' title='"+ filterNull(item.firstLocation) +"'>"+ filterNull(item.firstLocation) +"</td>");
+				roundTrArray.push("				<td class='over-hide' title='"+ filterNull(item.majorRoleNameList.join("|")) +"'>"+ filterNull(item.majorRoleNameList.join("|")) +"</td>");
+				roundTrArray.push("				<td class='over-hide' title='"+ filterNull(item.goods) +"'>"+ filterNull(item.goods) +"</td>");
+				roundTrArray.push("				<td class='over-hide'></td>");
+				roundTrArray.push("			</tr>");
+			});
 			
 			$("#roundListTbody").html(roundTrArray.join(""));
 			
@@ -225,9 +221,9 @@ function showRoleViewList(own) {
 			// });
 
             //绘制百分比
-            $.each($(".pie-div"), function (index, value) {
-                percentageNum(value, $(value).attr("rate"))
-            });
+//            $.each($(".pie-div"), function (index, value) {
+//                percentageNum(value, $(value).attr("rate"))
+//            });
 		}
 	});
 }

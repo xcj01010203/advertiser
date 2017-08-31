@@ -75,7 +75,7 @@ public class PlayContentService extends BaseService {
 			Page page = new Page();
 			page.setPageSize(pageSize);
 			page.setCurrentPage(i + 1);
-			Map<String, Object> roundResult = this.playRoundService.queryRoundList(page);
+			Map<String, Object> roundResult = this.playRoundService.queryRoundListWithContent(page);
 			List<Map<String, Object>> roundList = (List<Map<String, Object>>) roundResult.get("roundList");
 			
 			for (Map<String, Object> round : roundList)
@@ -262,7 +262,7 @@ public class PlayContentService extends BaseService {
     {
     	List<Map<String, Object>> contentList = new ArrayList<Map<String, Object>>();
     	
-		Map<String, Object> roundResult = this.playRoundService.queryRoundList(null);
+		Map<String, Object> roundResult = this.playRoundService.queryRoundListWithContent(null);
 		List<Map<String, Object>> roundList = (List<Map<String, Object>>) roundResult.get("roundList");
 		for (Map<String, Object> roundMap : roundList) 
 		{

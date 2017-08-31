@@ -1,17 +1,22 @@
 package com.test;
 
-import java.awt.List;
-
-import com.xiaotu.common.util.GsonUtils;
-
 public class Test {
 
-	public static void main(String[] args) {
-		String data = "[{roleList=[], roundId=X15E07D770C527433FE221D2}, {roleList=[常宝童, 常天慧], roundId=X15E07D770C627443FD4A165]";
-		
-		List list = GsonUtils.fromJson(data, List.class);
-		
-		System.out.println(list);
+	public static void main(String[] args) throws Exception {
+		System.out.println(getMethodName("abc"));
+	}
+	
+	/**
+	 * 字符串首字母转大写
+	 * @author xuchangjian 2017年8月28日下午6:24:23
+	 * @param str
+	 * @return
+	 * @throws Exception
+	 */
+	public static String getMethodName(String str) throws Exception {
+		byte[] items = str.getBytes();
+		items[0] = (byte) ((char) items[0] - 'a' + 'A');
+		return new String(items);
 	}
 
 }

@@ -148,14 +148,12 @@
 			tpr.atmosphere,
 			tpr.site,
 			tpr.firstLocation,
-			tg.goods,
-			tiar.position,
-			tiar.weight,
+			GROUP_CONCAT(tg.goods SEPARATOR '|') goods,
 			tmp.roleIds
 		FROM tab_implant_analyse_result tiar, 
 			tab_play_round tpr
 		
-			-- 角色信息
+			<!-- 角色信息 -->
 			LEFT JOIN (
 				SELECT
 					tiar.round_id,
@@ -183,13 +181,10 @@
 		AND tiar.goods_id = tg.id
 		AND tiar.project_id = #{projectId}
 		<if test="roleId != null">
-			AND tmp.roleIds like '%${roleId}%'
+			AND tmp.roleIds like CONCAT('%', #{roleId}, '%')
 		</if>
-		<if test="seriesNoList != null">
-			AND tpr.seriesno IN
-			<foreach collection="seriesNoList" item="seriesNo" open="(" separator="," close=")">
-				#{seriesNo}
-			</foreach>
+		<if test="seriesNo != null">
+			AND tpr.seriesno = #{seriesNo}
 		</if>
 		<if test="goodsIdList != null">
 			AND tg.id IN
@@ -197,6 +192,13 @@
 				#{goodsId}
 			</foreach>
 		</if>
+		GROUP BY tpr.id, 
+			tpr.seriesNo,
+			tpr.roundNo,
+			tpr.atmosphere,
+			tpr.site,
+			tpr.firstLocation,
+			tmp.roleIds
 		ORDER BY tpr.seriesNo, ABS(tpr.roundNo), tpr.roundNo
 	</select>
 	

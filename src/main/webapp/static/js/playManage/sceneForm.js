@@ -1,9 +1,12 @@
-var xiaotuObj = {
-    prevNum: 1,
-    nextNum: 1
-}
+
 
 $(function () {
+
+    var xiaotuObj = {
+        prevNum: 1,
+        nextNum: 1,
+        num: ''
+    }
 
     //集次的展开和隐藏
     clickShowOrHide($(".project-list-four .four-content .four-middle"), $(".project-list-five"));
@@ -71,16 +74,17 @@ function clickSeriesNo(own) {
 //加载场景列表
 function loadViewList() {
     var selectedSeriesNo = $("#seriesNoUl").find("li.active");
-    var seriesNoList = [];
+    var seriesNo = "";
     if (selectedSeriesNo) {
         $.each(selectedSeriesNo, function (index, item) {
-            seriesNoList.push($(item).attr("seriesNo"));
+        	seriesNo = $(item).attr("seriesNo");
         });
     }
 
     $("#tcdPageCode").createPage({
-        url: "/playRound/querySeriesRoundList",
-        data: {seriesNoList: seriesNoList},
+        url: "/playRound/queryRoundList",
+        data: {seriesNo: seriesNo},
+        contentType: 'application/json;charset=utf-8',
         pageSize: 20,
         successFn: function (response) {
             if (response.status == 1) {
@@ -90,26 +94,22 @@ function loadViewList() {
 
             var roundListTrArray = [];
             var roundList = response.data.roundList;
-            for (var key in roundList) {
-                var seriesNo = key;
-                var viewList = roundList[key];
 
-                $("#seriesTitle").text("第" + seriesNo + "集");
+            $("#seriesTitle").text("第" + seriesNo + "集");
 
-                $.each(viewList, function (index, item) {
-                    roundListTrArray.push("			<tr>");
-                    roundListTrArray.push("				<td width='5%'><a class='text-primary' roundId=\"" + item.id + "\" href='javascript:void(0)' onclick='showViewDetail(this)'>" + item.seriesNo + "-" + item.roundNo + "</a></td>");
-                    roundListTrArray.push("				<td width='5%' class='over-hide'>" + filterNull(item.atmosphere) + "</td>");
-                    roundListTrArray.push("				<td width='5%' class='over-hide'>" + filterNull(item.site) + "</td>");
-                    roundListTrArray.push("				<td width='15%' class='over-hide' title='" + filterNull(item.firstLocation) + "'>" + filterNull(item.firstLocation) + "</td>");
-                    roundListTrArray.push("				<td width='20%' class='over-hide' title='" + filterNull(item.majorRoleNameList.join("|")) + "'>" + filterNull(item.majorRoleNameList.join("|")) + "</td>");
-                    roundListTrArray.push("				<td width='10%' class='over-hide' title='" + filterNull(item.guestRoleNameList.join("|")) + "'>" + filterNull(item.guestRoleNameList.join("|")) + "</td>");
-                    roundListTrArray.push("				<td width='10%' class='over-hide' title='" + filterNull(item.massRoleNameList.join("|")) + "'>" + filterNull(item.massRoleNameList.join("|")) + "</td>");
-                    roundListTrArray.push("				<td width='20%' class='over-hide' title='" + filterNull(item.propNameList.join("|")) + "'>" + filterNull(item.propNameList.join("|")) + "</td>");
-                    roundListTrArray.push("				<td width='10%' class='over-hide' title='" + filterNull(item.remark) + "'>" + filterNull(item.remark) + "</td>");
-                    roundListTrArray.push("			</tr>");
-                });
-            }
+            $.each(roundList, function (index, item) {
+                roundListTrArray.push("			<tr>");
+                roundListTrArray.push("				<td width='5%'><a class='text-primary' roundId=\"" + item.id + "\" href='javascript:void(0)' onclick='showViewDetail(this)'>" + item.seriesNo + "-" + item.roundNo + "</a></td>");
+                roundListTrArray.push("				<td width='5%' class='over-hide'>" + filterNull(item.atmosphere) + "</td>");
+                roundListTrArray.push("				<td width='5%' class='over-hide'>" + filterNull(item.site) + "</td>");
+                roundListTrArray.push("				<td width='15%' class='over-hide' title='" + filterNull(item.firstLocation) + "'>" + filterNull(item.firstLocation) + "</td>");
+                roundListTrArray.push("				<td width='20%' class='over-hide' title='" + filterNull(item.majorRoleNameList.join("|")) + "'>" + filterNull(item.majorRoleNameList.join("|")) + "</td>");
+                roundListTrArray.push("				<td width='10%' class='over-hide' title='" + filterNull(item.guestRoleNameList.join("|")) + "'>" + filterNull(item.guestRoleNameList.join("|")) + "</td>");
+                roundListTrArray.push("				<td width='10%' class='over-hide' title='" + filterNull(item.massRoleNameList.join("|")) + "'>" + filterNull(item.massRoleNameList.join("|")) + "</td>");
+                roundListTrArray.push("				<td width='20%' class='over-hide' title='" + filterNull(item.propNameList.join("|")) + "'>" + filterNull(item.propNameList.join("|")) + "</td>");
+                roundListTrArray.push("				<td width='10%' class='over-hide' title='" + filterNull(item.remark) + "'>" + filterNull(item.remark) + "</td>");
+                roundListTrArray.push("			</tr>");
+            });
             $("#seriesViewListTbody").html(roundListTrArray.join(""));
             if (xiaotuObj.prevNum == 2) {
                 // 如果为2或者3，说明是在模态窗点击的
@@ -183,6 +183,7 @@ function preView() {
         xiaotuObj.prevNum = 3;
     } else {
         modelWindow("已经是第一场了")
+        $("#myModal").css("zIndex", 2000)
     }
 
     $(".anal-content .anal-left .anal-color .anal-color-keyword").removeClass("active");
@@ -206,6 +207,7 @@ function nextView() {
         xiaotuObj.nextNum = 3;
     } else {
         modelWindow("已经是最后一场了")
+        $("#myModal").css("zIndex", 2000)
     }
 
     $(".anal-content .anal-left .anal-color .anal-color-keyword").removeClass("active");
@@ -355,16 +357,39 @@ function getListAddClick() {
 // 主要演员一个或者两个及两个以上的情况
 function mainActorCheck() {
     var mainActorDom = $(".shade .shade-con .panel-body .panel-body-lr .main-actor .con-box .con-name");
-    var mainActorCheck = $(".shade .shade-con .panel-body .panel-body-lr .main-actor-check .con-main-actor");
+    var conMainActor = $(".shade .shade-con .panel-body .panel-body-lr .xuan-tian .con-main-actor");
+    var $label = conMainActor.find("label");
+
     if (mainActorDom.length > 0) {
         if (mainActorDom.length == 1) {
-            mainActorCheck.find(".one").show(200)
-            mainActorCheck.find(".two").hide(200)
+            conMainActor.attr("flag", "show")
+            conMainActor.find(".one").show(200)
+            conMainActor.find(".two").hide(200)
+            xiaotuObj.num = 1;
         } else if (mainActorDom.length >= 2) {
-            mainActorCheck.find("label").show(200)
+            conMainActor.attr("flag", "show")
+            conMainActor.find("label").show(200)
         } else {}
     } else {
-        mainActorCheck.find("label").hide(200)
+        conMainActor.attr("flag", "hide")
+        conMainActor.find("label").hide(200)
+    }
+
+    if (conMainActor.attr("flag") == "show") {
+        $label.click(function () {
+            $label.each(function (index, value) {
+                var item = $(value).find("input")
+                if (item.is(":checked")) {
+                    xiaotuObj.num = item.attr("num")
+                    return false;
+                }else {
+                    xiaotuObj.num = ""
+                }
+            })
+        })
+    } else {
+        $label.off("click")
+        xiaotuObj.num = ""
     }
 }
 
@@ -377,6 +402,16 @@ function removeConName() {
 
         // 主要演员一个或者两个及两个以上的情况
         mainActorCheck()
+
+        var conName = $(".shade .shade-con .panel-body .panel-body-lr .xuan-tian .con-box .con-name");
+        var input = $(".shade .shade-con .panel-body .panel-body-lr .main-actor-check input");
+        if (conName.length == 1) {
+            if (input.eq(0).is(":checked") || input.eq(1).is(":checked")) {
+                return;
+            }
+            input.removeAttr("checked")
+            input.eq(0).prop("checked", true)
+        }
     })
 }
 
@@ -390,6 +425,7 @@ function selectFunc() {
     var jiChangSectionFour = panelBodyLr.find(".ji-chang-section input:eq(3)");
     // 集场编号
     var jiChangNumber = panelBodyLr.find(".ji-chang-number input");
+
 
     $(".shade .shade-con .panel-foot .search-btn").click(function () {
         // 主要演员
@@ -462,57 +498,35 @@ function selectFunc() {
         jiChangSectionThreeVal = jiChangSectionThreeVal == '' ? '' : parseInt(jiChangSectionThreeVal);
         jiChangSectionFourVal = jiChangSectionFourVal == '' ? '' : parseInt(jiChangSectionFourVal);
 
-        if (jiChangNumberVal == '') {
-            var dataObj = {
-                startSeriesNo: jiChangSectionOneVal,
-                startRoundNo: jiChangSectionTwoVal,
-                endSeriesNo: jiChangSectionThreeVal,
-                endRoundNo: jiChangSectionFourVal,
-                seriesNo: '',
-                roundNo: '',
-                // 气氛
-                atmosphereList: airArr,
-                // 内外景
-                siteList: inOutArr,
-                // 主场景
-                firstLocationList: mainSceneArr,
-                // 道具
-                propIdList: stageArr,
-                // 主要演员
-                majorRoleIdList: mainActorArr,
-                // 特约演员
-                guestRoleIdList: specialActorArr,
-                // 群众演员
-                massRoleIdList: publicActorArr
-            }
-        } else {
-            var dataObj = {
-                startSeriesNo: jiChangSectionOneVal,
-                startRoundNo: jiChangSectionTwoVal,
-                endSeriesNo: jiChangSectionThreeVal,
-                endRoundNo: jiChangSectionFourVal,
-                seriesNo: parseInt(jiChangNumberVal.split("-")[0]),
-                roundNo: parseInt(jiChangNumberVal.split("-")[1]),
-                // 气氛
-                atmosphereList: airArr,
-                // 内外景
-                siteList: inOutArr,
-                // 主场景
-                firstLocationList: mainSceneArr,
-                // 道具
-                propIdList: stageArr,
-                // 主要演员
-                majorRoleIdList: mainActorArr,
-                // 特约演员
-                guestRoleIdList: specialActorArr,
-                // 群众演员
-                massRoleIdList: publicActorArr
-            }
+
+        var dataObj = {
+            startSeriesNo: jiChangSectionOneVal,
+            startRoundNo: jiChangSectionTwoVal,
+            endSeriesNo: jiChangSectionThreeVal,
+            endRoundNo: jiChangSectionFourVal,
+            seriesRoundNos: jiChangNumberVal,
+            // 气氛
+            atmosphereList: airArr,
+            // 内外景
+            siteList: inOutArr,
+            // 主场景
+            firstLocationList: mainSceneArr,
+            // 道具
+            propIdList: stageArr,
+            // 主要演员
+            majorRoleIdList: mainActorArr,
+            // 主演出现逻辑
+            majorRoleSearchMode: Number(xiaotuObj.num),
+            // 特约演员
+            guestRoleIdList: specialActorArr,
+            // 群众演员
+            massRoleIdList: publicActorArr
         }
 
         $("#tcdPageCode").createPage({
-            url: "/playRound/querySearchList",
+            url: "/playRound/queryRoundList",
             data: dataObj,
+            contentType: 'application/json;charset=utf-8',
             pageSize: 20,
             successFn: function (response) {
                 if (response.status == 1) {
@@ -528,28 +542,23 @@ function selectFunc() {
 
                 var roundListTrArray = [];
                 var roundList = response.data.roundList;
-                for (var key in roundList) {
-                    var seriesNo = key;
-                    var viewList = roundList[key];
 
-                    // $("#seriesTitle").text("第" + seriesNo + "集");
-                    // 清空集数
-                    $("#seriesTitle").html('检索结果');
+                // 清空集数
+                $("#seriesTitle").html('检索结果');
 
-                    $.each(viewList, function (index, item) {
-                        roundListTrArray.push("			<tr>");
-                        roundListTrArray.push("				<td width='5%'><a class='text-primary' roundId=\"" + item.id + "\" href='javascript:void(0)' onclick='showViewDetail(this)'>" + item.seriesNo + "-" + item.roundNo + "</a></td>");
-                        roundListTrArray.push("				<td width='5%' class='over-hide'>" + filterNull(item.atmosphere) + "</td>");
-                        roundListTrArray.push("				<td width='5%' class='over-hide'>" + filterNull(item.site) + "</td>");
-                        roundListTrArray.push("				<td width='15%' class='over-hide' title='" + filterNull(item.firstLocation) + "'>" + filterNull(item.firstLocation) + "</td>");
-                        roundListTrArray.push("				<td width='20%' class='over-hide' title='" + filterNull(item.majorRoleNameList.join("|")) + "'>" + filterNull(item.majorRoleNameList.join("|")) + "</td>");
-                        roundListTrArray.push("				<td width='10%' class='over-hide' title='" + filterNull(item.guestRoleNameList.join("|")) + "'>" + filterNull(item.guestRoleNameList.join("|")) + "</td>");
-                        roundListTrArray.push("				<td width='10%' class='over-hide' title='" + filterNull(item.massRoleNameList.join("|")) + "'>" + filterNull(item.massRoleNameList.join("|")) + "</td>");
-                        roundListTrArray.push("				<td width='20%' class='over-hide' title='" + filterNull(item.propNameList.join("|")) + "'>" + filterNull(item.propNameList.join("|")) + "</td>");
-                        roundListTrArray.push("				<td width='10%' class='over-hide' title='" + filterNull(item.remark) + "'>" + filterNull(item.remark) + "</td>");
-                        roundListTrArray.push("			</tr>");
-                    });
-                }
+                $.each(roundList, function (index, item) {
+                    roundListTrArray.push("			<tr>");
+                    roundListTrArray.push("				<td width='5%'><a class='text-primary' roundId=\"" + item.id + "\" href='javascript:void(0)' onclick='showViewDetail(this)'>" + item.seriesNo + "-" + item.roundNo + "</a></td>");
+                    roundListTrArray.push("				<td width='5%' class='over-hide'>" + filterNull(item.atmosphere) + "</td>");
+                    roundListTrArray.push("				<td width='5%' class='over-hide'>" + filterNull(item.site) + "</td>");
+                    roundListTrArray.push("				<td width='15%' class='over-hide' title='" + filterNull(item.firstLocation) + "'>" + filterNull(item.firstLocation) + "</td>");
+                    roundListTrArray.push("				<td width='20%' class='over-hide' title='" + filterNull(item.majorRoleNameList.join("|")) + "'>" + filterNull(item.majorRoleNameList.join("|")) + "</td>");
+                    roundListTrArray.push("				<td width='10%' class='over-hide' title='" + filterNull(item.guestRoleNameList.join("|")) + "'>" + filterNull(item.guestRoleNameList.join("|")) + "</td>");
+                    roundListTrArray.push("				<td width='10%' class='over-hide' title='" + filterNull(item.massRoleNameList.join("|")) + "'>" + filterNull(item.massRoleNameList.join("|")) + "</td>");
+                    roundListTrArray.push("				<td width='20%' class='over-hide' title='" + filterNull(item.propNameList.join("|")) + "'>" + filterNull(item.propNameList.join("|")) + "</td>");
+                    roundListTrArray.push("				<td width='10%' class='over-hide' title='" + filterNull(item.remark) + "'>" + filterNull(item.remark) + "</td>");
+                    roundListTrArray.push("			</tr>");
+                });
                 $("#seriesViewListTbody").html(roundListTrArray.join(""));
                 if (xiaotuObj.prevNum == 2) {
                     // 如果为2或者3，说明是在模态窗点击的
@@ -606,17 +615,39 @@ function checkString(str) {
     if (typeof(str) == 'string') {
         if (str == '') {
             return true;
-        } else if (str.indexOf("-") == -1) {
-            return false;
-        } else {
-            var arr = str.split("-")
-            if (arr[0] != '' && arr[1] != '') {
-                arr[0] = Number(arr[0])
-                arr[1] = Number(arr[1])
-                return ((arr[0] | 0) === arr[0] && (arr[1] | 0) === arr[1])
-            } else {
+        } else if (str.indexOf(",") == -1) {
+            if (str.indexOf("-") == -1) {
                 return false;
+            } else {
+                var arr = str.split("-")
+                if (arr[0] != '' && arr[1] != '') {
+                    arr[0] = Number(arr[0])
+                    arr[1] = Number(arr[1])
+                    return ((arr[0] | 0) === arr[0] && (arr[1] | 0) === arr[1])
+                } else {
+                    return false;
+                }
             }
+        } else {
+            var arrList = str.split(",");
+            for (var i = 0; i < arrList.length; i++) {
+                if (arrList[i] == "") {
+                    continue;
+                }
+                var item = arrList[i].split("-");
+                if (item[0] != '' && item[1] != '') {
+                    item[0] = Number(item[0])
+                    item[1] = Number(item[1])
+                    if ((item[0] | 0) === item[0] && (item[1] | 0) === item[1]) {
+
+                    } else {
+                        return false;
+                    }
+                } else {
+                    return false;
+                }
+            }
+            return true;
         }
     } else {
         return false;
@@ -679,6 +710,6 @@ function closeHighSearch() {
             })
         }, 150)
 
-        $(".shade .shade-con .panel-foot .empty-btn").click()
+        // $(".shade .shade-con .panel-foot .empty-btn").click()
     })
 }

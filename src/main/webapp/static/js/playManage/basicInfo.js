@@ -92,6 +92,28 @@ function switchToMoidfyProject(own) {
 	//切换到信息修改面板
 	$("#projectContentDiv").addClass("hidden");
 	$("#editProjectDiv").removeClass("hidden");
+	
+//	var url = "/playRound/queryRoundList";
+//	var successCall = function(response) {
+//		if (response.status == 1) {
+//			alert(response.message);
+//			return;
+//		}
+//		console.log(response.data.roundList);
+//	};
+//	
+//	var data = {};
+//	data.startSeriesNo = 5;
+//	data.endSeriesNo = 5;
+//	data.endRoundNo = 5;
+//	data.atmosphereList = ["傍晚"];
+//	data.siteList = ["外"];
+//	data.firstLocationList = ["电话局门口"];
+//	data.guestRoleIdList = ["X15E2D0A7514275A3FD30867"];
+//	data.massRoleIdList = ["X15E2D0A7514275C3FECA539"];
+//	data.majorRoleIdList = ["X15E27CC7112350F3FE72605", "X15E27CC711235113FE75744"];
+//	data.majorRoleSearchMode = 4;
+//	doPost(url, JSON.stringify(data), successCall, null, null, null, null, null, 'application/json;charset=utf-8');
 }
 
 //切换到显示信息页面

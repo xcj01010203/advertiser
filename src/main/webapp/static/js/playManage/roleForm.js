@@ -75,8 +75,9 @@ function loadRoleList() {
 function showRoleViewList(id) {
 	
 	$("#roleRoundPage").createPage({
-		url: "/playRound/querySeriesRoundList",
+		url: "/playRound/queryRoundList",
 		data: {roleId: id},
+        contentType: 'application/json;charset=utf-8',
 		pageSize: 10,
 		successFn: function(response) {
 			if (response.status == 1) {
@@ -86,23 +87,20 @@ function showRoleViewList(id) {
 			
 			var roundList = response.data.roundList;
 			var roundTrArray = [];
-			for (var key in roundList) {
-				var myRoundList = roundList[key];
-				$.each(myRoundList, function(index, item) {
-					roundTrArray.push("<tr>");
-					roundTrArray.push("	<td width='5%'>"+ item.seriesNo + "-" + item.roundNo +"</td>");
-					roundTrArray.push("	<td width='5%' class='over-hide'>"+ filterNull(item.atmosphere) +"</td>");
-					roundTrArray.push("	<td width='5%' class='over-hide'>"+ filterNull(item.site) +"</td>");
-					roundTrArray.push("	<td width='15%' class='over-hide' title='"+ filterNull(item.firstLocation) +"'>"+ filterNull(item.firstLocation) +"</td>");
-					roundTrArray.push("	<td width='20%' class='over-hide' title='"+ filterNull(item.majorRoleNameList.join("|")) +"'>"+ filterNull(item.majorRoleNameList.join("|")) +"</td>");
-					roundTrArray.push("	<td width='10%' class='over-hide' title='"+ filterNull(item.guestRoleNameList.join("|")) +"'>"+ filterNull(item.guestRoleNameList.join("|")) +"</td>");
-					roundTrArray.push("	<td width='10%' class='over-hide' title='"+ filterNull(item.massRoleNameList.join("|")) +"'>"+ filterNull(item.massRoleNameList.join("|")) +"</td>");
-					roundTrArray.push("	<td width='20%' class='over-hide' title='"+ filterNull(item.propNameList.join("|")) +"'>"+ filterNull(item.propNameList.join("|")) +"</td>");
-					roundTrArray.push("	<td width='10%' class='over-hide' title='"+ filterNull(item.remark) +"'>"+ filterNull(item.remark) +"</td>");
-					roundTrArray.push("</tr>");
-					
-				});
-			}
+			$.each(roundList, function(index, item) {
+				roundTrArray.push("<tr>");
+				roundTrArray.push("	<td width='5%'>"+ item.seriesNo + "-" + item.roundNo +"</td>");
+				roundTrArray.push("	<td width='5%' class='over-hide'>"+ filterNull(item.atmosphere) +"</td>");
+				roundTrArray.push("	<td width='5%' class='over-hide'>"+ filterNull(item.site) +"</td>");
+				roundTrArray.push("	<td width='15%' class='over-hide' title='"+ filterNull(item.firstLocation) +"'>"+ filterNull(item.firstLocation) +"</td>");
+				roundTrArray.push("	<td width='20%' class='over-hide' title='"+ filterNull(item.majorRoleNameList.join("|")) +"'>"+ filterNull(item.majorRoleNameList.join("|")) +"</td>");
+				roundTrArray.push("	<td width='10%' class='over-hide' title='"+ filterNull(item.guestRoleNameList.join("|")) +"'>"+ filterNull(item.guestRoleNameList.join("|")) +"</td>");
+				roundTrArray.push("	<td width='10%' class='over-hide' title='"+ filterNull(item.massRoleNameList.join("|")) +"'>"+ filterNull(item.massRoleNameList.join("|")) +"</td>");
+				roundTrArray.push("	<td width='20%' class='over-hide' title='"+ filterNull(item.propNameList.join("|")) +"'>"+ filterNull(item.propNameList.join("|")) +"</td>");
+				roundTrArray.push("	<td width='10%' class='over-hide' title='"+ filterNull(item.remark) +"'>"+ filterNull(item.remark) +"</td>");
+				roundTrArray.push("</tr>");
+				
+			});
 			
 			$("#viewListTbody").html(roundTrArray.join(''));
 			

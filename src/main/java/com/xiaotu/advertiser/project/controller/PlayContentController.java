@@ -85,7 +85,7 @@ public class PlayContentController {
 	{
 		List<Map<String, Object>> contentList = new ArrayList<Map<String, Object>>();
 		
-		Map<String, Object> roundResult = this.playRoundService.queryRoundList(null);
+		Map<String, Object> roundResult = this.playRoundService.queryRoundListWithContent(null);
 		List<Map<String, Object>> roundList = (List<Map<String, Object>>) roundResult.get("roundList");
 		
 		for (Map<String, Object> roundMap : roundList) {

@@ -281,7 +281,7 @@
             <!--<h2 class="header-name"><a href="${basePath}/base/forward/playManage/basicInfo"></a></h2>-->
             <a class="header-play" href="/base/forward/project/projectList">我的项目</a>
             <#if PROJECT ??>
-                <a class="header-name" href="/base/forward/playManage/basicInfo">
+                <a title="${PROJECT.name}" class="header-name over-hide" href="/base/forward/playManage/basicInfo">
                     ${PROJECT.name}
                 </a>
             </#if>

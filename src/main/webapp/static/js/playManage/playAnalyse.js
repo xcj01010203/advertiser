@@ -837,7 +837,8 @@ function getGatherSpaceList() {
                     })
 
                     for (var i = 0; i < seriesNoList[num].length; i++) {
-                        spaceHtml += '<li flagId="' + seriesNoList[num][i].id + '"><a href="javascript:;">' + seriesNoList[num][i].roundNo + '</a>' +
+                        spaceHtml += '<li title="' + seriesNoList[num][i].roundNo + '" class="over-hide" flagId="' + seriesNoList[num][i].id + '">' +
+                        '<a href="javascript:;">' + seriesNoList[num][i].roundNo + '</a>' +
                             '<i class="icon iconfont">&#xe600;</i></li>';
                     }
                     // 渲染场  只有当点击集的时候才能渲染场

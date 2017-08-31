@@ -121,6 +121,20 @@ public class ImplantAnalyseResultService extends BaseService {
 				otherGoodsImplantDto.setId(otherGoodsImplantDto.getId().substring(1, otherGoodsImplantDto.getId().length()));
 				goodsImplantDtoList.add(otherGoodsImplantDto);
 			}
+			
+			
+			//把每个角色的产品列表按照总场数升序排序
+			Collections.sort(goodsImplantDtoList, new Comparator<GoodsImplantDto>() {
+
+				@Override
+				public int compare(GoodsImplantDto o1, GoodsImplantDto o2) {
+					if (o1.getGoods().equals("其他")) {
+						return 1;
+					}
+					
+					return o2.getRoundCount() - o1.getRoundCount();
+				}
+			});
 		}
 		
 		//把角色列表按照总场数倒序排序
@@ -230,7 +244,7 @@ public class ImplantAnalyseResultService extends BaseService {
 	 * @param seriesNoList
 	 * @return
 	 */
-	public Map<String, Object> queryRoundGoodsImplant(List<String> seriesNoList, List<String> goodsIdList, String roleId, Integer pageSize, Integer currentPage)
+	public Map<String, Object> queryRoundGoodsImplant(Integer seriesNo, List<String> goodsIdList, String roleId, Integer pageSize, Integer currentPage)
 	{
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		
@@ -246,7 +260,7 @@ public class ImplantAnalyseResultService extends BaseService {
 		
 		Map<String, Object> implantParams = new HashMap<String, Object>();
 		implantParams.put("projectId", project.getId());
-		implantParams.put("seriesNoList", seriesNoList);
+		implantParams.put("seriesNo", seriesNo);
 		implantParams.put("goodsIdList", goodsIdList);
 		implantParams.put("roleId", roleId);
 		
@@ -272,11 +286,10 @@ public class ImplantAnalyseResultService extends BaseService {
 		}
 		
 		//封装最后的场次数据，key为集次，value为集次下的场次列表
-		Map<Integer, List<Map<String, Object>>> seriesList = new HashMap<Integer, List<Map<String, Object>>>();
+		List<Map<String, Object>> dealedRoundList = new ArrayList<Map<String, Object>>();
 		for (Map<String, Object> result : resultList)
 		{
 			String roundId = (String) result.get("roundId");	//场次ID
-			int seriesNo = (int) result.get("seriesNo");
 			String roleIds = (String) result.get("roleIds");
 			
 			//计算出主要角色名称列表
@@ -304,20 +317,10 @@ public class ImplantAnalyseResultService extends BaseService {
 			roundMap.put("majorRoleNameList", majorRoleNameList);
 			
 			
-			if (!seriesList.containsKey(seriesNo))
-			{
-				List<Map<String, Object>> roundList = new ArrayList<Map<String, Object>>();
-				roundList.add(roundMap);
-				
-				seriesList.put(seriesNo, roundList);
-			}
-			else
-			{
-				seriesList.get(seriesNo).add(roundMap);
-			}
+			dealedRoundList.add(roundMap);
 		}
 		
-		resultMap.put("roundList", seriesList);
+		resultMap.put("roundList", dealedRoundList);
 		if (page != null)
 		{
 			resultMap.put("totalPage", page.getTotalPage());

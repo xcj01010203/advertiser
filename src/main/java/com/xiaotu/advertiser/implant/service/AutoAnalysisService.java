@@ -64,7 +64,7 @@ public class AutoAnalysisService extends BaseService
         AnalysisJobModel job = KeyLocker.lock(project.getId(),
                 () -> this.refreshJob(user, project));// 刷新任务基本信息（同一项目需要同步执行，避免任务基本信息更新错误）
 
-        Map<String, Object> map = playRoundService.queryRoundList(page);// 查询剧本内容
+        Map<String, Object> map = playRoundService.queryRoundListWithContent(page);// 查询剧本内容
         if (map == null || map.get("roundList") == null
                 || !(map.get("roundList") instanceof List)
                 || ((List<Map<String, Object>>) map.get("roundList")).isEmpty())

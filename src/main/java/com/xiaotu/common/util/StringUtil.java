@@ -9,12 +9,12 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-
 import org.apache.commons.lang.StringUtils;
 
 import com.google.gson.Gson;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 /**
  * Copyright (c)2013,小土科技 All rights reserved. <core>字符串的工具类</core>
@@ -466,5 +466,18 @@ public class StringUtil
 				.replaceAll("\\)", "）")
 				.replaceAll("\\(", "（");
 		return changedStr;
+	}
+	
+	/**
+	 * 字符串首字母转大写
+	 * @author xuchangjian 2017年8月28日下午6:24:23
+	 * @param str
+	 * @return
+	 * @throws Exception
+	 */
+	public static String firstToUpper(String str) throws Exception {
+		byte[] items = str.getBytes();
+		items[0] = (byte) ((char) items[0] - 'a' + 'A');
+		return new String(items);
 	}
 }

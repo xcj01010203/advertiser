@@ -55,17 +55,11 @@ function clickSeriesNo(own) {
 
 //加载场次列表
 function loadViewList() {
-    var selectedSeriesNo = $("#seriesNoUl").find("li.active");
-    var seriesNoList = [];
-    if (selectedSeriesNo) {
-        $.each(selectedSeriesNo, function (index, item) {
-            seriesNoList.push($(item).attr("seriesNo"));
-        });
-    }
+    var seriesNo = $("#seriesNoUl").find("li.active").attr("seriesNo");
 
     $("#tcdPageCode").createPage({
         url: "/implantAnalyse/queryRoundGoodsImplant",
-        data: {seriesNoList: seriesNoList},
+        data: {seriesNo: seriesNo},
         pageSize: 10,
         successFn: function (response) {
             if (response.status == 1) {
@@ -73,32 +67,25 @@ function loadViewList() {
                 return;
             }
 
-            var positionJson = {};
-            positionJson["0"] = "台词";
-            positionJson["1"] = "地点";
-            positionJson["2"] = "台词+地点";
+//            var positionJson = {};
+//            positionJson["0"] = "台词";
+//            positionJson["1"] = "地点";
+//            positionJson["2"] = "台词+地点";
 
             var roundList = response.data.roundList;
             var viewTrArray = [];
-            for (var key in roundList) {
-                var seriesNo = key;
-                $("#seriesTitle").text("第" + seriesNo + "集");
-
-                var viewList = roundList[key];
-                $.each(viewList, function (index, item) {
-                    viewTrArray.push("			<tr>");
-                    viewTrArray.push("				<td><a class='text-primary' roundId=\"" + item.id + "\" href='javascript:void(0)' onclick='showViewDetail(this)'>" + item.seriesNo + "-" + item.roundNo + "</a></td>");
-                    viewTrArray.push("				<td class='over-hide'>" + filterNull(item.atmosphere) + "</td>");
-                    viewTrArray.push("				<td class='over-hide'>" + filterNull(item.site) + "</td>");
-                    viewTrArray.push("				<td class='over-hide' title='" + filterNull(item.firstLocation) + "'>" + filterNull(item.firstLocation) + "</td>");
-                    viewTrArray.push("				<td class='over-hide' title='" + filterNull(item.majorRoleNameList.join("|")) + "'>" + filterNull(item.majorRoleNameList.join("|")) + "</td>");
-                    viewTrArray.push("				<td class='over-hide' title='" + filterNull(item.goods) + "'>" + filterNull(item.goods) + "</td>");
-                    viewTrArray.push("				<td class='over-hide'>" + positionJson[item.position] + "</td>");
-                    // viewTrArray.push("				<td width='26%' class='over-hide pie-td' rate='"+ item.weight +"'>"+ multiply(item.weight, 100) +"%</td>");
-                    viewTrArray.push("				<td width='26%' class='over-hide pie-td' rate='" + item.weight + "'></td>");
-                    viewTrArray.push("			</tr>");
-                });
-            }
+            $("#seriesTitle").text("第" + seriesNo + "集");
+            $.each(roundList, function (index, item) {
+                viewTrArray.push("			<tr>");
+                viewTrArray.push("				<td><a class='text-primary' roundId=\"" + item.id + "\" href='javascript:void(0)' onclick='showViewDetail(this)'>" + item.seriesNo + "-" + item.roundNo + "</a></td>");
+                viewTrArray.push("				<td class='over-hide'>" + filterNull(item.atmosphere) + "</td>");
+                viewTrArray.push("				<td class='over-hide'>" + filterNull(item.site) + "</td>");
+                viewTrArray.push("				<td class='over-hide' title='" + filterNull(item.firstLocation) + "'>" + filterNull(item.firstLocation) + "</td>");
+                viewTrArray.push("				<td class='over-hide' title='" + filterNull(item.majorRoleNameList.join("|")) + "'>" + filterNull(item.majorRoleNameList.join("|")) + "</td>");
+                viewTrArray.push("				<td class='over-hide' title='" + filterNull(item.goods) + "'>" + filterNull(item.goods) + "</td>");
+                viewTrArray.push("				<td width='26%' class='over-hide pie-td'></td>");
+                viewTrArray.push("			</tr>");
+            });
 
             $("#playContentList").html(viewTrArray.join(""));
 
@@ -109,9 +96,9 @@ function loadViewList() {
             // });
 
             //绘制百分比
-            $.each($(".pie-td"), function (index, value) {
-                percentageNum(value, $(value).attr("rate"))
-            });
+//            $.each($(".pie-td"), function (index, value) {
+//                percentageNum(value, $(value).attr("rate"))
+//            });
         }
     });
 

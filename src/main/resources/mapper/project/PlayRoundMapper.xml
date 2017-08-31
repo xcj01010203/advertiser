@@ -100,7 +100,7 @@
 		FROM
 			tab_play_round tpr
 		
-		-- 角色信息
+		<!-- 角色信息 -->
 		LEFT JOIN (
 			SELECT
 				round_id,
@@ -113,7 +113,7 @@
 				round_id
 		) tprrm ON tprrm.round_id = tpr.id
 		
-		-- 道具信息
+		<!-- 道具信息 -->
 		LEFT JOIN (
 			SELECT
 				trm.round_id,
@@ -129,17 +129,151 @@
 		) tprpm ON tprpm.round_id = tpr.id
 		WHERE
 			tpr.project_id = #{projectId}
-			<if test="seriesNoList != null">
-			  AND tpr.seriesno IN
-			  <foreach collection="seriesNoList" open="(" separator="," close=")" item="series">
-			  	#{series}
-			  </foreach>
+			
+			
+			<!-- 集场次，不考虑开始集和开始场为空的情况，因为这两个参数默认都是1，以下条件拼接分成三个部分，具体看注释 -->
+			AND (
+				<!-- 第一部分：开始集和结束集中间的部分，不包含开始集和结束集里的数据 -->
+				(
+					tpr.seriesno &gt; #{startSeriesNo}
+					<if test="endSeriesNo != null">
+						 AND tpr.seriesno &lt; #{endSeriesNo}
+					</if>
+				)
+				
+				<!-- 第二部分：开始集里从开始场算起的部分 -->
+				OR (tpr.seriesno = #{startSeriesNo} AND ABS(tpr.roundno) &gt;= ABS(#{startRoundNo}))
+				
+				<!-- 第三部分：结束集里截至到结束场的部分 -->
+				<!-- 开始集和结束集相同 -->
+				<if test="endSeriesNo != null and endSeriesNo == startSeriesNo">
+					AND (
+						tpr.seriesno = #{endSeriesNo}
+						<if test="endRoundNo != null">
+							 AND ABS(tpr.roundno) &lt;= ABS(#{endRoundNo})
+						</if>
+					)
+				</if>
+				
+				<!-- 开始集和结束集不同-->
+				<if test="endSeriesNo != null and endSeriesNo != startSeriesNo">
+					OR (
+						tpr.seriesno = #{endSeriesNo}
+						<if test="endRoundNo != null">
+							 AND ABS(tpr.roundno) &lt;= ABS(#{endRoundNo})
+						</if>
+					)
+				</if>
+				
+			)
+			
+			<!-- 多个集场编号 -->
+			<if test="seriesRoundNoList != null and seriesRoundNoList.size() > 0">
+				AND
+				<foreach collection="seriesRoundNoList" open="(" separator="OR" close=")" item="seriesRoundMap">
+					tpr.seriesno = #{seriesRoundMap.seriesNo, jdbcType=INTEGER} 
+				AND tpr.roundno = #{seriesRoundMap.roundNo, jdbcType=VARCHAR}
+				</foreach>
 			</if>
+			
+			<!-- 集次 -->
+			<if test="seriesNo != null">
+				AND tpr.seriesno = #{seriesNo}
+			</if>
+			
+			<!-- 气氛 -->
+			<if test="atmosphereList != null and atmosphereList.size() > 0">
+				AND tpr.atmosphere IN
+				<foreach collection="atmosphereList" open="(" separator="," close=")" item="atmosphere">
+					#{atmosphere}
+				</foreach>
+			</if>
+			
+			<!-- 内外景 -->
+			<if test="siteList != null and siteList.size() > 0">
+				AND tpr.site IN
+				<foreach collection="siteList" open="(" separator="," close=")" item="site">
+					#{site}
+				</foreach>
+			</if>
+			
+			<!-- 主场景 -->
+			<if test="firstLocationList != null and firstLocationList.size() > 0">
+				AND tpr.firstlocation IN
+				<foreach collection="firstLocationList" open="(" separator="," close=")" item="firstlocation">
+					#{firstlocation}
+				</foreach>
+			</if>
+			
+			<!-- 道具 -->
+			<if test="propIdList != null and propIdList.size() > 0">
+				AND tprpm.propIds REGEXP CONCAT_WS('|',  
+				<foreach collection="propIdList" separator="," item="myPropId">
+					#{myPropId}
+				</foreach>)
+			</if>
+			
+			<!-- 主要角色 -->
+			<if test="majorRoleIdList != null and majorRoleIdList.size() > 0">
+				AND 
+				<!-- 出现即可 -->
+				<if test="majorRoleSearchMode == 1">
+					tprrm.roleIds REGEXP CONCAT_WS('|', 
+					<foreach collection="majorRoleIdList" separator="," item="myRoleId">
+						#{myRoleId}
+					</foreach>
+					)
+				</if>
+				<!-- 不出现 -->
+				<if test="majorRoleSearchMode == 2">
+					tprrm.roleIds NOT REGEXP CONCAT_WS('|',  
+					<foreach collection="majorRoleIdList" separator="," item="myRoleId">
+						#{myRoleId}
+					</foreach>)
+				</if>
+				<!-- 同时出现 -->
+				<if test="majorRoleSearchMode == 3">
+					<foreach collection="majorRoleIdList" open="(" separator="AND" close=")" item="myRoleId">
+						(tprrm.roleIds LIKE CONCAT('%', #{myRoleId}, '%'))
+					</foreach>
+				</if>
+				<!-- 不同时出现 -->
+				<if test="majorRoleSearchMode == 4">
+					tprrm.roleIds REGEXP CONCAT_WS('|',  
+					<foreach collection="majorRoleIdList" separator="," item="myRoleId">
+						#{myRoleId}
+					</foreach>)
+					AND
+					<foreach collection="majorRoleIdList" open="(" separator="OR" close=")" item="myRoleId">
+						(tprrm.roleIds NOT REGEXP #{myRoleId})
+					</foreach>
+				</if>
+			</if>
+			
+			<!-- 特约角色 -->
+			<if test="guestRoleIdList != null and guestRoleIdList.size() > 0">
+				AND tprrm.roleIds REGEXP CONCAT_WS('|', 
+					<foreach collection="guestRoleIdList" separator="," item="myRoleId">
+						#{myRoleId}
+					</foreach>
+					)
+			</if>
+			
+			<!-- 群众角色 -->
+			<if test="massRoleIdList != null and massRoleIdList.size() > 0">
+				AND tprrm.roleIds REGEXP CONCAT_WS('|', 
+					<foreach collection="massRoleIdList" separator="," item="myRoleId">
+						#{myRoleId}
+					</foreach>
+					)
+			</if>
+			
+			<!-- 单个角色和道具条件 -->
 			<if test="roleId != null">
-			  AND tprrm.roleIds like '%${roleId}%'
+			  AND tprrm.roleIds like CONCAT('%', #{roleId}, '%')
 			</if>
 			<if test="propId != null">
-			  AND tprpm.propIds like '%${propId}%'
+			  AND tprpm.propIds like CONCAT('%', #{propId}, '%')
 			</if>
 		ORDER BY
 			tpr.seriesno,
@@ -251,129 +385,4 @@
 	<delete id="deleteByProjectId" parameterType="String">
 		DELETE FROM tab_play_round where project_id = #{projectId}
 	</delete>
-	
-	
-	<!-- 检索场次信息，带有角色、道具） -->
-	<select id="selectSearchContent" parameterType="map" resultType="map">
-		SELECT
-			tpr.id,
-			tpr.seriesNo,
-			tpr.roundNo,
-			tpr.atmosphere,
-			tpr.site,
-			tpr.firstLocation,
-			tpr.remark,
-			tpr.isManualSaved,
-			tprrm.roleIds,
-			tprpm.propIds
-		FROM
-			tab_play_round tpr
-		
-		-- 角色信息
-		LEFT JOIN (
-			SELECT
-				round_id,
-				GROUP_CONCAT(play_roleid) roleIds
-			FROM
-				tab_play_round_role_map
-			WHERE
-				project_id = #{projectId}
-			GROUP BY
-				round_id
-		) tprrm ON tprrm.round_id = tpr.id
-		
-		-- 道具信息
-		LEFT JOIN (
-			SELECT
-				trm.round_id,
-				GROUP_CONCAT(trm.prop_id) propIds
-			FROM
-				tab_play_round_prop_map trm,
-				tab_prop tp
-			WHERE
-				trm.prop_id = tp.id
-			AND tp.project_id = #{projectId}
-			GROUP BY
-				round_id
-		) tprpm ON tprpm.round_id = tpr.id
-		WHERE
-			tpr.project_id = #{projectId}
-			<!-- 开始和结束集场，全部填写时执行 -->
-			<if test="seriesNo1 !=null and roundNo1 !=null  and seriesNo2 !=null and roundNo2 !=null">
-			<choose>
-			<!-- 当开始结束集相同时 -->
-		        <when test="seriesNo1 == seriesNo2">
-		            and (tpr.seriesNo = #{seriesNo1} and abs(tpr.roundNo) &gt;= abs(#{roundNo1}) and abs(tpr.roundNo) &lt;=abs(#{roundNo2}))
-		        </when>
-		        <otherwise>
-		            and ((tpr.seriesNo &gt; #{seriesNo1} and tpr.seriesNo &lt; #{seriesNo2}) or (tpr.seriesNo=#{seriesNo1} and abs(tpr.roundNo) &gt;=abs(#{roundNo1})) or (tpr.seriesNo=#{seriesNo2} and abs(tpr.roundNo) &lt;=abs(#{roundNo2})))
-		        </otherwise>
-		    </choose>
-			</if>
-			<!-- 只有结束场次为空时 -->
-			<if test="seriesNo1 !=null and roundNo1 !=null  and seriesNo2 !=null">
-				and ((tpr.seriesNo &gt; #{seriesNo1} and tpr.seriesNo &lt;= #{seriesNo2}) or (tpr.seriesNo=#{seriesNo1} and abs(tpr.roundNo) &gt;= abs(#{roundNo1})))
-			</if>
-			<!-- 只有开始场次为空时 -->
-			<if test="seriesNo1 !=null and roundNo2 !=null  and seriesNo2 !=null">
-				and ((tpr.seriesNo &gt;= #{seriesNo1} and tpr.seriesNo &lt; #{seriesNo2}) or (tpr.seriesNo=#{seriesNo2} and abs(tpr.roundNo) &lt;=abs(#{roundNo2}))) 
-			</if>
-			<!-- 只输入开始结束集 -->
-			<if test="seriesNo1 !=null and seriesNo2 !=null">
-				and ((tpr.seriesNo between #{seriesNo1} and #{seriesNo2}))
-			</if>
-			<!-- 只填写开始集和开始场 -->
-			<if test="seriesNo1 !=null and roundNo1 !=null">
-				and ( (tpr.seriesNo = #{seriesNo1} and abs(tpr.roundNo ) &gt;= abs(#{roundNo1})) or tpr.seriesNo &gt; #{seriesNo1} )
-			</if>
-			<!-- 只填写结束集合结束场 -->
-			<if test="seriesNo2 !=null and roundNo2 !=null">
-				and ((tpr.seriesNo = #{seriesNo2} and abs(tpr.roundNo ) &lt;= abs(#{roundNo2})) or tpr.seriesNo &lt; #{seriesNo2})
-			</if>
-			<!-- 只填写开始集 -->
-			<if test="seriesNo1 !=null">
-				and (tpr.seriesNo &gt;= #{seriesNo1})
-			</if>
-			<!-- 只填写结束集 -->
-			<if test="seriesNo2 !=null">
-				and (tpr.seriesNo &lt;= #{seriesNo2})
-			</if>
-			<if test="seriesNo3 !=null and roundNo3 !=null">
-				 AND tpr.seriesNo =#{seriesNo3} AND tpr.roundNo =#{roundNo3}
-			</if>
-			<if test="atmosphereList != null">
-			 AND tpr.atmosphere IN
-			  <foreach collection="atmosphereList" open="(" separator="," close=")" item="atmospheres">
-			  	#{atmospheres}
-			  </foreach>
-			</if>
-			<if test="siteList != null">
-			 AND tpr.site IN
-			  <foreach collection="siteList" open="(" separator="," close=")" item="sites">
-			  	#{sites}
-			  </foreach>
-			</if>
-			<if test="firstLocationList != null">
-				AND tpr.firstLocation IN
-			<foreach collection="firstLocationList" open="(" separator="," close=")" item="firstLocations">
-			  	#{firstLocations}
-			  </foreach>
-			</if>
-			<if test="propIdList != null">
-			 AND tprpm.propIds like concat('%',#{propIdList},'%')
-			</if>
-			<if test="majorRoleIdList != null">
-			 AND tprrm.roleIds like concat('%',#{majorRoleIdList},'%')
-			</if>
-			<if test="guestRoleIdList != null">
-			 AND tprrm.roleIds like concat('%',#{guestRoleIdList},'%')
-			</if>
-			<if test="massRoleIdList != null">
-			 AND tprrm.roleIds like concat('%',#{massRoleIdList},'%')
-			</if>
-			ORDER BY
-			tpr.seriesno,
-			abs(tpr.roundno),
-			tpr.roundno
-	</select>
 </mapper>

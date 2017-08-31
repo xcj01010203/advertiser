@@ -84,27 +84,17 @@ public class PlayRoundController {
 	}
 	
 	/**
-	 * 查询所有场次信息列表
-	 * @author xuchangjian 2017年6月27日上午10:38:33
-	 * @return
-	 */
-	@RequestMapping("/queryRoundList")
-	public Object queryRoundList()
-	{
-		return this.playRoundService.queryRoundList(null);
-	}
-	
-	/**
 	 * 查询场次列表
-	 * 返回的数据按照集次进行分组
+	 * 不带有内容信息
 	 * @author xuchangjian 2017年6月29日下午5:03:30
 	 * @param seriesNoList 集次列表
 	 * @return
+	 * @throws Exception 
 	 */
-	@RequestMapping("/querySeriesRoundList")
-	public Object querySeriesRoundList(PlayRoundFilter filter, Integer pageSize, Integer currentPage)
+	@RequestMapping("/queryRoundList")
+	public Object queryRoundList(@RequestBody PlayRoundFilter filter) throws Exception
 	{
-		return this.playRoundService.querySeriesRoundList(filter, pageSize, currentPage);
+		return this.playRoundService.queryRoundListWithoutContent(filter);
 	}
 	
 	/**
@@ -113,7 +103,8 @@ public class PlayRoundController {
 	 * @return
 	 */
 	@RequestMapping("/queryRoundStatistic")
-	public Object queryRoundStatistic(String roleId, String propId) {
+	public Object queryRoundStatistic(String roleId, String propId) 
+	{
 		return this.playRoundService.queryRoundStatistic(roleId, propId);
 	}
 	

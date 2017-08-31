@@ -120,13 +120,17 @@
             for (var x in args.data) {
                 obj[x] = args.data[x];
             }
+            if (args.contentType != 'application/x-www-form-urlencoded') {
+                obj = JSON.stringify(obj)
+            }
             return (function () {
                 $.ajax({
-                    // 接口地址
                     url: args.url,
-                    dataType: "json",
-                    // 要传的参数
                     data: obj,
+                    type: "post",
+                    dataType: "json",
+                    // 发送信息至服务器时内容编码类型
+                    contentType: args.contentType,
                     success: function (response) {
                         var data = response.data;
                         // 这一步是取得总页数跟总条数然后渲染分页，注册事件
@@ -147,6 +151,8 @@
         var args = $.extend({
             url: '',
             data: {},
+            // 发送信息至服务器时内容编码类型
+            contentType: "application/x-www-form-urlencoded",
             // 总页数
             pageCount: 0,
             // 总条数

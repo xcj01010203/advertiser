@@ -29,7 +29,9 @@ import com.xiaotu.common.db.Page;
 import com.xiaotu.common.db.util.UUIDUtils;
 import com.xiaotu.common.exception.BusinessException;
 import com.xiaotu.common.mvc.BaseService;
+import com.xiaotu.common.util.EntityUtils;
 import com.xiaotu.common.util.SessionUtil;
+import com.xiaotu.common.util.StringUtil;
 
 /**
  * 场次信息
@@ -729,10 +731,11 @@ public class PlayRoundService extends BaseService{
 	
 	/**
 	 * 查询所有场次信息列表
+	 * 带有剧本内容信息
 	 * @author xuchangjian 2017年6月27日上午10:38:33
 	 * @return
 	 */
-	public Map<String, Object> queryRoundList(Page page)
+	public Map<String, Object> queryRoundListWithContent(Page page)
 	{
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		
@@ -821,34 +824,51 @@ public class PlayRoundService extends BaseService{
 	}
 	
 	/**
-	 * 获取集下的场次列表
+	 * 查询所有场次信息列表
+	 * 不带有剧本内容信息
 	 * @author xuchangjian 2017年6月29日下午5:04:16
 	 * @param seriesNoList	集次列表
 	 * @return
+	 * @throws Exception 
 	 */
-	public Map<String, Object> querySeriesRoundList(PlayRoundFilter filter, Integer pageSize, Integer currentPage)
+	public Map<String, Object> queryRoundListWithoutContent(PlayRoundFilter filter) throws Exception
 	{
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		
 		ProjectModel project = SessionUtil.getSessionProject();
 		
-		/*
-		 * 需要注意的是，这里查询出的主要角色信息是主要角色的ID，多个用逗号隔开
-		 * 这样处理可以有效避免角色名字中带有“逗号”而导致的结果不正确问题
-		 */
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("projectId", project.getId());
-//		params.put("seriesNoList", seriesNoList);
-//		params.put("roleId", roleId);
-//		params.put("propId", propId);
-		Page page = null;
+		//基本参数
+		Map<String, Object> params = EntityUtils.EntityToMap(filter, PlayRoundFilter.class);
+		String seriesRoundNos = filter.getSeriesRoundNos();
+		if (!StringUtils.isBlank(seriesRoundNos)) 
+		{
+			String[] seriesRoundNoArray = StringUtil.CHToENSeparator(seriesRoundNos).split("，|、|；");
+			
+			List<Map<String, Object>> seriesRoundNoList = new ArrayList<Map<String, Object>>();
+			for (String seriesRoundNo : seriesRoundNoArray) 
+			{
+				if (seriesRoundNo.indexOf("-") == -1 || seriesRoundNo.split("-").length < 2) 
+				{
+					throw new BusinessException("集号和场号之间请用“-”隔开");
+				}
+				Map<String, Object> seriesRoundNoMap = new HashMap<String, Object>();
+				seriesRoundNoMap.put("seriesNo", seriesRoundNo.split("-")[0]);
+				seriesRoundNoMap.put("roundNo",  seriesRoundNo.split("-")[1]);
+				seriesRoundNoList.add(seriesRoundNoMap);
+			}
+			params.put("seriesRoundNoList", seriesRoundNoList);
+		}
 		
+		params.put("projectId", project.getId());
+		
+		//分页条件
+		Page page = null;
 		List<Map<String, Object>> roundList = null;
-		if (pageSize != null && currentPage != null) 
+		if (filter.getPageSize() != null && filter.getCurrentPage() != null) 
 		{
 			page = new Page();
-			page.setPageSize(pageSize);
-			page.setCurrentPage(currentPage);
+			page.setPageSize(filter.getPageSize());
+			page.setCurrentPage(filter.getCurrentPage());
 			roundList = this.queryPageList("selectFullWithoutContent", params, page);
 		} 
 		else 
@@ -873,8 +893,8 @@ public class PlayRoundService extends BaseService{
 			propIdNameMap.put(prop.getId(), prop.getName());
 		}
 		
-		//封装最后的场次数据，key为集次，value为集次下的场次列表
-		Map<Integer, List<Map<String, Object>>> seriesRoundList = new HashMap<Integer, List<Map<String, Object>>>();
+		//场次列表
+		List<Map<String, Object>> myRoundList = new ArrayList<Map<String, Object>>();
 		for (Map<String, Object> round : roundList)
 		{
 			String roundId = (String) round.get("id");
@@ -930,17 +950,7 @@ public class PlayRoundService extends BaseService{
 			roundMap.put("massRoleNameList", massRoleNameList);
 			roundMap.put("propNameList", propNameList);
 			
-			
-			if (!seriesRoundList.containsKey(seriesNo))
-			{
-				List<Map<String, Object>> myRoundList = new ArrayList<Map<String, Object>>();
-				myRoundList.add(roundMap);
-				seriesRoundList.put(seriesNo, myRoundList);
-			}
-			else
-			{
-				seriesRoundList.get(seriesNo).add(roundMap);
-			}
+			myRoundList.add(roundMap);
 		}
 		
 		if (page != null)
@@ -948,7 +958,7 @@ public class PlayRoundService extends BaseService{
 			resultMap.put("totalPage", page.getTotalPage());
 			resultMap.put("totalRows", page.getTotalRows());
 		}
-		resultMap.put("roundList", seriesRoundList);
+		resultMap.put("roundList", myRoundList);
 		return resultMap;
 	}
 	
