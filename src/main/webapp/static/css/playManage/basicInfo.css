@@ -38,6 +38,9 @@
     float: left;
     margin-left: 40px;
 }
+.edit-project .project-content .project-content-block .movie-subject-div {
+	display: none;
+}
 .edit-project .project-content .project-content-block label {
     margin-right: 30px;
     width: 100px;

@@ -57,6 +57,21 @@
             margin: 20px 0;
         }
 
+        .operate .calcu-page {
+            display: inline-block;
+            float: right;
+            margin-top: 28px;
+            margin-right: 20px;
+        }
+
+        .operate .calcu-page input[type="text"] {
+            width: 75px;
+            padding-left: 5px;
+            border-bottom: 1px solid #A2A2A2;
+            cursor: text;
+            text-align: center;
+        }
+
         #filelist {
             border-top: 1px solid #dddddd;
             border-bottom: 1px solid #dddddd;
@@ -76,17 +91,17 @@
             position: relative;
         }
 
-
         /*遮罩  start*/
         .shade {
             width: 100%;
             height: 100%;
             position: fixed;
-            top:0;
+            top: 0;
             left: 0;
             background-color: transparent;
             z-index: -111;
         }
+
         .shade .shade-con {
             position: absolute;
             width: 1110px;
@@ -104,6 +119,7 @@
             filter: Alpha(opacity=0);
             z-index: -111;
         }
+
         /*.shade-fade {*/
         /*background-color: #7B7B7B;*/
         /*opacity: 1;*/
@@ -133,6 +149,10 @@
     <div class="operate">
         <div id="picker">选择文件</div>
         <button id="startBtn" class="btn btn-default">开始上传</button>
+        <div class="calcu-page">
+            <input class="word" type="text">&nbsp;字/行&nbsp;&nbsp;&nbsp;<input class="line" type="text">&nbsp;行/页&nbsp;&nbsp;&nbsp;<input
+                class="page" style="vertical-align: top" type="checkbox">&nbsp;计算页数时包含标题
+        </div>
     </div>
     <table id="filelist" class="table table-hover table-bordered">
         <thead>
@@ -154,22 +174,8 @@
 <script>
     $(function () {
 
-        $(".project-list-four .four-content .four-right .upload-play-t").click(function () {
-            $(".shade").css({
-                "backgroundColor": "rgba(0,0,0,0.5)",
-                "opacity": "1",
-                "transition": "all 0.15s ease-in",
-                "zIndex": 100
-            })
-            $(".shade .shade-con").css({
-                "opacity": "1",
-                "filter": "Alpha(opacity=1)",
-                "top": "50%",
-                "marginTop": "-250px",
-                "transition": "all 0.3s ease-in",
-                "zIndex": 100
-            })
-        })
+        // 打开上传剧本页面
+        openUploadPlayPage()
 
         $(".shade .shade-con .upload-file .upload-header .header-con i").click(function () {
             doPost(basePath + '/playRoundTmp/chackHasSkipOrReplaceData', {}, function (data) {
@@ -207,13 +213,56 @@
             })
         })
 
-        // 上传剧本
-        uploadFile()
-
     })
 
+    // 打开上传剧本页面
+    function openUploadPlayPage() {
+
+        var calcuPage = $(".upload-file .operate .calcu-page");
+        var wordInput = calcuPage.find(".word"), lineText = calcuPage.find(".line"),
+            pageInput = calcuPage.find(".page");
+
+        $(".project-list-four .four-content .four-right .upload-play-t").click(function () {
+            $(".shade").css({
+                "backgroundColor": "rgba(0,0,0,0.5)",
+                "opacity": "1",
+                "transition": "all 0.15s ease-in",
+                "zIndex": 100
+            })
+            $(".shade .shade-con").css({
+                "opacity": "1",
+                "filter": "Alpha(opacity=1)",
+                "top": "50%",
+                "marginTop": "-250px",
+                "transition": "all 0.3s ease-in",
+                "zIndex": 100
+            })
+            // 获取信息
+            doPost(basePath + '/play/queryPlayFormat', {}, function (data) {
+                if (data.status === 1) {
+                    modelWindow(data.message, 1000);
+                    return;
+                }
+                var data = data.data;
+                var word = data.wordCount, line = data.lineCount, page = data.pageIncludeTitle;
+                wordInput.val(word)
+                lineText.val(line)
+                if (page) {
+                    pageInput.attr("checked", "checked")
+                } else {
+                    pageInput.removeAttr("checked")
+                }
+            }, function (error) {
+                console.log(error)
+            })
+        })
+
+        // 上传剧本
+        uploadFile(wordInput, lineText, pageInput)
+    }
+
     // 上传剧本
-    function uploadFile() {
+    function uploadFile(wordInput, lineText, pageInput) {
 
         var uploader = WebUploader.create({
             // swf文件路径
@@ -328,11 +377,42 @@
         });
 
         $("#startBtn").click(function () {
-            uploader.option('formData', {});
+            var wordVal = wordInput.val(), lineVal = lineText.val(), pageBol = pageInput.is(":checked");
+            if (wordVal == '') {
+                modelWindow('请输入字/行', 1000)
+                return;
+            }
+            if (!isNumber(wordVal)) {
+                modelWindow('字/行栏请输入数字', 1000)
+                return;
+            }
+            if (!isNumber(lineVal)) {
+                modelWindow('行/页栏请输入数字', 1000)
+                return;
+            }
+            var objData = {
+                wordCount: parseInt(wordVal),
+                lineCount: parseInt(lineVal),
+                pageIncludeTitle: pageBol
+            }
+
+            uploader.option('formData', objData);
             uploader.upload();
         })
 
 //        $("#picker>.webuploader-pick").html("添加文件")
+    }
+
+    // 验证是否是数字
+    function isNumber(str) {
+        if (str == '') {
+            return true;
+        } else if (typeof(str) == 'string') {
+            str = Number(str)
+            return (str | 0) === str;
+        } else {
+            return false;
+        }
     }
 
 </script>

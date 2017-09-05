@@ -38,8 +38,8 @@ th{
 .new-project .left a:nth-of-type(5){
     border-bottom: solid 1px #ededed;
 }
-.new-project .left a:nth-of-type(3) .leftMenu .user_settings{
-	border-left:3px solid #29d9c2;
+.new-project .left a:nth-of-type(5) .leftMenu .user_settings{
+    border-left:3px solid #29d9c2;
 }
 .new-project .left a{
     width: 210px;
@@ -106,7 +106,6 @@ th{
     text-align: center;
     height: 50px;
     line-height: 50px;
-    border-right: 1px solid #ededed;
     overflow: hidden;
 }
 .new-project .center .right .project-info .userManage-menu li input{
@@ -126,37 +125,16 @@ th{
 }
 .new-project .center .right .project-info .userManage-menu .menu-num {
     width: 89px;
+    border-right: 1px solid #ededed;
 }
 .new-project .center .right .project-info .userManage-menu .menu-name {
     width:250px;
     text-align: left;
+    border-right: 1px solid #ededed;
 }
 .new-project .center .right .project-info .userManage-menu .menu-describe {
-    width:105px;
-}
-.new-project .center .right .project-info .userManage-menu .menu-url {
-    width:320px;
-}
-.new-project .center .right .project-info .userManage-menu .menu-icon {
-    width:135px;
-    border-right: none;
-}
-.new-project .center .right .project-info .userManage-menu .follow-menu {
-    width:61px;
-    height: 50px;
-    line-height: 25px;
-}
-.new-project .center .right .project-info .userManage-td .follow-menu {
-    line-height: 50px;
-}
-.new-project .center .right .project-info .userManage-menu .menu-position {
-    width: 116px;
-}
-.new-project .center .right .project-info .userManage-menu .func-control {
-    width:72px;
-    line-height: 25px;
-    height: 50px;
-    border-right: none;
+    width:560px;
+    text-align: center;
 }
 .new-project .center .right .project-info .userManage-td .func-control {
     line-height: 50px;

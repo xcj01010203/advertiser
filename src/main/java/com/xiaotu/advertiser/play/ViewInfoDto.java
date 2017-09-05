@@ -3,7 +3,7 @@ package com.xiaotu.advertiser.play;
 import java.util.List;
 
 /**
- * 场景信息
+ * 剧本中提取出的场次信息
  * @author xuchangjian 2017-6-19下午1:54:15
  */
 public class ViewInfoDto {
@@ -17,6 +17,11 @@ public class ViewInfoDto {
 	 * 场次
 	 */
 	private String viewNo;
+	
+	/**
+	 * 页数
+	 */
+	private double pageCount;
 	
 	/**
 	 * 季节
@@ -80,6 +85,14 @@ public class ViewInfoDto {
 		} else {
 			return false;
 		}
+	}
+
+	public double getPageCount() {
+		return pageCount;
+	}
+
+	public void setPageCount(double pageCount) {
+		this.pageCount = pageCount;
 	}
 
 	public Integer getSeriesNo() {

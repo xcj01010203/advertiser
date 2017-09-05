@@ -1,5 +1,9 @@
 package com.xiaotu.advertiser.project.controller;
 
+import java.io.IOException;
+
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -72,5 +76,20 @@ public class PlayMarkController {
 	public Object queryScriptMarkList(Integer pageSize, Integer currentPage)
 	{
 		return this.playMarkService.queryScriptMarkList(pageSize,currentPage);
+	}
+	
+	/**
+	 * 导出剧本标记列表
+	 * @author wangyanlong 2017年9月2日
+	 * @return
+	 * @throws IOException 
+	 * @throws IllegalAccessException 
+	 * @throws IllegalArgumentException 
+	 */
+	@RequestMapping("queryExportMarkList")
+	public Object queryExportMarkList(String roleNames,HttpServletResponse response) throws IllegalArgumentException, IllegalAccessException, IOException
+	{
+		 this.playMarkService.queryExportMarkList(roleNames,response);
+		 return null;
 	}
 }

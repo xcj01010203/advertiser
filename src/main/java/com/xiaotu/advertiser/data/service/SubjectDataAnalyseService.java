@@ -9,9 +9,11 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
+import com.xiaotu.advertiser.data.controller.filter.SubjectDataFilter;
 import com.xiaotu.common.exception.BusinessException;
 import com.xiaotu.common.mvc.BaseService;
 import com.xiaotu.common.util.BigDecimalUtil;
+import com.xiaotu.common.util.ListUtils;
 
 /**
  * 题材数据分析
@@ -30,45 +32,11 @@ public class SubjectDataAnalyseService extends BaseService {
 	 * @author xuchangjian 2017年7月18日上午9:34:52
 	 * @return
 	 */
-	public Map<String, Object> querySubjectMarketPos(Integer areaId, 
-			List<Integer> channelIdList, List<Integer> channelLevelList, 
-			String startDate, String endDate, String startTime, String endTime)
+	public Map<String, Object> querySubjectMarketPos(SubjectDataFilter filter)
 	{
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		if (areaId == null)
-		{
-			throw new BusinessException("请选择收视地区");
-		}
-		if ((channelIdList == null || channelIdList.size() == 0)
-				&& (channelLevelList == null || channelLevelList.size() == 0))
-		{
-			throw new BusinessException("请选择频道");
-		}
-		if (StringUtils.isBlank(startDate))
-		{
-			throw new BusinessException("请选择开始日期");
-		}
-		if (StringUtils.isBlank(endDate))
-		{
-			throw new BusinessException("请选择结束日期");
-		}
-		if (StringUtils.isBlank(startTime))
-		{
-			throw new BusinessException("请选择开始时间");
-		}
-		if (StringUtils.isBlank(endTime))
-		{
-			throw new BusinessException("请选择结束时间");
-		}
 		
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("areaId", areaId);
-		params.put("channelIdList", channelIdList);
-		params.put("channelLevelList", channelLevelList);
-		params.put("startDate", startDate);
-		params.put("endDate", endDate);
-		params.put("startTime", startTime.replace(":", "") + "00");
-		params.put("endTime", endTime.replace(":", "") + "00");
+		Map<String, Object> params = this.getFilterParamMap(filter);
 		List<Map<String, Object>> marketPos = this.getList("selectSubjectMarketPos", params);
 		
 		resultMap.put("marketPos", marketPos);
@@ -87,46 +55,11 @@ public class SubjectDataAnalyseService extends BaseService {
 	 * @param endTime	结束时间
 	 * @return
 	 */
-	public Map<String, Object> querySubjectRank(Integer areaId, 
-			List<Integer> channelIdList,  List<Integer> channelLevelList, 
-			String startDate, String endDate, String startTime, String endTime)
+	public Map<String, Object> querySubjectRank(SubjectDataFilter filter)
 	{
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		if (areaId == null)
-		{
-			throw new BusinessException("请选择收视地区");
-		}
-		if ((channelIdList == null || channelIdList.size() == 0)
-				&& (channelLevelList == null || channelLevelList.size() == 0))
-		{
-			throw new BusinessException("请选择频道");
-		}
-		if (StringUtils.isBlank(startDate))
-		{
-			throw new BusinessException("请选择开始日期");
-		}
-		if (StringUtils.isBlank(endDate))
-		{
-			throw new BusinessException("请选择结束日期");
-		}
-		if (StringUtils.isBlank(startTime))
-		{
-			throw new BusinessException("请选择开始时间");
-		}
-		if (StringUtils.isBlank(endTime))
-		{
-			throw new BusinessException("请选择结束时间");
-		}
 		
-		
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("areaId", areaId);
-		params.put("channelIdList", channelIdList);
-		params.put("channelLevelList", channelLevelList);
-		params.put("startDate", startDate);
-		params.put("endDate", endDate);
-		params.put("startTime", startTime.replace(":", "") + "00");
-		params.put("endTime", endTime.replace(":", "") + "00");
+		Map<String, Object> params = this.getFilterParamMap(filter);
 		List<Map<String, Object>> subjectRank = this.getList("selectSubjectRank", params);
 		
 		DecimalFormat df = new DecimalFormat("0.000");
@@ -152,57 +85,24 @@ public class SubjectDataAnalyseService extends BaseService {
 	 * @param endTime	结束时间
 	 * @return
 	 */
-	public Map<String, Object> querySubjectCity(Integer areaId, 
-			List<Integer> channelIdList, List<Integer> channelLevelList, 
-			String startDate, String endDate, String startTime, String endTime)
+	public Map<String, Object> querySubjectCity(SubjectDataFilter filter)
 	{
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		if (areaId == null)
-		{
-			throw new BusinessException("请选择收视地区");
-		}
-		if ((channelIdList == null || channelIdList.size() == 0)
-				&& (channelLevelList == null || channelLevelList.size() == 0))
-		{
-			throw new BusinessException("请选择频道");
-		}
-		if (StringUtils.isBlank(startDate))
-		{
-			throw new BusinessException("请选择开始日期");
-		}
-		if (StringUtils.isBlank(endDate))
-		{
-			throw new BusinessException("请选择结束日期");
-		}
-		if (StringUtils.isBlank(startTime))
-		{
-			throw new BusinessException("请选择开始时间");
-		}
-		if (StringUtils.isBlank(endTime))
-		{
-			throw new BusinessException("请选择结束时间");
-		}
 		
 		Integer cityGroupId = null;
 		Integer cityId = null;
 		Integer[] cityGroupIdArray = new Integer[] {19901, 19902, 19903, 19904, 19905};
-		if (Arrays.asList(cityGroupIdArray).contains(areaId))
+		if (Arrays.asList(cityGroupIdArray).contains(filter.getAreaId()))
 		{
-			cityGroupId = areaId;
+			cityGroupId = filter.getAreaId();
 		}
 		else
 		{
-			cityId = areaId;
+			cityId = filter.getAreaId();
 		}
-		Map<String, Object> params = new HashMap<String, Object>();
+		Map<String, Object> params = this.getFilterParamMap(filter);
 		params.put("cityGroupId", cityGroupId);
 		params.put("cityId", cityId);
-		params.put("channelIdList", channelIdList);
-		params.put("channelLevelList", channelLevelList);
-		params.put("startDate", startDate);
-		params.put("endDate", endDate);
-		params.put("startTime", startTime.replace(":", "") + "00");
-		params.put("endTime", endTime.replace(":", "") + "00");
 		List<Map<String, Object>> subjectCity = this.getList("selectSubjectCity", params);
 		
 		//计算偏好值
@@ -213,7 +113,7 @@ public class SubjectDataAnalyseService extends BaseService {
 			Map<String, Object> map = subjectCity.get(i);
 			Integer myAreaId = (Integer) map.get("areaid");
 			Double rate = Double.parseDouble(map.get("rate").toString());
-			if (myAreaId.equals(areaId))
+			if (myAreaId.equals(filter.getAreaId()))
 			{
 				groupRate = rate;
 				groupIndex = i;
@@ -255,45 +155,11 @@ public class SubjectDataAnalyseService extends BaseService {
 	 * @param endTime	结束时间
 	 * @return
 	 */
-	public Map<String, Object> querySubjectAgeSpread(Integer areaId, 
-			List<Integer> channelIdList, List<Integer> channelLevelList, 
-			String startDate, String endDate, String startTime, String endTime)
+	public Map<String, Object> querySubjectAgeSpread(SubjectDataFilter filter)
 	{
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		if (areaId == null)
-		{
-			throw new BusinessException("请选择收视地区");
-		}
-		if ((channelIdList == null || channelIdList.size() == 0)
-				&& (channelLevelList == null || channelLevelList.size() == 0))
-		{
-			throw new BusinessException("请选择频道");
-		}
-		if (StringUtils.isBlank(startDate))
-		{
-			throw new BusinessException("请选择开始日期");
-		}
-		if (StringUtils.isBlank(endDate))
-		{
-			throw new BusinessException("请选择结束日期");
-		}
-		if (StringUtils.isBlank(startTime))
-		{
-			throw new BusinessException("请选择开始时间");
-		}
-		if (StringUtils.isBlank(endTime))
-		{
-			throw new BusinessException("请选择结束时间");
-		}
 		
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("areaId", areaId);
-		params.put("channelIdList", channelIdList);
-		params.put("channelLevelList", channelLevelList);
-		params.put("startDate", startDate);
-		params.put("endDate", endDate);
-		params.put("startTime", startTime.replace(":", "") + "00");
-		params.put("endTime", endTime.replace(":", "") + "00");
+		Map<String, Object> params = this.getFilterParamMap(filter);
 		List<Map<String, Object>> ageSpread = this.getList("selectSubjectAgaSpread", params);
 		
 		double groupRate = this.get("selectRate", params);
@@ -325,45 +191,11 @@ public class SubjectDataAnalyseService extends BaseService {
 	 * @param endTime	结束时间
 	 * @return
 	 */
-	public Map<String, Object> querySubjectEarnSpread(Integer areaId, 
-			List<Integer> channelIdList, List<Integer> channelLevelList, 
-			String startDate, String endDate, String startTime, String endTime)
+	public Map<String, Object> querySubjectEarnSpread(SubjectDataFilter filter)
 	{
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		if (areaId == null)
-		{
-			throw new BusinessException("请选择收视地区");
-		}
-		if ((channelIdList == null || channelIdList.size() == 0)
-				&& (channelLevelList == null || channelLevelList.size() == 0))
-		{
-			throw new BusinessException("请选择频道");
-		}
-		if (StringUtils.isBlank(startDate))
-		{
-			throw new BusinessException("请选择开始日期");
-		}
-		if (StringUtils.isBlank(endDate))
-		{
-			throw new BusinessException("请选择结束日期");
-		}
-		if (StringUtils.isBlank(startTime))
-		{
-			throw new BusinessException("请选择开始时间");
-		}
-		if (StringUtils.isBlank(endTime))
-		{
-			throw new BusinessException("请选择结束时间");
-		}
 		
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("areaId", areaId);
-		params.put("channelIdList", channelIdList);
-		params.put("channelLevelList", channelLevelList);
-		params.put("startDate", startDate);
-		params.put("endDate", endDate);
-		params.put("startTime", startTime.replace(":", "") + "00");
-		params.put("endTime", endTime.replace(":", "") + "00");
+		Map<String, Object> params = this.getFilterParamMap(filter);
 		List<Map<String, Object>> earnSpread = this.getList("querySubjectEarnSpread", params);
 		
 		double groupRate = this.get("selectRate", params);
@@ -395,45 +227,11 @@ public class SubjectDataAnalyseService extends BaseService {
 	 * @param endTime	结束时间
 	 * @return
 	 */
-	public Map<String, Object> querySubjectEduSpread(Integer areaId, 
-			List<Integer> channelIdList, List<Integer> channelLevelList, 
-			String startDate, String endDate, String startTime, String endTime)
+	public Map<String, Object> querySubjectEduSpread(SubjectDataFilter filter)
 	{
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		if (areaId == null)
-		{
-			throw new BusinessException("请选择收视地区");
-		}
-		if ((channelIdList == null || channelIdList.size() == 0)
-				&& (channelLevelList == null || channelLevelList.size() == 0))
-		{
-			throw new BusinessException("请选择频道");
-		}
-		if (StringUtils.isBlank(startDate))
-		{
-			throw new BusinessException("请选择开始日期");
-		}
-		if (StringUtils.isBlank(endDate))
-		{
-			throw new BusinessException("请选择结束日期");
-		}
-		if (StringUtils.isBlank(startTime))
-		{
-			throw new BusinessException("请选择开始时间");
-		}
-		if (StringUtils.isBlank(endTime))
-		{
-			throw new BusinessException("请选择结束时间");
-		}
 		
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("areaId", areaId);
-		params.put("channelIdList", channelIdList);
-		params.put("channelLevelList", channelLevelList);
-		params.put("startDate", startDate);
-		params.put("endDate", endDate);
-		params.put("startTime", startTime.replace(":", "") + "00");
-		params.put("endTime", endTime.replace(":", "") + "00");
+		Map<String, Object> params = this.getFilterParamMap(filter);
 		List<Map<String, Object>> eduSpread = this.getList("querySubjectEduSpread", params);
 		
 		double groupRate = this.get("selectRate", params);
@@ -465,45 +263,11 @@ public class SubjectDataAnalyseService extends BaseService {
 	 * @param endTime	结束时间
 	 * @return
 	 */
-	public Map<String, Object> querySubjectPeopleSpread(Integer areaId, 
-			List<Integer> channelIdList, List<Integer> channelLevelList, 
-			String startDate, String endDate, String startTime, String endTime) 
+	public Map<String, Object> querySubjectPeopleSpread(SubjectDataFilter filter) 
 	{
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		if (areaId == null)
-		{
-			throw new BusinessException("请选择收视地区");
-		}
-		if ((channelIdList == null || channelIdList.size() == 0)
-				&& (channelLevelList == null || channelLevelList.size() == 0))
-		{
-			throw new BusinessException("请选择频道");
-		}
-		if (StringUtils.isBlank(startDate))
-		{
-			throw new BusinessException("请选择开始日期");
-		}
-		if (StringUtils.isBlank(endDate))
-		{
-			throw new BusinessException("请选择结束日期");
-		}
-		if (StringUtils.isBlank(startTime))
-		{
-			throw new BusinessException("请选择开始时间");
-		}
-		if (StringUtils.isBlank(endTime))
-		{
-			throw new BusinessException("请选择结束时间");
-		}
 		
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("areaId", areaId);
-		params.put("channelIdList", channelIdList);
-		params.put("channelLevelList", channelLevelList);
-		params.put("startDate", startDate);
-		params.put("endDate", endDate);
-		params.put("startTime", startTime.replace(":", "") + "00");
-		params.put("endTime", endTime.replace(":", "") + "00");
+		Map<String, Object> params = this.getFilterParamMap(filter);
 		List<Map<String, Object>> ageSpread = this.getList("selectSubjectAgaSpread", params);
 		List<Map<String, Object>> earnSpread = this.getList("querySubjectEarnSpread", params);
 		List<Map<String, Object>> eduSpread = this.getList("querySubjectEduSpread", params);
@@ -549,5 +313,55 @@ public class SubjectDataAnalyseService extends BaseService {
 		resultMap.put("ageSpread", ageSpread);
 		resultMap.put("eduSpread", eduSpread);
 		return resultMap;
+	}
+	
+	/**
+	 * 获取查询条件
+	 * @author xuchangjian 2017年9月1日下午4:43:13
+	 * @param filter
+	 * @return
+	 */
+	private Map<String, Object> getFilterParamMap(SubjectDataFilter filter) {
+		if (filter.getAreaId() == null)
+		{
+			throw new BusinessException("请选择收视地区");
+		}
+		if ((filter.getChannelIdList() == null || filter.getChannelIdList().size() == 0)
+				&& (filter.getChannelLevelList() == null || filter.getChannelLevelList().size() == 0))
+		{
+			throw new BusinessException("请选择频道");
+		}
+		if (StringUtils.isBlank(filter.getStartDate()))
+		{
+			throw new BusinessException("请选择开始日期");
+		}
+		if (StringUtils.isBlank(filter.getEndDate()))
+		{
+			throw new BusinessException("请选择结束日期");
+		}
+		if (StringUtils.isBlank(filter.getStartTime()))
+		{
+			throw new BusinessException("请选择开始时间");
+		}
+		if (StringUtils.isBlank(filter.getEndTime()))
+		{
+			throw new BusinessException("请选择结束时间");
+		}
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("areaId", filter.getAreaId());
+		params.put("channelIdList", ListUtils.filterListNull(filter.getChannelIdList()));
+		params.put("channelLevelList", ListUtils.filterListNull(filter.getChannelLevelList()));
+		params.put("startDate", filter.getStartDate());
+		params.put("endDate", filter.getEndDate());
+		params.put("startTime", filter.getStartTime().replace(":", "") + "00");
+		params.put("endTime", filter.getEndTime().replace(":", "") + "00");
+		params.put("subjectIdList", ListUtils.filterListNull(filter.getSubjectIdList()));
+		params.put("ageType", filter.getAgeType());
+		params.put("sexType", filter.getSexType());
+		params.put("eduType", filter.getEduType());
+		params.put("earnType", filter.getEarnType());
+		
+		return params;
 	}
 }

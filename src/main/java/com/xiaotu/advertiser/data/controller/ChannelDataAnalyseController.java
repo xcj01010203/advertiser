@@ -1,10 +1,12 @@
 package com.xiaotu.advertiser.data.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.xiaotu.advertiser.common.util.Constants;
+import com.xiaotu.advertiser.data.controller.filter.ChannelDataFilter;
 import com.xiaotu.advertiser.data.service.ChannelDataAnalyseService;
 import com.xiaotu.common.db.DynamicDataSource;
 import com.xiaotu.common.redis.CacheHandler;
@@ -44,10 +46,10 @@ public class ChannelDataAnalyseController {
 	 * @return
 	 */
 	@RequestMapping("/queryChannelRank")
-	public Object queryChannelRank(Integer areaId, Integer channelId, String startDate, String endDate, String startTime, String endTime) 
+	public Object queryChannelRank(@RequestBody ChannelDataFilter filter) 
 	{
 		DynamicDataSource.setDataSource(DynamicDataSource.DATA_SOURCE_PG);
-		return this.channelDataAnayseService.queryChannelRank(areaId, channelId, startDate, endDate,startTime,endTime);
+		return this.channelDataAnayseService.queryChannelRank(filter);
 	}
 
 	/**
@@ -62,10 +64,10 @@ public class ChannelDataAnalyseController {
 	 * @return
 	 */
 	@RequestMapping("/queryChannelSubjectMark")
-	public Object queryChannelSubjectMark(Integer areaId, Integer channelId, String startDate, String endDate, String startTime, String endTime)
+	public Object queryChannelSubjectMark(@RequestBody ChannelDataFilter filter)
 	{
 		DynamicDataSource.setDataSource(DynamicDataSource.DATA_SOURCE_PG);
-		return this.channelDataAnayseService.queryChannelSubjectMark(areaId, channelId, startDate, endDate, startTime, endTime);
+		return this.channelDataAnayseService.queryChannelSubjectMark(filter);
 	}
 	
 	/**
@@ -78,10 +80,10 @@ public class ChannelDataAnalyseController {
 	 * @return
 	 */
 	@RequestMapping("/queryChannelCity")
-	public Object queryChannelCity(Integer areaId, Integer channelId, String startDate, String endDate, String startTime, String endTime)
+	public Object queryChannelCity(@RequestBody ChannelDataFilter filter)
 	{
 		DynamicDataSource.setDataSource(DynamicDataSource.DATA_SOURCE_PG);
-		return this.channelDataAnayseService.queryChannelCity(areaId, channelId, startDate, endDate, startTime, endTime);
+		return this.channelDataAnayseService.queryChannelCity(filter);
 	}
 	
 	/**
@@ -96,10 +98,10 @@ public class ChannelDataAnalyseController {
 	 * @return
 	 */
 	@RequestMapping("/queryChannelPeopleSpread")
-	public Object queryChannelPeopleSpread(Integer areaId, Integer channelId, String startDate, String endDate, String startTime, String endTime)
+	public Object queryChannelPeopleSpread(@RequestBody ChannelDataFilter filter)
 	{
 		DynamicDataSource.setDataSource(DynamicDataSource.DATA_SOURCE_PG);
-		return this.channelDataAnayseService.queryChannelPeopleSpread(areaId, channelId, startDate, endDate, startTime, endTime);
+		return this.channelDataAnayseService.queryChannelPeopleSpread(filter);
 	}
 	
 	/**
@@ -114,10 +116,10 @@ public class ChannelDataAnalyseController {
 	 * @return
 	 */
 	@RequestMapping("/queryChannelAgeSpread")
-	public Object queryChannelAgeSpread(Integer areaId, Integer channelId, String startDate, String endDate, String startTime, String endTime)
+	public Object queryChannelAgeSpread(@RequestBody ChannelDataFilter filter)
 	{
 		DynamicDataSource.setDataSource(DynamicDataSource.DATA_SOURCE_PG);
-		return this.channelDataAnayseService.queryChannelAgeSpread(areaId, channelId, startDate, endDate, startTime, endTime);
+		return this.channelDataAnayseService.queryChannelAgeSpread(filter);
 	}
 	
 	/**
@@ -132,10 +134,10 @@ public class ChannelDataAnalyseController {
 	 * @return
 	 */
 	@RequestMapping("/queryChannelEarnSpread")
-	public Object queryChannelEarnSpread(Integer areaId, Integer channelId, String startDate, String endDate, String startTime, String endTime)
+	public Object queryChannelEarnSpread(@RequestBody ChannelDataFilter filter)
 	{
 		DynamicDataSource.setDataSource(DynamicDataSource.DATA_SOURCE_PG);
-		return this.channelDataAnayseService.queryChannelEarnSpread(areaId, channelId, startDate, endDate, startTime, endTime);
+		return this.channelDataAnayseService.queryChannelEarnSpread(filter);
 	}
 	
 	/**
@@ -150,9 +152,9 @@ public class ChannelDataAnalyseController {
 	 * @return
 	 */
 	@RequestMapping("/queryChannelEduSpread")
-	public Object queryChannelEduSpread(Integer areaId, Integer channelId, String startDate, String endDate, String startTime, String endTime)
+	public Object queryChannelEduSpread(@RequestBody ChannelDataFilter filter)
 	{
 		DynamicDataSource.setDataSource(DynamicDataSource.DATA_SOURCE_PG);
-		return this.channelDataAnayseService.queryChannelEduSpread(areaId, channelId, startDate, endDate, startTime, endTime);
+		return this.channelDataAnayseService.queryChannelEduSpread(filter);
 	}
 }

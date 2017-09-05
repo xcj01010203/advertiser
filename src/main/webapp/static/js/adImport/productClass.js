@@ -35,7 +35,7 @@ function rederPie(id, data) {
 	var myChart = echarts.init(document.getElementById(id), "wonderland");
 	myChart.setOption(option);
 	myChart.on("click", function(params) {
-		showRoleViewList(params.data.doms);
+		showRoleViewList(params.data.doms,params.data.name);
 	});
 }
 
@@ -144,7 +144,7 @@ function loadGoodsImplant() {
 			var singleData = {};
 			singleData.name = item.goods;
 			singleData.value = item.roundCount;
-			singleData.doms ="<button class='story-card-con-btn' idList=\'"+ JSON.stringify(item.idList) +"\' onclick='showRoleViewList(this)'>查看详情</button>";
+			singleData.doms ="<button class='story-card-con-btn' goodNames=\'"+item.goods+"\' idList=\'"+ JSON.stringify(item.idList) +"\' onclick='showRoleViewList(this)'>查看详情</button>";
 			pieData.push(singleData);
 			if ((index + 1) % 4 == 0) {
 				goodsLiArray.push("<li class='story-li story-li-mar'>");
@@ -156,7 +156,7 @@ function loadGoodsImplant() {
 			goodsLiArray.push("        <li>"+ item.goods +"</li>");
 			goodsLiArray.push("        <li><div></div></li>");
 			goodsLiArray.push("        <li>场数："+ item.roundCount +"</li>");
-			goodsLiArray.push("        <li><button class='story-card-con-btn' idList=\'"+ JSON.stringify(item.idList) +"\' onclick='showRoleViewList(this)'>查看详情</button></li>");
+			goodsLiArray.push("        <li><button class='story-card-con-btn' goodNames=\'"+item.goods+"\' idList=\'"+ JSON.stringify(item.idList) +"\' onclick='showRoleViewList(this)'>查看详情</button></li>");
 			goodsLiArray.push("    </ul>");
 			goodsLiArray.push("</li>");
 		});
@@ -179,7 +179,7 @@ function loadGoodsImplant() {
 }
 
 //显示产品场景表
-function showRoleViewList(own) {
+function showRoleViewList(own,goodName) {
 	var idList = $(own).attr("idList");
 	$("#goodsRoundListPage").createPage({
 		url: "/implantAnalyse/queryRoundGoodsImplant",
@@ -215,6 +215,13 @@ function showRoleViewList(own) {
 			
 			$('#roundListDiv').modal('show');
 			
+			 //导出角色分类列表
+            $("#roundListDiv .export-role-tab").click(function() {
+            	var goodName = $(own).attr("goodNames");
+            	var goodNames ="产品分类-"+goodName;
+                exportRoleTab(JSON.parse(idList),roundList,goodNames);
+            })
+			
 			//绘制环形图
 			// $.each($(".pie-div"), function(index, item) {
 			// 	renderRing($(item)[0], $(item).attr("rate"));
@@ -226,6 +233,15 @@ function showRoleViewList(own) {
 //            });
 		}
 	});
+}
+
+//导出角色分类列表
+function exportRoleTab(goodsId,roundList,roleName){
+	if(roundList.length > 0){
+		window.location.href=basePath+"/implantAnalyse/exportRoundGoodsImplant?goodsIdList[]="+goodsId+"&roleNames="+roleName;
+	}else{
+		modelWindow("没有可导出的数据!",0);
+	}
 }
 
 // 百分比

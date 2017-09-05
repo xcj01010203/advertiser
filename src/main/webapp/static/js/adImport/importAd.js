@@ -29,8 +29,23 @@ function loadRecordList() {
 			});
 
 			$("#implantRecordList").html(recordTrArray.join(""));
+			
+			//导出植入广告列表
+			$("#importAdListDiv .export-role-tab").click(function() {
+            	var goodNames ="植入广告";
+                exportRoleTab(recordList,goodNames);
+            })
 		}
 	});
+}
+
+//导出植入广告列表
+function exportRoleTab(roundList,roleName){
+	if(roundList.length > 0){
+		window.location.href=basePath+"/implantRecord/exportRecordList?roleNames="+roleName;
+	}else{
+		modelWindow("没有可导出的数据!",0);
+	}
 }
 
 //显示场次详情弹窗

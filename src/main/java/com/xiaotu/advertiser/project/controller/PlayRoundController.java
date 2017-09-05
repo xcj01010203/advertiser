@@ -143,22 +143,4 @@ public class PlayRoundController {
 		
 		return hasRound;
 	}
-	
-	
-
-	/**
-	 * 高级检索场次列表
-	 * @author wangyanlong 2017年8月22日
-	 * @return
-	 */
-//	@RequestMapping("/querySearchList")
-//	public Object querySearchList(Integer startSeriesNo, Integer startRoundNo, Integer endSeriesNo, Integer endRoundNo,Integer seriesNo, Integer roundNo,
-//			@RequestParam(value="atmosphereList[]", required=false) List<String> atmosphereList, @RequestParam(value="siteList[]", required=false) List<String> siteList,
-//			@RequestParam(value="firstLocationList[]", required=false) List<String> firstLocationList, @RequestParam(value="propIdList[]", required=false) List<String> propIdList, 
-//			@RequestParam(value="majorRoleIdList[]", required=false) List<String> majorRoleIdList, @RequestParam(value="guestRoleIdList[]", required=false) List<String> guestRoleIdList, 
-//			@RequestParam(value="massRoleIdList[]", required=false) List<String> massRoleIdList,Integer pageSize, Integer currentPage)
-//	{
-//		return this.playRoundService.querySearchList(startSeriesNo,startRoundNo,endSeriesNo,endRoundNo,seriesNo,roundNo,atmosphereList,siteList, firstLocationList,
-//				propIdList,majorRoleIdList,guestRoleIdList,massRoleIdList, pageSize, currentPage);
-//	}
 }

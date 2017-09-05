@@ -17,6 +17,13 @@ public class PlayRoundTmpModel {
 	private String content;	//剧本内容
 	private String majorRoleNames;	//主要角色名称，多个用逗号隔开
 	private String firstLocation;	//一级场景
+	private Double pageCount;	//页数
+	public Double getPageCount() {
+		return pageCount;
+	}
+	public void setPageCount(Double pageCount) {
+		this.pageCount = pageCount;
+	}
 	public String getId() {
 		return id;
 	}

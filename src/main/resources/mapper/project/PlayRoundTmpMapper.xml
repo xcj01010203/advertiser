@@ -8,10 +8,12 @@
 			id, project_id, round_id, 
 			seriesno, roundno, atmosphere, 
 			site, title, content, 
-			majorrolenames, firstlocation) 
+			majorrolenames, firstlocation, pageCount) 
 		VALUES
 		<foreach collection="list" separator="," item="prt">
- 			(#{prt.id},#{prt.project.id},#{prt.playRound.id},#{prt.seriesNo}, #{prt.roundNo}, #{prt.atmosphere},#{prt.site}, #{prt.title}, #{prt.content}, #{prt.majorRoleNames}, #{prt.firstLocation})
+ 			(#{prt.id},#{prt.project.id},#{prt.playRound.id},#{prt.seriesNo},
+ 			 #{prt.roundNo}, #{prt.atmosphere},#{prt.site}, #{prt.title}, 
+ 			 #{prt.content}, #{prt.majorRoleNames}, #{prt.firstLocation}, #{prt.pageCount})
  		</foreach>
 	</insert>
 	

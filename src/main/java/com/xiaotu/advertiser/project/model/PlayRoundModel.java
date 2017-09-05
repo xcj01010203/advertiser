@@ -20,6 +20,7 @@ public class PlayRoundModel
 	private Date createTime; // 创建时间
 	private Date lastUpdateTime; // 最后修改时间
 	private boolean isManualSaved; // 是否已手动保存
+	private double pageCount;	//页数
 	
 	public PlayRoundModel()
 	{
@@ -87,6 +88,14 @@ public class PlayRoundModel
 		return true;
 	}
 	
+	public double getPageCount() {
+		return pageCount;
+	}
+
+	public void setPageCount(double pageCount) {
+		this.pageCount = pageCount;
+	}
+
 	public boolean getIsManualSaved()
 	{
 		return isManualSaved;

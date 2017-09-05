@@ -11,9 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.xiaotu.advertiser.play.PlayAnalysisUtils;
 import com.xiaotu.advertiser.play.ViewInfoDto;
 import com.xiaotu.advertiser.project.controller.dto.PlayRoundDto;
 import com.xiaotu.advertiser.project.model.PlayContentModel;
+import com.xiaotu.advertiser.project.model.PlayFormatModel;
 import com.xiaotu.advertiser.project.model.PlayRoundTmpModel;
 import com.xiaotu.advertiser.project.model.ProjectModel;
 import com.xiaotu.common.exception.BusinessException;
@@ -197,16 +199,32 @@ public class PlayRoundTmpService extends BaseService {
 		List<PlayContentModel> toAddContentList = new ArrayList<PlayContentModel>();
 		for (PlayRoundTmpModel roundTmp : roundTmpList)
 		{
-			PlayContentModel content = new PlayContentModel();
-			content.setProject(project);
-			content.setPlayRound(roundTmp.getPlayRound());
-			content.setTitle(roundTmp.getTitle());
-			content.setContent(roundTmp.getContent());
+			PlayContentModel playContent = new PlayContentModel();
+			playContent.setProject(project);
+			playContent.setPlayRound(roundTmp.getPlayRound());
+			playContent.setTitle(roundTmp.getTitle());
+			playContent.setContent(roundTmp.getContent());
 			if (!StringUtils.isBlank(roundTmp.getContent()))
 			{
-				content.setWordCount(roundTmp.getContent().length());
+				playContent.setWordCount(roundTmp.getContent().length());
 			}
-			toAddContentList.add(content);
+			toAddContentList.add(playContent);
+			
+			
+			//更新场次的页数
+			PlayFormatModel playFormat = this.get("PlayFormatMapper.selectByProjectId", project.getId());
+			
+			String title = playContent.getTitle();
+			String content = playContent.getContent();
+			
+			double pageCount = PlayAnalysisUtils.calculatePage(title, content, playFormat.getLineCount(), 
+					playFormat.getWordCount(), playFormat.getPageIncludeTitle());
+			
+			Map<String, Object> roundPageMap = new HashMap<String, Object>();
+			roundPageMap.put("id", playContent.getPlayRound().getId());
+			roundPageMap.put("pageCount", pageCount);
+			this.update("PlayRoundMapper.updatePage", roundPageMap);
+			
 		}
 		this.save("PlayContentMapper.insertBatch", toAddContentList);
 		
@@ -260,6 +278,7 @@ public class PlayRoundTmpService extends BaseService {
 				viewInfoDto.setMajorRoleNameList(Arrays.asList(roundTmp.getMajorRoleNames().split(",")));
 			}
 			viewInfoDto.setFirstLocation(roundTmp.getFirstLocation());
+			viewInfoDto.setPageCount(roundTmp.getPageCount());
 			autoAddViewList.add(viewInfoDto);
 		}
 		

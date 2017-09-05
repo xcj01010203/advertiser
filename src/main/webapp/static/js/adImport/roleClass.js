@@ -125,12 +125,19 @@ function showRoundList(roleId, roleName, goodsId, goodsName) {
                 roundTrArray.push("				<td width='20%' class='over-hide' title='" + filterNull(item.goods) + "'>" + filterNull(item.goods) + "</td>");
                 roundTrArray.push("				<td width='20%' class='over-hide'></td>");
                 roundTrArray.push("			</tr>");
+                
             });
 
             $("#roundListTbody").html(roundTrArray.join(""));
 
             $('#roundListDiv').modal('show');
             $("#roundTitle").text(roleName + "-" + goodsName);
+
+            //导出角色分类列表
+            $("#roundListDiv .export-role-tab").click(function() {
+            	var roleNames ="角色分类-" + goodsName;
+                exportRoleTab(goodsId,roleId,roundList,roleNames);
+            })
 
             //绘制环形图
             // $.each($(".pie-div"), function (index, item) {
@@ -143,6 +150,15 @@ function showRoundList(roleId, roleName, goodsId, goodsName) {
 //            });
         }
     });
+}
+
+//导出角色分类列表
+function exportRoleTab(goodsId,roleId,roundList,roleNames){
+	if(roundList.length > 0){
+		window.location.href=basePath+"/implantAnalyse/exportRoundGoodsImplant?goodsIdList[]="+goodsId+"&roleId="+roleId+"&roleNames="+roleNames;
+	}else{
+		modelWindow("没有可导出的数据!",0);
+	}
 }
 
 // 百分比
@@ -226,7 +242,6 @@ function loadRoleImplant() {
 
                     pieData.push(singleData);
                 });
-                console.log(index)
                 if (index % 2 == 0) {
                     roleDivArray.push("<div style='display: inline-block;width: 49%;margin-right: 1%;' class='panel panel-default'>");
                 } else if (index % 2 == 1) {

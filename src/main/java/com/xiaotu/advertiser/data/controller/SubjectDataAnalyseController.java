@@ -1,12 +1,11 @@
 package com.xiaotu.advertiser.data.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.xiaotu.advertiser.data.controller.filter.SubjectDataFilter;
 import com.xiaotu.advertiser.data.service.SubjectDataAnalyseService;
 import com.xiaotu.common.db.DynamicDataSource;
 
@@ -34,13 +33,10 @@ public class SubjectDataAnalyseController {
 	 * @return
 	 */
 	@RequestMapping("/querySubjectMarketPos")
-	public Object querySubjectMarketPos(Integer areaId, 
-			@RequestParam(required=false, name="channelIdList[]") List<Integer> channelIdList, 
-			@RequestParam(required=false, name="channelLevelList[]") List<Integer> channelLevelList, 
-			String startDate, String endDate, String startTime, String endTime)
+	public Object querySubjectMarketPos(@RequestBody SubjectDataFilter filter)
 	{
 		DynamicDataSource.setDataSource(DynamicDataSource.DATA_SOURCE_PG);
-		return this.subjectDataAnalyseService.querySubjectMarketPos(areaId, channelIdList, channelLevelList, startDate, endDate, startTime, endTime);
+		return this.subjectDataAnalyseService.querySubjectMarketPos(filter);
 	}
 	
 	/**
@@ -56,13 +52,10 @@ public class SubjectDataAnalyseController {
 	 * @return
 	 */
 	@RequestMapping("/querySubjectRank")
-	public Object querySubjectRank(Integer areaId, 
-			@RequestParam(required=false, name="channelIdList[]") List<Integer> channelIdList, 
-			@RequestParam(required=false, name="channelLevelList[]") List<Integer> channelLevelList, 
-			String startDate, String endDate, String startTime, String endTime)
+	public Object querySubjectRank(@RequestBody SubjectDataFilter filter)
 	{
 		DynamicDataSource.setDataSource(DynamicDataSource.DATA_SOURCE_PG);
-		return this.subjectDataAnalyseService.querySubjectRank(areaId, channelIdList, channelLevelList, startDate, endDate, startTime, endTime);
+		return this.subjectDataAnalyseService.querySubjectRank(filter);
 	}
 
 	/**
@@ -78,13 +71,10 @@ public class SubjectDataAnalyseController {
 	 * @return
 	 */
 	@RequestMapping("/querySubjectCity")
-	public Object querySubjectCity(Integer areaId, 
-			@RequestParam(required=false, name="channelIdList[]") List<Integer> channelIdList, 
-			@RequestParam(required=false, name="channelLevelList[]") List<Integer> channelLevelList, 
-			String startDate, String endDate, String startTime, String endTime)
+	public Object querySubjectCity(@RequestBody SubjectDataFilter filter)
 	{
 		DynamicDataSource.setDataSource(DynamicDataSource.DATA_SOURCE_PG);
-		return this.subjectDataAnalyseService.querySubjectCity(areaId, channelIdList, channelLevelList, startDate, endDate, startTime, endTime);
+		return this.subjectDataAnalyseService.querySubjectCity(filter);
 	}
 	
 	/**
@@ -100,13 +90,10 @@ public class SubjectDataAnalyseController {
 	 * @return
 	 */
 	@RequestMapping("/querySubjectAgeSpread")
-	public Object querySubjectAgeSpread(Integer areaId, 
-			@RequestParam(required=false, name="channelIdList[]") List<Integer> channelIdList, 
-			@RequestParam(required=false, name="channelLevelList[]") List<Integer> channelLevelList, 
-			String startDate, String endDate, String startTime, String endTime)
+	public Object querySubjectAgeSpread(@RequestBody SubjectDataFilter filter)
 	{
 		DynamicDataSource.setDataSource(DynamicDataSource.DATA_SOURCE_PG);
-		return this.subjectDataAnalyseService.querySubjectAgeSpread(areaId, channelIdList, channelLevelList, startDate, endDate, startTime, endTime);
+		return this.subjectDataAnalyseService.querySubjectAgeSpread(filter);
 	}
 	
 	/**
@@ -122,13 +109,10 @@ public class SubjectDataAnalyseController {
 	 * @return
 	 */
 	@RequestMapping("/querySubjectEarnSpread")
-	public Object querySubjectEarnSpread(Integer areaId, 
-			@RequestParam(required=false, name="channelIdList[]") List<Integer> channelIdList, 
-			@RequestParam(required=false, name="channelLevelList[]") List<Integer> channelLevelList, 
-			String startDate, String endDate, String startTime, String endTime)
+	public Object querySubjectEarnSpread(@RequestBody SubjectDataFilter filter)
 	{
 		DynamicDataSource.setDataSource(DynamicDataSource.DATA_SOURCE_PG);
-		return this.subjectDataAnalyseService.querySubjectEarnSpread(areaId, channelIdList, channelLevelList, startDate, endDate, startTime, endTime);
+		return this.subjectDataAnalyseService.querySubjectEarnSpread(filter);
 	}
 	
 	/**
@@ -144,13 +128,10 @@ public class SubjectDataAnalyseController {
 	 * @return
 	 */
 	@RequestMapping("/querySubjectEduSpread")
-	public Object querySubjectEduSpread(Integer areaId, 
-			@RequestParam(required=false, name="channelIdList[]") List<Integer> channelIdList, 
-			@RequestParam(required=false, name="channelLevelList[]") List<Integer> channelLevelList, 
-			String startDate, String endDate, String startTime, String endTime)
+	public Object querySubjectEduSpread(@RequestBody SubjectDataFilter filter)
 	{
 		DynamicDataSource.setDataSource(DynamicDataSource.DATA_SOURCE_PG);
-		return this.subjectDataAnalyseService.querySubjectEduSpread(areaId, channelIdList, channelLevelList, startDate, endDate, startTime, endTime);
+		return this.subjectDataAnalyseService.querySubjectEduSpread(filter);
 	}
 
 	/**
@@ -166,12 +147,9 @@ public class SubjectDataAnalyseController {
 	 * @return
 	 */
 	@RequestMapping("/querySubjectPeopleSpread")
-	public Object querySubjectPeopleSpread(Integer areaId, 
-			@RequestParam(required=false, name="channelIdList[]") List<Integer> channelIdList, 
-			@RequestParam(required=false, name="channelLevelList[]") List<Integer> channelLevelList, 
-			String startDate, String endDate, String startTime, String endTime) 
+	public Object querySubjectPeopleSpread(@RequestBody SubjectDataFilter filter) 
 	{
 		DynamicDataSource.setDataSource(DynamicDataSource.DATA_SOURCE_PG);
-		return this.subjectDataAnalyseService.querySubjectPeopleSpread(areaId, channelIdList, channelLevelList, startDate, endDate, startTime, endTime);
+		return this.subjectDataAnalyseService.querySubjectPeopleSpread(filter);
 	}
 }

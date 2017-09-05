@@ -18,6 +18,7 @@ import com.xiaotu.advertiser.play.PlayAnalysisUtils;
 import com.xiaotu.advertiser.play.PlayTitleMsgDto;
 import com.xiaotu.advertiser.play.ViewInfoDto;
 import com.xiaotu.advertiser.project.model.PlayContentModel;
+import com.xiaotu.advertiser.project.model.PlayFormatModel;
 import com.xiaotu.advertiser.project.model.PlayModel;
 import com.xiaotu.advertiser.project.model.PlayRoleModel;
 import com.xiaotu.advertiser.project.model.PlayRoundModel;
@@ -27,6 +28,7 @@ import com.xiaotu.advertiser.project.model.map.PlayRoundRoleMapModel;
 import com.xiaotu.advertiser.user.model.UserModel;
 import com.xiaotu.common.db.Page;
 import com.xiaotu.common.db.util.UUIDUtils;
+import com.xiaotu.common.exception.BusinessException;
 import com.xiaotu.common.mvc.BaseService;
 import com.xiaotu.common.util.FileUtil;
 import com.xiaotu.common.util.PropertiesUtil;
@@ -61,9 +63,20 @@ public class PlayService extends BaseService {
 	 * @param file
 	 * @throws Exception
 	 */
-	public Map<String, Object> savePlay(MultipartFile file) throws Exception
+	public Map<String, Object> savePlay(MultipartFile file, Integer wordCount, Integer lineCount, Boolean pageIncludeTitle) throws Exception
 	{
 		Map<String, Object> resultMap = new HashMap<String, Object>();
+		
+		if (wordCount == null) {
+			throw new BusinessException("为了方便计算页数，请填写剧本每行的字数");
+		}
+		if (lineCount == null) {
+			throw new BusinessException("为了方便计算页数，请填写剧本页的行数");
+		}
+		if (pageIncludeTitle == null) {
+			pageIncludeTitle = true;
+		}
+		
 		
 		ProjectModel project = SessionUtil.getSessionProject();
 		UserModel user = SessionUtil.getSessionUser();
@@ -78,9 +91,7 @@ public class PlayService extends BaseService {
 		String myStorepath = uploadFileInfo.get("storepath");
 		
 		//解析剧本
-		String openOfficeInstallPath = PropertiesUtil.getProperty("openOfficeInstallPath");
-		String winrarInstallPath = PropertiesUtil.getProperty("winrarInstallPath");
-		Map<String, Object> playInfo = PlayAnalysisUtils.analysePlay(myStorepath + fileStoreName);
+		Map<String, Object> playInfo = PlayAnalysisUtils.analysePlay(myStorepath + fileStoreName, wordCount, lineCount, pageIncludeTitle);
 		
 		List<ViewInfoDto> viewList = (List<ViewInfoDto>) playInfo.get("viewInfoList");
 		List<PlayTitleMsgDto> titleMsgList = (List<PlayTitleMsgDto>) playInfo.get("titleMsgList");
@@ -113,7 +124,6 @@ public class PlayService extends BaseService {
 				uploadDesc += "错误:\r\n" + titleErrorMsgs;
 			}
 		}
-		
 
 		//保存上传的剧本信息
 		PlayModel play = new PlayModel();
@@ -128,9 +138,28 @@ public class PlayService extends BaseService {
 		
 		this.save("insertPlay", play);
 		
+		//剧本格式信息
+		PlayFormatModel playFormat = this.get("PlayFormatMapper.selectByProjectId", project.getId());
+		if (playFormat == null) 
+		{
+			playFormat = new PlayFormatModel();
+		}
+		playFormat.setLineCount(lineCount);
+		playFormat.setWordCount(wordCount);
+		playFormat.setPageIncludeTitle(pageIncludeTitle);
+		playFormat.setProject(project);
+		
+		if (StringUtils.isBlank(playFormat.getId())) 
+		{
+			this.save("PlayFormatMapper.insertOne", playFormat);
+		}
+		else
+		{
+			this.save("PlayFormatMapper.updateOne", playFormat);
+		}
 		
 		//把解析出的剧本信息和数据库中已有信息比较，并把结果入库
-		this.compareWithExistRound(viewList, project);
+		this.compareWithExistRound(viewList, project);;
 		
 		resultMap.put("uploadDesc", uploadDesc);
 		return resultMap;
@@ -140,7 +169,10 @@ public class PlayService extends BaseService {
 	 * 把解析出的剧本信息和数据库中已有信息比较，并把比对结果入库
 	 * @author xuchangjian 2017年6月22日上午10:37:33
 	 * @param viewList	场次信息
-	 * @param project
+	 * @param project	项目信息
+	 * @param wordCount	每行显示字数
+	 * @param lineCount	每页显示行数
+	 * @param pageIncludeTitle	计算页数是否包含标题
 	 * @return
 	 */
 	public void compareWithExistRound(List<ViewInfoDto> viewList, ProjectModel project)
@@ -177,6 +209,7 @@ public class PlayService extends BaseService {
 							roundTmp.setTitle(viewInfoDto.getTitle());
 							roundTmp.setContent(viewInfoDto.getContent());
 							roundTmp.setFirstLocation(viewInfoDto.getFirstLocation());
+							roundTmp.setPageCount(viewInfoDto.getPageCount());
 							
 							List<String> majorRoleNameList = viewInfoDto.getMajorRoleNameList();
 							
@@ -268,6 +301,7 @@ public class PlayService extends BaseService {
 			playRound.setCreateTime(new Date());
 			playRound.setLastUpdateTime(new Date());
 			playRound.setIsManualSaved(false);
+			playRound.setPageCount(viewInfoDto.getPageCount());
 			toAddPlayRoundList.add(playRound);
 			
 			//场次内容信息
@@ -334,6 +368,64 @@ public class PlayService extends BaseService {
 		resultMap.put("totalPage", page.getTotalPage());
 		resultMap.put("totalRows", page.getTotalRows());
 		return resultMap;
+	}
+	
+	/**
+	 * 重新分析页数
+	 * @author xuchangjian 2017年8月31日下午3:48:44
+	 * @param wordCount	每行显示字数
+	 * @param lineCount	每页显示行数
+	 * @param pageIncludeTitle	计算页数是否包含标题
+	 */
+	public void savePage(Integer wordCount, Integer lineCount, Boolean pageIncludeTitle)
+	{
+		if (wordCount == null) {
+			throw new BusinessException("为了方便计算页数，请填写剧本每行的字数");
+		}
+		if (lineCount == null) {
+			throw new BusinessException("为了方便计算页数，请填写剧本页的行数");
+		}
+		if (pageIncludeTitle == null) {
+			pageIncludeTitle = true;
+		}
+		
+		ProjectModel project = SessionUtil.getSessionProject();
+		//剧本格式信息
+		PlayFormatModel playFormat = this.get("PlayFormatMapper.selectByProjectId", project.getId());
+		if (playFormat == null) 
+		{
+			playFormat = new PlayFormatModel();
+		}
+		playFormat.setLineCount(lineCount);
+		playFormat.setWordCount(wordCount);
+		playFormat.setPageIncludeTitle(pageIncludeTitle);
+		playFormat.setProject(project);
+		
+		if (StringUtils.isBlank(playFormat.getId())) 
+		{
+			this.save("PlayFormatMapper.insertOne", playFormat);
+		}
+		else
+		{
+			this.save("PlayFormatMapper.updateOne", playFormat);
+		}
+		
+		Map<String, Object> contentParam = new HashMap<String, Object>();
+		contentParam.put("projectId", project.getId());
+		List<PlayContentModel> contentList = this.getList("PlayContentMapper.selectPlayContent", contentParam);
+		
+		for (PlayContentModel playContent : contentList)
+		{
+			String title = playContent.getTitle();
+			String content = playContent.getContent();
+			
+			double pageCount = PlayAnalysisUtils.calculatePage(title, content, lineCount, wordCount, pageIncludeTitle);
+			
+			Map<String, Object> roundPageMap = new HashMap<String, Object>();
+			roundPageMap.put("id", playContent.getPlayRound().getId());
+			roundPageMap.put("pageCount", pageCount);
+			this.update("PlayRoundMapper.updatePage", roundPageMap);
+		}
 	}
 	
 

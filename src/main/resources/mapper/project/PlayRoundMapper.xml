@@ -12,7 +12,8 @@
 		  site,
 		  firstlocation,
 		  remark,
-		  ismanualsaved
+		  ismanualsaved,
+		  pagecount
 		FROM tab_play_round
 		WHERE project_id = #{projectId}
 		<if test="isManualSaved != null">
@@ -349,12 +350,12 @@
 		INSERT INTO tab_play_round(
 			id, project_id, seriesno, 
 			roundno, atmosphere, site, 
-			firstlocation, ismanualsaved, createtime, lastupdatetime)
+			firstlocation, ismanualsaved, createtime, lastupdatetime, pageCount)
 		VALUES
 		<foreach collection="list" separator="," item="pr">
 			(#{pr.id}, #{pr.project.id}, #{pr.seriesNo}, 
 			 #{pr.roundNo}, #{pr.atmosphere}, #{pr.site}, 
-			 #{pr.firstLocation}, #{pr.isManualSaved}, #{pr.createTime}, #{pr.lastUpdateTime})
+			 #{pr.firstLocation}, #{pr.isManualSaved}, #{pr.createTime}, #{pr.lastUpdateTime}, #{pr.pageCount})
 		</foreach>
 	</insert>
 	
@@ -377,7 +378,15 @@
 			firstlocation = #{firstLocation}, 
 			remark = #{remark}, 
 			ismanualsaved = #{isManualSaved}, 
-			lastupdatetime = #{lastUpdateTime}
+			lastupdatetime = #{lastUpdateTime},
+			pageCount = #{pageCount}
+		WHERE id = #{id}
+	</update>
+	
+	<!-- 更新场次页数 -->
+	<update id="updatePage" parameterType="map">
+		UPDATE tab_play_round
+		SET pageCount = #{pageCount}
 		WHERE id = #{id}
 	</update>
 	

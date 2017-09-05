@@ -42,6 +42,9 @@
     float: left;
     margin-left: 40px;
 }
+.new-project .right .project-content .project-content-block .movie-subject-div {
+	display: none;
+}
 .new-project .right .project-content .project-content-block label {
     margin-right: 30px;
     width: 100px;

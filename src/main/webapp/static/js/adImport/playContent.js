@@ -89,7 +89,11 @@ function loadViewList() {
 
             $("#playContentList").html(viewTrArray.join(""));
 
-
+            //导出角色分类列表
+            $("#playCountListDiv .export-role-tab").click(function() {
+            	var goodNames ="剧本内容";
+                exportRoleTab(seriesNo,roundList,goodNames);
+            })
             //绘制环形图
             // $.each($(".pie-td"), function(index, item) {
             // 	renderRing($(item)[0], $(item).attr("rate"));
@@ -102,6 +106,15 @@ function loadViewList() {
         }
     });
 
+}
+
+//导出角色分类列表
+function exportRoleTab(seriesNo,roundList,roleName){
+	if(roundList.length > 0){
+		window.location.href=basePath+"/implantAnalyse/exportRoundGoodsImplant?seriesNo="+seriesNo+"&roleNames="+roleName;
+	}else{
+		modelWindow("没有可导出的数据!",0);
+	}
 }
 
 //显示场次详情弹窗

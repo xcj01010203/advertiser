@@ -1,10 +1,14 @@
 package com.xiaotu.advertiser.project.service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
@@ -20,6 +24,7 @@ import com.xiaotu.advertiser.project.model.map.PlayMarkRoleMapModel;
 import com.xiaotu.common.db.Page;
 import com.xiaotu.common.exception.BusinessException;
 import com.xiaotu.common.mvc.BaseService;
+import com.xiaotu.common.util.ExcelUtils;
 import com.xiaotu.common.util.SessionUtil;
 
 /**
@@ -33,7 +38,14 @@ public class PlayMarkService extends BaseService {
 	protected String getKey() {
 		return "PlayMarkMapper";
 	}
-
+	private static Map<String, String> CREW_PROPS_MAP = new LinkedHashMap<String, String>();//需要导出的字段
+    static{
+    	CREW_PROPS_MAP.put("集-场", "seriesRoundNo");
+    	CREW_PROPS_MAP.put("关键词",  "word");
+    	CREW_PROPS_MAP.put("产品名称",  "goods");
+    	CREW_PROPS_MAP.put("角色",  "roleNameList");
+    	CREW_PROPS_MAP.put("描述",  "description");
+    }
 	
 	/**
 	 * 保存标记信息
@@ -340,5 +352,96 @@ public class PlayMarkService extends BaseService {
 			resultMap.put("totalPage", page.getTotalPage());
 		}
 		return resultMap;
+	}
+	
+	
+	/**
+	 * 导出剧本标记列表
+	 * @author wangyanlong 2017年9月2日
+	 * @return
+	 * @throws IOException 
+	 * @throws IllegalAccessException 
+	 * @throws IllegalArgumentException 
+	 */
+	public void queryExportMarkList(String roleNames,HttpServletResponse response) throws IllegalArgumentException, IllegalAccessException, IOException
+	{
+		ProjectModel project = SessionUtil.getSessionProject();
+		
+		List<PlayMarkModel> markList =null;
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("projectId", project.getId());
+		markList = this.getList("selectScriptMark", params);
+		List<Map<String, Object>> goodsMarkMapList = this.getList("GoodsMapper.selectByRoundId", params);	//带有标记ID的品类列表
+		List<Map<String, Object>> roleMarkMapList = this.getList("PlayRoleMapper.selectRoleListWithMarkInfo", params);	//带有标记ID的角色列表
+		
+		//把品类按照标记ID分组，key为标记ID，value为品类列表
+		List<Map<String, Object>> dealedRoundList = new ArrayList<Map<String, Object>>();
+		Map<String, List<GoodsModel>> groupGoodsMap = new HashMap<String, List<GoodsModel>>();
+		for (Map<String, Object> goodsMarkMap : goodsMarkMapList)
+		{
+			String playMarkId = (String) goodsMarkMap.get("playMarkId");
+			
+			GoodsModel goods = new GoodsModel();
+			goods.setId((String) goodsMarkMap.get("id"));
+			goods.setGoods((String) goodsMarkMap.get("goods"));
+			
+			if (!groupGoodsMap.containsKey(playMarkId))
+			{
+				List<GoodsModel> goodsList = new ArrayList<GoodsModel>();
+				goodsList.add(goods);
+				groupGoodsMap.put(playMarkId, goodsList);
+			}
+			else 
+			{
+				groupGoodsMap.get(playMarkId).add(goods);
+			}
+		}
+		
+		//把角色按照标记ID分组，key为标记ID，value为角色列表
+		Map<String, List<String>> groupRoleMap = new HashMap<String, List<String>>();
+		for (Map<String, Object> roleMarkMap : roleMarkMapList)
+		{
+			String playMarkId = (String) roleMarkMap.get("playMarkId");
+			String roleName = (String) roleMarkMap.get("name");
+			
+			if (!groupRoleMap.containsKey(playMarkId))
+			{
+				List<String> roleList = new ArrayList<String>();
+				roleList.add(roleName);
+				groupRoleMap.put(playMarkId, roleList);
+			}
+			else
+			{
+				groupRoleMap.get(playMarkId).add(roleName);
+			}
+		}
+		
+		//组装最后的结果
+		for (PlayMarkModel mark : markList)
+		{
+			Map<String, Object> roundMap = new HashMap<String, Object>();
+			String id = mark.getId();
+			String series_round_no =mark.getPlayRound().getSeriesNo() + "-" + mark.getPlayRound().getRoundNo();
+			String word =mark.getWord();
+			List<GoodsModel> goodList = groupGoodsMap.get(id);
+			String goods ="";
+			for (GoodsModel goodsModel : goodList) {
+				if(goodList.size() <=1){
+					goods = goodsModel.getGoods();
+				}else{
+					goods += '|' + goodsModel.getGoods();
+				}
+			}
+			String roleNameList =String.join("|", groupRoleMap.get(id));
+			String description =mark.getDescription();
+			roundMap.put("description", description);
+			roundMap.put("roleNameList", roleNameList);
+			roundMap.put("goods", goods);
+			roundMap.put("word", word);
+			roundMap.put("seriesRoundNo", series_round_no);
+			dealedRoundList.add(roundMap);
+			
+		}
+		ExcelUtils.exportPropsInfoForExcel(dealedRoundList,roleNames,response,CREW_PROPS_MAP,project.getName());
 	}
 }

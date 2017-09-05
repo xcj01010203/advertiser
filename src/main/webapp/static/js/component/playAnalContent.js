@@ -331,6 +331,7 @@ function operateRightData() {
     var dom = $(".anal-content .anal-right .anal-right-content");
     dom.find(".ji .two").html(xiaotuObj.sceneInfoContent.seriesNo)
     dom.find(".chang .two").html(xiaotuObj.sceneInfoContent.roundNo)
+    dom.find(".page .two").html(xiaotuObj.sceneInfoContent.pageCount)
     dom.find(".air .two").html(xiaotuObj.sceneInfoContent.atmosphere)
     dom.find(".in-out .two").html(xiaotuObj.sceneInfoContent.site)
     dom.find(".main-scene .two").html(xiaotuObj.sceneInfoContent.firstLocation)

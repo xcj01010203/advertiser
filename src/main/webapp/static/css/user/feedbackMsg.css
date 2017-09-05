@@ -35,10 +35,10 @@ th{
 .new-project .left a .left_content_select{
     border-left: 3px solid #29d9c2;
 }
-.new-project .left a:nth-of-type(4){
+.new-project .left a:nth-of-type(5){
     border-bottom: solid 1px #ededed;
 }
-.new-project .left a:nth-of-type(6) .leftMenu .user_settings{
+.new-project .left a:nth-of-type(7) .leftMenu .user_settings{
     border-left:3px solid #29d9c2;
 }
 .new-project .left a{

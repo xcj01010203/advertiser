@@ -173,6 +173,12 @@ $(function () {
 
     // 关闭角色列表
     closePickRoleList()
+
+    // 打开计算页数
+    openCountPage()
+
+    // 关闭计算页数
+    closeCountPage()
 })
 
 //检查是否有场次信息
@@ -364,7 +370,8 @@ function getDropdownSceneInfo(that) {
     doPost(basePath + '/playRound/queryAllDropDownList', {}, function (data) {
         if (data.status == 0) {
             if (data.data) {
-                var data = data.data[lrdropdownlist], html = '', singleRadio = $(".anal-content .anal-right .anal-search .single-radio"),
+                var data = data.data[lrdropdownlist], html = '',
+                    singleRadio = $(".anal-content .anal-right .anal-search .single-radio"),
                     multipleCheckbox = $(".anal-content .anal-right .anal-search .multiple-checkbox");
                 singleRadio.addClass("hide");
                 multipleCheckbox.addClass("hide");
@@ -838,7 +845,7 @@ function getGatherSpaceList() {
 
                     for (var i = 0; i < seriesNoList[num].length; i++) {
                         spaceHtml += '<li title="' + seriesNoList[num][i].roundNo + '" class="over-hide" flagId="' + seriesNoList[num][i].id + '">' +
-                        '<a href="javascript:;">' + seriesNoList[num][i].roundNo + '</a>' +
+                            '<a href="javascript:;">' + seriesNoList[num][i].roundNo + '</a>' +
                             '<i class="icon iconfont">&#xe600;</i></li>';
                     }
                     // 渲染场  只有当点击集的时候才能渲染场
@@ -879,7 +886,8 @@ function getGatherSpaceList() {
                     } else if (xiaotuObj.changeOverSpaceFlag == 2) {
                         // 如果为2说明是点击的上下页来找上下场信息  只有上一场需要拿到当前集的最后一场
                         $(".project-list-five .five-content .five-content-space .space-right li:last-child").trigger("click");
-                    }else {}
+                    } else {
+                    }
                 })
 
                 // 如果bookmarks中有值就走这个书签页
@@ -1066,7 +1074,9 @@ function getAdAnalArimCon(param) {
                 xiaotuObj.adAnalArimConList = data.resultList;
             }
         }
-    }, function (error) {}, false, function (complete) {})
+    }, function (error) {
+    }, false, function (complete) {
+    })
 }
 
 // 左侧颜色数据的操作
@@ -1245,6 +1255,7 @@ function refreshSceneContent() {
     var mAHtml = '', sAHtml = '', pAHtml = '', dHtml = '', sHtml = '';
     $(".anal-content .anal-right .scene-info .ji input").val(xiaotuObj.sceneInfoContent.seriesNo);
     $(".anal-content .anal-right .scene-info .chang input").val(xiaotuObj.sceneInfoContent.roundNo);
+    $(".anal-content .anal-right .scene-info .page input").val(xiaotuObj.sceneInfoContent.pageCount);
     $(".anal-content .anal-right .scene-info .air .con-box input").val(xiaotuObj.sceneInfoContent.atmosphere);
     $(".anal-content .anal-right .scene-info .in-out .con-box input").val(xiaotuObj.sceneInfoContent.site);
     $(".anal-content .anal-right .scene-info .main-scene .con-box input").val(xiaotuObj.sceneInfoContent.firstLocation);
@@ -1401,11 +1412,16 @@ function saveSceneInfo() {
             modelWindow("请输入已有的集跟场 2");
             return;
         }
+        var page = dom.find(".page input").val();
+        if (!isNaN(page)) {
+            modelWindow('请输入正确的页数', 1000)
+        }
 
         var data = {
             id: changdeId,
             seriesNo: parseInt(dom.find(".ji input").val()),
             roundNo: dom.find(".chang input").val(),
+            pageCount: page,
             atmosphere: dom.find(".air input").val(),
             site: dom.find(".in-out input").val(),
             firstLocation: dom.find(".main-scene input").val(),
@@ -1982,8 +1998,8 @@ function pickRoleList() {
                 var data = data.data
                 var html = "", roleList = data.roleList, len = roleList.length;
                 for (var i = 0; i < len; i++) {
-                    html += '<li><a href="javascript:;"><span class="content">'+roleList[i].roleName+'</span>' +
-                        '<span class="gather">('+roleList[i].roundCount+')</span></a>' +
+                    html += '<li><a href="javascript:;"><span class="content">' + roleList[i].roleName + '</span>' +
+                        '<span class="gather">(' + roleList[i].roundCount + ')</span></a>' +
                         '<i class="icon iconfont">&#xe600;</i></li>';
                 }
                 $(".shade-role .shade-con-role .panel-body h5 span").html(len)
@@ -1994,7 +2010,7 @@ function pickRoleList() {
                     if ($(this).hasClass("active")) {
                         $(this).removeClass("active")
                         $(".shade-role .shade-con-role .panel-body .role-details li").removeClass("active")
-                    }else {
+                    } else {
                         $(this).addClass("active")
                         $(".shade-role .shade-con-role .panel-body .role-details li").addClass("active")
                     }
@@ -2003,7 +2019,7 @@ function pickRoleList() {
                 $(".shade-role .shade-con-role .panel-body .role-details li").click(function () {
                     if ($(this).hasClass("active")) {
                         $(this).removeClass("active")
-                    }else {
+                    } else {
                         $(this).addClass("active")
                     }
                 })
@@ -2024,7 +2040,7 @@ function pickRoleList() {
                                 // 关闭角色列表
                                 $(".shade-role .shade-con-role .panel-heading h4 i").click()
                                 modelWindow('角色添加成功', 1000)
-                            }else {
+                            } else {
                                 modelWindow(data.message)
                             }
                         }, function (error) {
@@ -2068,4 +2084,120 @@ function closePickRoleList() {
             })
         }, 150)
     })
+}
+
+// 打开计算页数
+function openCountPage() {
+
+    var panelBody = $(".shade-page .shade-con-page .panel-body");
+    var wordInput = panelBody.find(".word input"), lineText = panelBody.find(".line input"),
+        pageInput = panelBody.find(".page input");
+
+    $(".project-list-four .four-content .four-right .count-page").click(function () {
+        $(".shade-page").css({
+            "backgroundColor": "rgba(0,0,0,0.5)",
+            "opacity": "1",
+            "transition": "all 0.15s ease-in",
+            "zIndex": "100"
+        })
+        $(".shade-page .shade-con-page").css({
+            "opacity": "1",
+            "top": "50%",
+            "marginTop": "-140px",
+            "transition": "all 0.3s ease-in",
+            "zIndex": "100"
+        })
+        // 获取信息
+        doPost(basePath + '/play/queryPlayFormat', {}, function (data) {
+            if (data.status === 1) {
+                modelWindow(data.message, 1000);
+                return;
+            }
+            var data = data.data;
+            var word = data.wordCount, line = data.lineCount, page = data.pageIncludeTitle;
+            wordInput.val(word)
+            lineText.val(line)
+            if (page) {
+                pageInput.attr("checked", "checked")
+            } else {
+                pageInput.removeAttr("checked")
+            }
+        }, function (error) {
+            console.log(error)
+        })
+    })
+
+    // 确定 提交信息
+    panelBody.find(".btn-primary").click(function () {
+        var wordVal = wordInput.val(), lineVal = lineText.val(), pageBol = pageInput.is(":checked")
+        if (wordVal == '') {
+            modelWindow('请输入字/行', 1000)
+            return;
+        }
+        if (!isNumber(wordVal)) {
+            modelWindow('字/行栏请输入数字', 1000)
+            return;
+        }
+        if (!isNumber(lineVal)) {
+            modelWindow('行/页栏请输入数字', 1000)
+            return;
+        }
+        var objData = {
+            wordCount: parseInt(wordVal),
+            lineCount: parseInt(lineVal),
+            pageIncludeTitle: pageBol
+        }
+        doPost(basePath + '/play/refreshPage', objData, function (data) {
+            if (data.status == 1) {
+                modelWindow(data.message, 1000)
+                return;
+            }
+            $(".shade-page .shade-con-page .panel-heading h4 i").click()
+            setTimeout(function () {
+                modelWindow('保存成功', 1000)
+            }, 300)
+        },function (error) {
+            console.log(error)
+        })
+    })
+
+    // 取消
+    panelBody.find(".btn-default").click(function () {
+        $(".shade-page .shade-con-page .panel-heading h4 i").click()
+    })
+}
+
+// 关闭计算页数
+function closeCountPage() {
+    $(".shade-page .shade-con-page .panel-heading h4 i").click(function () {
+        $(".shade-page").css({
+            "backgroundColor": "transparent",
+            "opacity": "0",
+            "transition": "all 0.15s ease-in"
+        })
+        $(".shade-page .shade-con-page").css({
+            "opacity": "0",
+            "top": "-600px",
+            "marginTop": "0px",
+            "transition": "all 0.3s ease-in",
+            "zIndex": "-111"
+        })
+        setTimeout(function () {
+            $(".shade-page").css({
+                "zIndex": "-111"
+            })
+        }, 150)
+    })
+}
+
+// 验证是否是数字
+function isNumber(str) {
+    if (str == '') {
+        return true;
+    } else if (typeof(str) == 'string') {
+        str = Number(str)
+        return (str | 0) === str;
+    } else {
+        return false;
+    }
 }

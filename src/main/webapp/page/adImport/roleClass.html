@@ -32,7 +32,7 @@
             <button class="btn btn-primary" onclick="loadRoleImplant()">确定</button>
         </div>
     </div>
-    
+
     <div class="center content role-class">
         <!-- <div class="panel panel-default">
         	<div class="panel-heading">
@@ -45,58 +45,63 @@
         <div id="roleListDiv"></div>
         <div class="tcdPageCode" id="tcdPageCode"></div>
     </div>
-    
-    
+
+
     <!-- 场景表弹窗 -->
-	<div id="roundListDiv" class="view-list modal fade" tabindex="-1" role="dialog">
-	  <div class="modal-dialog modal-lg" role="document">
-	    <div class="modal-content">
-	      <div class="modal-header">
-	      	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-	      	<div class="modal-title">
-	      		<div class="pull-left">
-	      			<h4 class="modal-title">
-			      		<div><#include '../component/dobuleBias.html'/>场景表</div>
-			      	</h4>
-	      		</div>
-	      		<div class="xt-green text-center round-title" id="roundTitle">
-	      			
-	      		</div>
-	      	</div>
-	      	
-	      </div>
-	      <div class="modal-body">
-	      	<table class="table table-hover table-implant">
-				<thead>
-					<tr>
-						<th width="10%">集-场</th>
-						<th width="10%" class="over-hide">气氛</th>
-						<th width="10%" class="over-hide">内外景</th>
-						<th width="14%" class="over-hide">主场景</th>
-						<th width="14%" class="over-hide">主要角色</th>
-						<th width="14%" class="over-hide">产品分类</th>
-						<th width="18%" class="over-hide">精彩度</th>
-					</tr>
-				</thead>
-				<tbody id="roundListTbody">
-					<!-- <tr>
-						<td width="5%">1-1</td>
-						<td width="5%" class="over-hide">日</td>
-						<td width="5%" class="over-hide">外</td>
-						<td width="15%" class="over-hide">北戴河</td>
-						<td width="20%" class="over-hide" title='大道'>秋明、个军均、吴佩孚秋明、个军均、吴佩孚秋明、个军均、吴佩孚秋明、个军均、吴佩孚</td>
-						<td width="10%" class="over-hide">秋明、个军均、吴佩孚</td>
-						<td width="10%" class="over-hide">秋明、个军均、吴佩孚</td>
-						<td width="20%" class="over-hide">手枪，大炮</td>
-						<td width="10%" class="over-hide">很重要的一出戏</td>
-					</tr> -->
-				</tbody>
-			</table>
-			<div id="roundListPage" class="tcdPageCode"></div>
-	      </div>
-	    </div>
-	  </div>
-	</div>
+    <div id="roundListDiv" class="view-list modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <button style="float: right;height: 26px;margin-right: 30px;line-height: 12px;font-size: 12px;margin-top: -3px" class="export-role-tab btn btn-primary">导出</button>
+                    <div class="modal-title">
+                        <div class="pull-left">
+                            <h4 class="modal-title">
+                                <div>
+                                    <#include '../component/dobuleBias.html'/>
+                                    场景表
+                                </div>
+                            </h4>
+                        </div>
+                        <div class="xt-green text-center round-title" id="roundTitle">
+
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-body">
+                    <table class="table table-hover table-implant">
+                        <thead>
+                        <tr>
+                            <th width="10%">集-场</th>
+                            <th width="10%" class="over-hide">气氛</th>
+                            <th width="10%" class="over-hide">内外景</th>
+                            <th width="14%" class="over-hide">主场景</th>
+                            <th width="14%" class="over-hide">主要角色</th>
+                            <th width="14%" class="over-hide">产品分类</th>
+                            <th width="18%" class="over-hide">精彩度</th>
+                        </tr>
+                        </thead>
+                        <tbody id="roundListTbody">
+                        <!-- <tr>
+                            <td width="5%">1-1</td>
+                            <td width="5%" class="over-hide">日</td>
+                            <td width="5%" class="over-hide">外</td>
+                            <td width="15%" class="over-hide">北戴河</td>
+                            <td width="20%" class="over-hide" title='大道'>秋明、个军均、吴佩孚秋明、个军均、吴佩孚秋明、个军均、吴佩孚秋明、个军均、吴佩孚</td>
+                            <td width="10%" class="over-hide">秋明、个军均、吴佩孚</td>
+                            <td width="10%" class="over-hide">秋明、个军均、吴佩孚</td>
+                            <td width="20%" class="over-hide">手枪，大炮</td>
+                            <td width="10%" class="over-hide">很重要的一出戏</td>
+                        </tr> -->
+                        </tbody>
+                    </table>
+                    <div id="roundListPage" class="tcdPageCode"></div>
+                </div>
+            </div>
+        </div>
+    </div>
     <#include '../component/footer.html'/>
 </body>
 </html>

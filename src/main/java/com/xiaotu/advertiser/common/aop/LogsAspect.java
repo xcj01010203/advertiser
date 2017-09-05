@@ -1,11 +1,17 @@
 package com.xiaotu.advertiser.common.aop;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.aspectj.lang.JoinPoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import com.xiaotu.advertiser.common.util.Constants;
+import com.xiaotu.advertiser.project.model.ProjectModel;
 import com.xiaotu.advertiser.user.model.LogManageModel;
 import com.xiaotu.advertiser.user.model.UserModel;
 import com.xiaotu.advertiser.user.service.LogManageService;
@@ -69,6 +75,18 @@ public class LogsAspect
 	public LogManageModel setLogEntity(){
 		// 日志实体对象
 		LogManageModel log = new LogManageModel();
+		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder
+				.getRequestAttributes()).getRequest();
+		ProjectModel project = (ProjectModel) request.getSession()
+				.getAttribute(Constants.SESSION_PROJECT);
+		String url = request.getRequestURI();
+		if(project !=null && !url.contains("/logManage") && !url.contains("/menu") 
+				&& !url.contains("/message") && !url.contains("/role")
+				&& !url.contains("/userBackReply") && !url.contains("/user")){
+			log.setProjectName(project.getName());
+		}else{
+			log.setProjectName("");
+		}
 		// 获取登录用户账户
 		UserModel user = SessionUtil.getSessionUser();
 		// 获取URL地址

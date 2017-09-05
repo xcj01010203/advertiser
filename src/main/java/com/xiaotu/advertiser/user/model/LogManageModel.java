@@ -21,6 +21,7 @@ public class LogManageModel implements Serializable{
 	private String status;  //执行状态
 	private UserModel userModel; //用户
 	private MenuModel menuModel; //菜单
+	private String projectName; //项目名称
     
 	public String getMenuId() {
 		return menuId;
@@ -76,6 +77,12 @@ public class LogManageModel implements Serializable{
 	}
 	public void setMenuModel(MenuModel menuModel) {
 		this.menuModel = menuModel;
+	}
+	public String getProjectName() {
+		return projectName;
+	}
+	public void setProjectName(String projectName) {
+		this.projectName = projectName;
 	}
 	
 }

@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.xiaotu.advertiser.project.service.BookMarksService;
 import com.xiaotu.advertiser.project.service.PlayContentService;
 import com.xiaotu.advertiser.project.service.PlayRoundService;
-import com.xiaotu.common.util.SessionUtil;
 
 /**
  * 剧本内容管理
@@ -101,6 +100,36 @@ public class PlayContentController {
 			contentMap.put("roleList", roleNameList);
 			contentMap.put("content", roundMap.get("content"));
 			
+			contentList.add(contentMap);
+		}
+		
+		return contentList;
+	}
+	
+	/**
+	 * 临时接口
+	 * @author xuchangjian 2017年9月4日下午4:08:39
+	 * @return
+	 */
+	@RequestMapping("/tmp")
+	public Object tmp() {
+		List<Map<String, Object>> contentList = new ArrayList<Map<String, Object>>();
+    	
+		Map<String, Object> roundResult = this.playRoundService.queryRoundListWithContent(null);
+		List<Map<String, Object>> roundList = (List<Map<String, Object>>) roundResult.get("roundList");
+		for (Map<String, Object> roundMap : roundList) 
+		{
+			//只取出角色名称字段
+			List<Map<String, Object>> roleList = (List<Map<String, Object>>) roundMap.get("roleList");
+			List<String> roleNameList = new ArrayList<String>();
+			for (Map<String, Object> roleMap : roleList) {
+				roleNameList.add((String) roleMap.get("name"));
+			}
+			
+			Map<String, Object> contentMap = new HashMap<String, Object>();
+			contentMap.put("roundId", roundMap.get("id"));
+			contentMap.put("roleList", roleNameList);
+			contentMap.put("content", roundMap.get("content"));
 			contentList.add(contentMap);
 		}
 		

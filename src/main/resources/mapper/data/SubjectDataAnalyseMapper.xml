@@ -51,43 +51,67 @@
 				to_timestamp(istoptime, 'HH24MISS') - to_timestamp(istarttime, 'HH24MISS')
 			) * 0.6
 	</sql>
+	
+	<!-- 人群条件查询结果 -->
+	<sql id="peopleResult">
+		<!-- 年龄 -->
+		<if test="(sexType == null and eduType == null and earnType == null) and (ageType == null or ageType == 0)">
+			AVG (avg_c_0_rate) AS rate,
+			AVG (avg_c_0_rate000) AS rate000,
+			AVG (avg_c_0_market) AS market
+		</if>
+		<if test="ageType != null and ageType > 1">
+			AVG (avg_c_age_rate[#{ageType}]) AS rate,
+			AVG (avg_c_age_rate000[#{ageType}]) AS rate000,
+			AVG (avg_c_age_market[#{ageType}]) AS market
+		</if>
+		
+		<!-- 性别 -->
+		<if test="sexType != null">
+			AVG (avg_c_sex_rate[#{sexType}]) AS rate,
+			AVG (avg_c_sex_rate000[#{sexType}]) AS rate000,
+			AVG (avg_c_sex_market[#{sexType}]) AS market
+		</if>
+		
+		<!-- 教育程度 -->
+		<if test="eduType != null">
+			AVG (avg_c_edu_rate[#{eduType}]) AS rate,
+			AVG (avg_c_edu_rate000[#{eduType}]) AS rate000,
+			AVG (avg_c_edu_market[#{eduType}]) AS market
+		</if>
+		
+		<!-- 收入 -->
+		<if test="earnType != null">
+			AVG (avg_c_earn_rate[#{earnType}]) AS rate,
+			AVG (avg_c_earn_rate000[#{earnType}]) AS rate000,
+			AVG (avg_c_earn_market[#{earnType}]) AS market
+		</if>
+	</sql>
 
 	<!-- 题材市场地位分析 -->
 	<select id="selectSubjectMarketPos" parameterType="map" resultType="map">
 		SELECT
 			isubject,
-			subjectName,
+			sj.label subjectName,
 			SUM (itotalpage :: integer) totalPage,
-			AVG (rate000) AS rate000
+			<include refid="peopleResult"></include>
 		FROM
-			(
-				SELECT
-					isubject,
-					sj.label subjectName,
-					itotalpage,
-					avg_c_0_rate000 AS rate000,
-					ROW_NUMBER () OVER (
-						PARTITION BY iserialno,
-						iname
-					ORDER BY
-						releasetime DESC,
-						tv.tvid
-					) num
-				FROM
-					stat.tab_city_tvprogram_rounds_week T32
-				INNER JOIN dim_subject sj ON T32.isubject = sj.sid
-				LEFT JOIN basicinfo.tab_tv_info tv ON T32.iname = tv.tvname
-				AND tvtype = 1
-				WHERE
-					1 = 1
-				AND T32.iareaid = #{areaId}
-				<include refid="channelCondition"></include>
-				
-				<include refid="dateTimeCondition"></include>
-				AND T32.avg_c_0_rate IS NOT NULL
-			) mytable
+			stat.tab_city_tvprogram_rounds_week T32
+		INNER JOIN dim_subject sj ON T32.isubject = sj.sid
+		LEFT JOIN basicinfo.tab_tv_info tv ON T32.tvid = tv.tvid AND tvtype = 1
 		WHERE
-			num = 1
+			1 = 1
+		AND T32.iareaid = #{areaId}
+		<include refid="channelCondition"></include>
+		
+		<include refid="dateTimeCondition"></include>
+		<if test="subjectIdList != null">
+			AND tv.subject IN
+			<foreach collection="subjectIdList" open="(" separator="," close=")" item="subjectId">
+				#{subjectId}
+			</foreach>
+		</if>
+		AND T32.avg_c_0_rate IS NOT NULL
 		GROUP BY
 			isubject, subjectName
 		ORDER BY
@@ -101,14 +125,11 @@
 			sj.label AS subjectName,
 			COUNT (DISTINCT iname) workCount,
 			COUNT (DISTINCT iserialno) AS lunci,
-			AVG (avg_c_0_rate) rate,
-			AVG (avg_c_0_rate000) rate000,
-			AVG (avg_c_0_market) market
+			<include refid="peopleResult"></include>
 		FROM
 			stat.tab_city_tvprogram_rounds_week T32
-		LEFT JOIN basicinfo.tab_tv_info tv ON T32.iname = tv.tvname
+		LEFT JOIN basicinfo.tab_tv_info tv ON T32.tvid = tv.tvid AND tvtype = 1
 		INNER JOIN dim_subject sj ON T32.isubject = sj.sid
-		AND tvtype = 1
 		WHERE
 			1 = 1
 		AND T32.iareaid = #{areaId}
@@ -117,6 +138,12 @@
 		<include refid="channelCondition"></include>
 		
 		<include refid="dateTimeCondition"></include>
+		<if test="subjectIdList != null">
+			AND tv.subject IN
+			<foreach collection="subjectIdList" open="(" separator="," close=")" item="subjectId">
+				#{subjectId}
+			</foreach>
+		</if>
 		AND T32.avg_c_0_rate IS NOT NULL
 		GROUP BY
 			isubject, sj.label
@@ -130,14 +157,11 @@
 		SELECT
 			iareaid AS areaId,
 			cy.label AS areaName,
-			AVG (avg_c_0_rate) AS rate,
-			AVG (avg_c_0_rate000) AS rate000,
-			AVG (avg_c_0_market) AS market
+			<include refid="peopleResult"></include>
 		FROM
 			stat.tab_city_tvprogram_rounds_week T32
-		LEFT JOIN basicinfo.tab_tv_info tv ON T32.iname = tv.tvname
+		LEFT JOIN basicinfo.tab_tv_info tv ON T32.tvid = tv.tvid AND tvtype = 1
 		INNER JOIN dim_city cy ON cy.cid = T32.iareaid
-		AND tvtype = 1
 		WHERE
 			1 = 1
 		<!-- 地区查询条件 -->
@@ -159,6 +183,12 @@
 		<include refid="channelCondition"></include>
 		
 		<include refid="dateTimeCondition"></include>
+		<if test="subjectIdList != null">
+			AND tv.subject IN
+			<foreach collection="subjectIdList" open="(" separator="," close=")" item="subjectId">
+				#{subjectId}
+			</foreach>
+		</if>
 		AND T32.avg_c_0_rate IS NOT NULL
 		GROUP BY
 			iareaid, cy.label
@@ -173,14 +203,19 @@
 			AVG (avg_c_0_rate) AS rate
 		FROM
 			stat.tab_city_tvprogram_rounds_week T32
-		LEFT JOIN basicinfo.tab_tv_info tv ON T32.iname = tv.tvname
-		AND tvtype = 1
+		LEFT JOIN basicinfo.tab_tv_info tv ON T32.tvid = tv.tvid AND tvtype = 1
 		WHERE
 			1 = 1
 		AND T32.iareaid = #{areaId}
 		<!-- 频道查询条件 -->
 		<include refid="channelCondition"></include>
 		<include refid="dateTimeCondition"></include>
+		<if test="subjectIdList != null">
+			AND tv.subject IN
+			<foreach collection="subjectIdList" open="(" separator="," close=")" item="subjectId">
+				#{subjectId}
+			</foreach>
+		</if>
 		AND T32.avg_c_0_rate IS NOT NULL
 	</select>
 	
@@ -211,14 +246,19 @@
 					UNNEST (avg_c_age_market) market
 				FROM
 					stat.tab_city_tvprogram_rounds_week T32
-				LEFT JOIN basicinfo.tab_tv_info tv ON T32.iname = tv.tvname
-				AND tvtype = 1
+				LEFT JOIN basicinfo.tab_tv_info tv ON T32.tvid = tv.tvid AND tvtype = 1
 				WHERE
 					1 = 1
 				AND T32.iareaid = #{areaId}
 				<!-- 频道查询条件 -->
 				<include refid="channelCondition"></include>
 				<include refid="dateTimeCondition"></include>
+				<if test="subjectIdList != null">
+					AND tv.subject IN
+					<foreach collection="subjectIdList" open="(" separator="," close=")" item="subjectId">
+						#{subjectId}
+					</foreach>
+				</if>
 			) mytable
 		GROUP BY
 			mytable.throngid,
@@ -251,14 +291,19 @@
 					UNNEST (avg_c_earn_market) market
 				FROM
 					stat.tab_city_tvprogram_rounds_week T32
-				LEFT JOIN basicinfo.tab_tv_info tv ON T32.iname = tv.tvname
-				AND tvtype = 1
+				LEFT JOIN basicinfo.tab_tv_info tv ON T32.tvid = tv.tvid AND tvtype = 1
 				WHERE
 					1 = 1
 				AND T32.iareaid = #{areaId}
 				<!-- 频道查询条件 -->
 				<include refid="channelCondition"></include>
 				<include refid="dateTimeCondition"></include>
+				<if test="subjectIdList != null">
+					AND tv.subject IN
+					<foreach collection="subjectIdList" open="(" separator="," close=")" item="subjectId">
+						#{subjectId}
+					</foreach>
+				</if>
 				AND T32.avg_c_earn_rate [ 1 ] IS NOT NULL
 			) mytable
 		GROUP BY
@@ -293,14 +338,19 @@
 					UNNEST (avg_c_edu_market) market
 				FROM
 					stat.tab_city_tvprogram_rounds_week T32
-				LEFT JOIN basicinfo.tab_tv_info tv ON T32.iname = tv.tvname
-				AND tvtype = 1
+				LEFT JOIN basicinfo.tab_tv_info tv ON T32.tvid = tv.tvid AND tvtype = 1
 				WHERE
 					1 = 1
 				AND T32.iareaid = #{areaId}
 				<!-- 频道查询条件 -->
 				<include refid="channelCondition"></include>
 				<include refid="dateTimeCondition"></include>
+				<if test="subjectIdList != null">
+					AND tv.subject IN
+					<foreach collection="subjectIdList" open="(" separator="," close=")" item="subjectId">
+						#{subjectId}
+					</foreach>
+				</if>
 				AND T32.avg_c_edu_rate [ 1 ] IS NOT NULL
 			) mytable
 		GROUP BY

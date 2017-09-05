@@ -1,10 +1,14 @@
 package com.xiaotu.advertiser.implant.service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
@@ -13,11 +17,11 @@ import com.xiaotu.advertiser.implant.controller.dto.ImplantRecordDto;
 import com.xiaotu.advertiser.implant.model.ImplantRecordModel;
 import com.xiaotu.advertiser.implant.model.map.ImplantRoleMapModel;
 import com.xiaotu.advertiser.project.model.PlayRoleModel;
-import com.xiaotu.advertiser.project.model.PlayRoundModel;
 import com.xiaotu.advertiser.project.model.ProjectModel;
 import com.xiaotu.common.db.Page;
 import com.xiaotu.common.exception.BusinessException;
 import com.xiaotu.common.mvc.BaseService;
+import com.xiaotu.common.util.ExcelUtils;
 import com.xiaotu.common.util.SessionUtil;
 
 /**
@@ -31,6 +35,15 @@ public class ImplantRecordService extends BaseService {
 	protected String getKey() {
 		return "ImplantRecordMapper";
 	}
+	private static Map<String, String> CREW_PROPS_MAP = new LinkedHashMap<String, String>();//需要导出的字段
+    static{
+    	CREW_PROPS_MAP.put("集-场", "seriesRoundNo");
+    	CREW_PROPS_MAP.put("广告名称",  "recordName");
+    	CREW_PROPS_MAP.put("角色",  "roleNameList");
+    	CREW_PROPS_MAP.put("植入手法",  "implantName");
+    	CREW_PROPS_MAP.put("产品",  "goods");
+    	CREW_PROPS_MAP.put("描述",  "desc");
+    }
 	
 	/**
 	 * 保存广告植入信息
@@ -214,4 +227,66 @@ public class ImplantRecordService extends BaseService {
 		return resultMap;
 	}
 
+	/**
+	 * 导出广告植入列表
+	 * @author wangyanlong 2017年9月2日
+	 * @param roleNames
+	 * @return
+	 * @throws IOException 
+	 * @throws IllegalAccessException 
+	 * @throws IllegalArgumentException 
+	 */
+	public void queryExportRecordList(String roleNames,HttpServletResponse response) throws IllegalArgumentException, IllegalAccessException, IOException
+	{
+		ProjectModel project = SessionUtil.getSessionProject();
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("projectId", project.getId());
+		
+		List<ImplantRecordModel> recordList = null;
+		recordList = this.getList("selectRecord", params);
+		
+		List<Map<String, Object>> recordRoleMapList = this.getList("PlayRoleMapper.selectRoleListWithImplantInfo", params);
+		
+		//把角色按照广告信息分组，key为广告ID， value为角色列表
+		List<Map<String, Object>> dealedRoundList = new ArrayList<Map<String, Object>>();
+		Map<String, List<String>> groupRecordMap = new HashMap<String, List<String>>();
+		for (Map<String, Object> recordMap : recordRoleMapList)
+		{
+			String implantId = (String) recordMap.get("implantId");
+			String roleName = (String) recordMap.get("name");
+			
+			if (!groupRecordMap.containsKey(implantId))
+			{
+				List<String> roleNameList = new ArrayList<String>();
+				roleNameList.add(roleName);
+				groupRecordMap.put(implantId, roleNameList);
+			}
+			else
+			{
+				groupRecordMap.get(implantId).add(roleName);
+			}
+		}
+		
+		//处理最后的结果
+		for (ImplantRecordModel record : recordList)
+		{
+			Map<String, Object> roundMap = new HashMap<String, Object>();
+			String series_round_no =record.getPlayRound().getSeriesNo() + "-" + record.getPlayRound().getRoundNo();
+			String recordName =record.getName();
+			String roleNameList =String.join("|", groupRecordMap.get(record.getId()));
+			String implantName =record.getImplantMode().getName();
+			String goods =record.getGoods().getGoods();
+			String desc =record.getDesc();
+			
+			roundMap.put("desc", desc);
+			roundMap.put("goods", goods);
+			roundMap.put("implantName", implantName);
+			roundMap.put("roleNameList", roleNameList);
+			roundMap.put("recordName", recordName);
+			roundMap.put("seriesRoundNo", series_round_no);
+			dealedRoundList.add(roundMap);
+		}
+		ExcelUtils.exportPropsInfoForExcel(dealedRoundList,roleNames,response,CREW_PROPS_MAP,project.getName());
+	}
 }

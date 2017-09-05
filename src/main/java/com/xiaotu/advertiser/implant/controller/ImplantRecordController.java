@@ -1,5 +1,9 @@
 package com.xiaotu.advertiser.implant.controller;
 
+import java.io.IOException;
+
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -55,5 +59,21 @@ public class ImplantRecordController {
 	public Object queryRecordList(String roundId, Integer pageSize, Integer currentPage)
 	{
 		return this.implantRecordService.queryRecordList(roundId, pageSize, currentPage);
+	}
+	
+	/**
+	 * 导出广告植入列表
+	 * @author wangyanlong 2017年9月2日
+	 * @param roleNames
+	 * @return
+	 * @throws IOException 
+	 * @throws IllegalAccessException 
+	 * @throws IllegalArgumentException 
+	 */
+	@RequestMapping("/exportRecordList")
+	public Object queryExportRecordList(String roleNames,HttpServletResponse response) throws IllegalArgumentException, IllegalAccessException, IOException
+	{
+		this.implantRecordService.queryExportRecordList(roleNames, response);
+		return null;
 	}
 }

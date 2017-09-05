@@ -1,11 +1,15 @@
 package com.xiaotu.advertiser.implant.service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
@@ -18,6 +22,7 @@ import com.xiaotu.common.db.Page;
 import com.xiaotu.common.exception.BusinessException;
 import com.xiaotu.common.mvc.BaseService;
 import com.xiaotu.common.util.BigDecimalUtil;
+import com.xiaotu.common.util.ExcelUtils;
 import com.xiaotu.common.util.PropertiesUtil;
 import com.xiaotu.common.util.SessionUtil;
 
@@ -32,6 +37,17 @@ public class ImplantAnalyseResultService extends BaseService {
 	protected String getKey() {
 		return "ImplantAnalyseResultMapper";
 	}
+	
+	private static Map<String, String> CREW_PROPS_MAP = new LinkedHashMap<String, String>();//需要导出的字段
+    static{
+    	CREW_PROPS_MAP.put("集-场", "seriesRoundNo");
+    	CREW_PROPS_MAP.put("气氛",  "atmosphere");
+    	CREW_PROPS_MAP.put("内外景",  "site");
+    	CREW_PROPS_MAP.put("主场景",  "firstLocation");
+    	CREW_PROPS_MAP.put("主要角色",  "majorRoleNameList");
+    	CREW_PROPS_MAP.put("产品分类",  "goods");
+    	CREW_PROPS_MAP.put("精彩度",  "excellence");
+    }
 
 	/**
 	 * 获取按角色分类的广告统计信息
@@ -353,5 +369,79 @@ public class ImplantAnalyseResultService extends BaseService {
 		
 		resultMap.put("resultList", resultList);
 		return resultMap;
+	}
+	
+	
+	/**
+	 * 导出角色分类列表
+	 * @param roundRoleList
+	 * @throws IOException 
+	 * @throws IllegalAccessException 
+	 * @throws IllegalArgumentException 
+	 */
+	public void queryExportRoundGoods(Integer seriesNo, List<String> goodsIdList,String roleId,String roleNames,HttpServletResponse response) throws IllegalArgumentException, IllegalAccessException, IOException{
+		ProjectModel project = SessionUtil.getSessionProject();
+		
+		Map<String, Object> implantParams = new HashMap<String, Object>();
+		implantParams.put("projectId", project.getId());
+		implantParams.put("goodsIdList", goodsIdList);
+		implantParams.put("seriesNo", seriesNo);
+		implantParams.put("roleId", roleId);
+		
+		List<Map<String, Object>> resultList = new ArrayList<Map<String, Object>>();
+		resultList = this.getList("selectImplant", implantParams);
+		
+		//查询项目中的所有角色
+		Map<String, Object> roleParams = new HashMap<String, Object>();
+		roleParams.put("projectId", project.getId());
+		List<PlayRoleModel> roundRoleList = this.getList("PlayRoleMapper.selectPlayRoleList", roleParams);
+		//把角色封装成以id为key，角色信息为value的Map形式
+		Map<String, PlayRoleModel> roleMap = new HashMap<String, PlayRoleModel>();
+		for (PlayRoleModel role : roundRoleList)
+		{
+			roleMap.put(role.getId(), role);
+		}
+		
+		//封装最后的场次数据，key为集次，value为集次下的场次列表
+		List<Map<String, Object>> dealedRoundList = new ArrayList<Map<String, Object>>();
+		for (Map<String, Object> result : resultList)
+		{
+			String roleIds = (String) result.get("roleIds");
+			
+			//计算出主要角色名称列表
+			List<String> majorRoleNameList = new ArrayList<String>();
+			if (!StringUtils.isBlank(roleIds))
+			{
+				for (String myRoleId : roleIds.split(","))
+				{
+					PlayRoleModel role = roleMap.get(myRoleId);
+					if (role.getType() == 1)
+					{
+						majorRoleNameList.add(role.getName());
+					}
+				}
+			}
+			
+			//场次信息Map
+			Map<String, Object> roundMap = new HashMap<String, Object>();
+			String series_round_no =result.get("seriesNo")+"-"+result.get("roundNo");
+			String atmosphere = result.get("atmosphere")+"";
+			String site = result.get("site")+"";
+			String firstLocation = result.get("firstLocation")+"";
+			String goods = result.get("goods")+"";
+			
+			roundMap.put("excellence", "");
+			roundMap.put("goods", goods);
+			String majorRoleNameLists = String.join("|", majorRoleNameList);  
+			roundMap.put("majorRoleNameList", majorRoleNameLists);
+			roundMap.put("firstLocation", firstLocation);
+			roundMap.put("site", site);
+			roundMap.put("atmosphere", atmosphere);
+			roundMap.put("seriesRoundNo", series_round_no);
+			
+			dealedRoundList.add(roundMap);
+		}
+		
+		ExcelUtils.exportPropsInfoForExcel(dealedRoundList,roleNames,response,CREW_PROPS_MAP,project.getName());
 	}
 }

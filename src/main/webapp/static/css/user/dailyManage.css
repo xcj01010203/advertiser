@@ -29,7 +29,7 @@ th{
     padding-left: 30px;
     color: #1a1a1a;
 }
-.new-project .left a:nth-of-type(4){
+.new-project .left a:nth-of-type(5){
     border-bottom: solid 1px #ededed;
 }
 .new-project .left a .left_content {
@@ -166,22 +166,23 @@ th{
 .new-project .center .right .project-info .usrManage-table-th li{
     float: left;
     line-height: 50px;
+    height:50px;
 }
 .new-project .center .right .project-info .usrManage-table-th li:first-of-type{
-    width: 100px;
+    width: 80px;
     text-align: left;
     border-right: 1px solid #ededed;
 }
 .new-project .center .right .project-info .usrManage-table-th li:nth-of-type(2){
-    width: 130px;
+    width: 110px;
     border-right: 1px solid #ededed;
 }
 .new-project .center .right .project-info .usrManage-table-th li:nth-of-type(3){
-    width:150px;
+    width:130px;
     border-right: 1px solid #ededed;
 }
 .new-project .center .right .project-info .usrManage-table-th li:nth-of-type(4){
-    width:225px;
+    width:205px;
     border-right: 1px solid #ededed;
 }
 .new-project .center .right .project-info .usrManage-table-th li:nth-of-type(5){
@@ -189,7 +190,11 @@ th{
     border-right: 1px solid #ededed;
 }
 .new-project .center .right .project-info .usrManage-table-th li:nth-of-type(6){
-    width:150px;
+    width:110px;
+    border-right: 1px solid #ededed;
+}
+.new-project .center .right .project-info .usrManage-table-th li:nth-of-type(7){
+    width:125px;
 }
 
 .new-project .center .right .project-info .usrManage-table-td{
@@ -217,22 +222,24 @@ th{
 .new-project .center .right .project-info .usrManage-table-td .userManage-data .userManage-data-in li{
     float: left;
     line-height: 50px;
+    height:50px;
 }
 .new-project .center .right .project-info .usrManage-table-td .userManage-data .userManage-data-in li:first-of-type{
-    width: 100px;
+    width: 80px;
     text-align: left;
     border-right: 1px solid #ededed;
 }
 .new-project .center .right .project-info .usrManage-table-td .userManage-data .userManage-data-in li:nth-of-type(2){
+    width: 110px;
+    border-right: 1px solid #ededed;
+    display:block;
+}
+.new-project .center .right .project-info .usrManage-table-td .userManage-data .userManage-data-in li:nth-of-type(3){
     width: 130px;
     border-right: 1px solid #ededed;
 }
-.new-project .center .right .project-info .usrManage-table-td .userManage-data .userManage-data-in li:nth-of-type(3){
-    width: 150px;
-    border-right: 1px solid #ededed;
-}
 .new-project .center .right .project-info .usrManage-table-td .userManage-data .userManage-data-in li:nth-of-type(4){
-    width: 225px;
+    width: 205px;
     border-right: 1px solid #ededed;
 }
 .new-project .center .right .project-info .usrManage-table-td .userManage-data .userManage-data-in li:nth-of-type(5){
@@ -240,7 +247,11 @@ th{
     border-right: 1px solid #ededed;
 }
 .new-project .center .right .project-info .usrManage-table-td .userManage-data .userManage-data-in li:nth-of-type(6){
-    width: 150px;
+    width: 110px;
+    border-right: 1px solid #ededed;
+}
+.new-project .center .right .project-info .usrManage-table-td .userManage-data .userManage-data-in li:nth-of-type(7){
+    width: 125px;
 }
 
 .new-project .center .right .project-info .userManange-table-directions{

@@ -3,7 +3,8 @@ package com.test;
 public class Test {
 
 	public static void main(String[] args) throws Exception {
-		System.out.println(getMethodName("abc"));
+		double a = 1.11;
+		System.out.println(Math.ceil(a));
 	}
 	
 	/**

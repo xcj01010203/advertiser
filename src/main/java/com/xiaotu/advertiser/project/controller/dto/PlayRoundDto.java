@@ -15,12 +15,19 @@ public class PlayRoundDto {
 	private String atmosphere;	//气氛
 	private String site;	//内外景
 	private String firstLocation;	//一级场景
+	private double pageCount;
 	private List<String> majorRoleNameList = new ArrayList<String>();	//主要角色列表
 	private List<String> guestRoleNameList = new ArrayList<String>();	//特约角色列表
 	private List<String> massRoleNameList = new ArrayList<String>();	//群众角色列表
 	private List<String> clothesNameList = new ArrayList<String>();	//服装列表
 	private List<String> propNameList = new ArrayList<String>();	//道具列表
 	private String remark;
+	public double getPageCount() {
+		return pageCount;
+	}
+	public void setPageCount(double pageCount) {
+		this.pageCount = pageCount;
+	}
 	public String getId() {
 		return id;
 	}

@@ -89,7 +89,7 @@
 .project-list-five .five-content .five-content-space .space-right li {
     position: relative;
     float: left;
-    width: 45px;
+    width: 50px;
     height: 28px;
     line-height: 28px;
     margin-right: 10px;
@@ -105,7 +105,7 @@
 }
 .project-list-five .five-content .five-content-space .space-right li i {
     position: absolute;
-    bottom: -12px;
+    bottom: -11px;
     right: -4px;
     color: #fff;
     z-index: -1;
@@ -114,8 +114,8 @@
     border: 1px solid #29d9c2;
 }
 .project-list-five .five-content .five-content-space .space-right li:hover a {
-    color: #29d9c2;
     text-decoration: none;
+    color: #29d9c2;
 }
 .project-list-five .five-content .five-content-space .space-right li:hover i {
     color: #29d9c2;
@@ -356,7 +356,7 @@
     padding-left: 5%;
     padding-right: 5%;
     width: 90%;
-    padding-top: 30px;
+    padding-top: 10px;
     padding-bottom: 30px;
     height: 660px;
     overflow-y: auto;
@@ -1116,4 +1116,56 @@
     margin-left: 445px;
     margin-right: 10px;
     background-color: #29d9c2;
+}
+
+/*计算页数*/
+
+.shade-page {
+    position: fixed;
+    top:0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+    z-index: -111;
+}
+.shade-page .shade-con-page {
+    position: absolute;
+    width: 400px;
+    height: 280px;
+    left: 50%;
+    margin-left: -200px;
+    top: 0px;
+    margin-top: 0;
+    background-color: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+    opacity: 0;
+    z-index: -111;
+}
+.shade-page .shade-con-page .panel-heading h4 i {
+    cursor: pointer;
+}
+.shade-page .shade-con-page .panel-body {
+
+}
+.shade-page .shade-con-page .panel-body div {
+    margin-top: 15px;
+    margin-left: 100px;
+}
+.shade-page .shade-con-page .panel-body div input {
+    border-bottom: 1px solid #A2A2A2;
+    cursor: text;
+    text-align: center;
+}
+.shade-page .shade-con-page .panel-body button {
+    margin-top: 30px;
+}
+.shade-page .shade-con-page .panel-body .btn-primary {
+    margin-left: 110px;
+}
+.shade-page .shade-con-page .panel-body .btn-default {
+    margin-left: 20px;
 }

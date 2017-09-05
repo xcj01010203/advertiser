@@ -1,6 +1,9 @@
 package com.xiaotu.advertiser.implant.controller;
 
+import java.io.IOException;
 import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -73,4 +76,22 @@ public class ImplantAnalyseResultController {
 	{
 		return this.implantAnalyseResultService.queryRoundResult(roundId);
 	}
+	
+	
+	/**
+	 * 导出角色、产品、剧本内容分类列表
+	 * @param goodsIdList
+	 * @param roleId
+	 * @return
+	 * @throws IOException 
+	 * @throws IllegalAccessException 
+	 * @throws IllegalArgumentException 
+	 */
+	@RequestMapping("/exportRoundGoodsImplant")
+	public Object queryExportRoundGoods(Integer seriesNo, @RequestParam(required=false, value="goodsIdList[]") List<String> goodsIdList,String roleId,String roleNames,HttpServletResponse response) throws IllegalArgumentException, IllegalAccessException, IOException
+	{
+		 implantAnalyseResultService.queryExportRoundGoods(seriesNo, goodsIdList,roleId,roleNames,response);
+		 return null;
+	}
+	
 }

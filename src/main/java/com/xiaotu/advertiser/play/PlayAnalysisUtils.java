@@ -5,8 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.xiaotu.common.util.BigDecimalUtil;
 
 import scenarioAnalysis.dto.EpisodeInfoDto;
 import scenarioAnalysis.dto.MatchInfoDto;
@@ -15,6 +18,8 @@ import scenarioAnalysis.service.ScenarioAnalysisMainService;
 public class PlayAnalysisUtils {
 
 	private static Logger logger = LoggerFactory.getLogger(PlayAnalysisUtils.class);
+	
+	private final static String lineSeparator = "\r\n";
 
 	/**
 	 * 解析剧本<br>
@@ -37,7 +42,7 @@ public class PlayAnalysisUtils {
 	 *         具体返回结构见接口文档
 	 * @throws Exception
 	 */
-	public static Map<String, Object> analysePlay(String filepath) throws Exception {
+	public static Map<String, Object> analysePlay(String filepath, Integer wordCount, Integer lineCount, Boolean pageIncludeTitle) throws Exception {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 
 		List<ViewInfoDto> viewList = new ArrayList<ViewInfoDto>();
@@ -74,12 +79,29 @@ public class PlayAnalysisUtils {
 						viewInfoDto.setSeason(match.getSeason());
 						viewInfoDto.setAtmosphere(match.getAtmosphere());
 						viewInfoDto.setSite(match.getSite());
-						viewInfoDto.setTitle(match.getTitle());
-						viewInfoDto.setContent(match.getContent());
+						//去除空行 计算页数
+						String title = match.getTitle();
+						String content = match.getContent();
+						if (!StringUtils.isBlank(title)) {
+							title = title.replaceAll("\n+", lineSeparator);
+							if (title.endsWith(lineSeparator)) {
+								title = title.substring(0, title.length() - lineSeparator.length());
+							}
+						}
+						if (!StringUtils.isBlank(content)) {
+							content = content.replaceAll("\n+", lineSeparator);
+							if (content.endsWith(lineSeparator)) {
+								content = content.substring(0, content.length() - lineSeparator.length());
+							}
+						}
+
+						viewInfoDto.setTitle(title);
+						viewInfoDto.setContent(content);
 						viewInfoDto.setMajorRoleNameList(match.getMajorRoleNameList());
 						viewInfoDto.setFirstLocation(match.getFirstLocation());
 						viewInfoDto.setSecondLocation(match.getSecondLocation());
 						viewInfoDto.setThirdLocation(match.getThirdLocation());
+						viewInfoDto.setPageCount(calculatePage(title, content, lineCount, wordCount, pageIncludeTitle));
 						
 						if (!viewList.contains(viewInfoDto)) {
 							viewList.add(viewInfoDto);
@@ -92,5 +114,58 @@ public class PlayAnalysisUtils {
 		resultMap.put("viewInfoList", viewList);
 		resultMap.put("titleMsgList", titleMsgList);
 		return resultMap;
+	}
+	
+	/**
+	 * 计算文本的页数
+	 * 		（1）如果某行的字数大于wordCount指定的字数，需要根据该行的字数/wordCount计算该行文本的实际行数
+	 * 		（2）不足一行的按一行计算，即计算的行数存在小数，取大于该小数的最小整数
+	 * @author xuchangjian 2017年8月31日下午2:53:03
+	 * @param title	标题
+	 * @param content	内容
+	 * @param lineCount	每页显示行数
+	 * @param wordCount	每行显示字数
+	 * @param pageIncludeTitle	计算页数是否包含标题
+	 * @return
+	 */
+	public static double calculatePage(String title, String content, int lineCount, int wordCount, boolean pageIncludeTitle) 
+	{
+		int totalLine = 0;
+		if (!StringUtils.isBlank(title) || !StringUtils.isBlank(content)) 
+		{
+			if (pageIncludeTitle) 
+			{
+				content = title + lineSeparator + content;
+			}
+			
+			String[] arr = null;
+			if (!StringUtils.isBlank(content)) 
+			{
+				arr = content.split(lineSeparator);
+			}
+
+			if (arr != null) 
+			{
+				for (String str : arr) 
+				{
+					int len = str.length();
+					if (len > wordCount) 
+					{
+						double v = BigDecimalUtil.divide(len, wordCount, 2);
+						Double rv = Math.ceil(v);
+						int temp = rv.intValue();
+						totalLine = totalLine + temp;
+					} 
+					else 
+					{
+						totalLine++;
+					}
+				}
+			}
+			
+		}
+
+		double pageCount = BigDecimalUtil.divide(totalLine, lineCount, 1);
+		return pageCount;
 	}
 }

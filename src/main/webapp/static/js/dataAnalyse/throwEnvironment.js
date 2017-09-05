@@ -121,7 +121,7 @@ function loadChannelRank(params) {
 			$("#channelRank").next("div").removeClass("hidden");
 		}
 	};
-	doPost(url, params, successFn);
+	doPost(url, JSON.stringify(params), successFn, null, null, null, null, null, "application/json;charset=utf-8");
 }
 
 //加载频道题材市场
@@ -341,9 +341,7 @@ function loadChannelSubjectMarket(params) {
 		
 		
 	};
-	doPost(url, params, successFn);
-	
-	
+	doPost(url, JSON.stringify(params), successFn, null, null, null, null, null, "application/json;charset=utf-8");
 }
 
 //加载分城贡献
@@ -443,7 +441,7 @@ function loadChannelCity(params) {
 		}
 	};
 	
-	doPost(url, params, successFn);
+	doPost(url, JSON.stringify(params), successFn, null, null, null, null, null, "application/json;charset=utf-8");
 }
 
 //加载人群分布
@@ -586,6 +584,6 @@ function loadPeopleSpread(params) {
 		}
 	};
 	
-	doPost(url, params, successFn);
+	doPost(url, JSON.stringify(params), successFn, null, null, null, null, null, "application/json;charset=utf-8");
 	
 }

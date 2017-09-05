@@ -3,7 +3,7 @@
 <mapper namespace="SubjectMapper">
 
 	<select id="selectSubject" parameterType="map" resultType="Subject">
-		SELECT id, name from tab_subject 
+		SELECT id, name, ownerType from tab_subject 
 		WHERE 1 = 1
 		<if test="id != null">
 		  AND id = #{id}

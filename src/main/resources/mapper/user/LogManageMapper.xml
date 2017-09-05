@@ -4,8 +4,8 @@
 	
 	<!-- 添加日志信息 -->
 	<insert id="insertLog" parameterType="LogManage">
-		INSERT INTO advertiser.tab_log_manage (id,userId,menuId,status,createtime,commite,ip) 
-		values(#{id},#{userId},#{menuId},#{status},now(),#{commite},#{ip})
+		INSERT INTO advertiser.tab_log_manage (id,userId,menuId,status,createtime,commite,ip,projectName) 
+		values(#{id},#{userId},#{menuId},#{status},now(),#{commite},#{ip},#{projectName})
 	</insert>	
 	
 	<!-- 查询日志信息 -->
@@ -16,6 +16,7 @@
 			tl.menuid,
 			tl.status,
 			tl.createtime,
+			tl.projectName,
 			tu.username AS 'userModel.username',
 			tm.menuname AS 'menuModel.menuname',
 			tl.commite,

@@ -110,17 +110,20 @@
 	                <div class="project-content-block clearfix">
 	                    <span>项目类型</span>
 	                    <div class="single">
-	                        <label><input name="type" value="1" type="radio" checked/><span>电视剧</span></label>
-	                        <label><input name="type" value="2" type="radio"/><span>电影</span></label>
-	                        <label><input name="type" value="3" type="radio"/><span>网剧</span></label>
-	                        <label><input name="type" value="6" type="radio"/><span>网大</span></label>
-	                    </div>
+                            <label><input name="type" value="1" type="radio" onclick="selectSubjectType(1)" checked/><span>电视剧</span></label>
+                            <label><input name="type" value="2" type="radio" onclick="selectSubjectType(2)"/><span>电影</span></label>
+                            <label><input name="type" value="3" type="radio" onclick="selectSubjectType(3)"/><span>网剧</span></label>
+                            <label><input name="type" value="6" type="radio" onclick="selectSubjectType(6)"/><span>网大</span></label>
+                        </div>
 	                </div>
 	                <div class="project-content-block clearfix">
 	                    <span>题材</span>
-	                    <div id="subjectDiv" class="single">
-	                        
-	                    </div>
+	                    <div id="tvSubjectDiv" class="single">
+	                            
+                        </div>
+                        <div id="movieSubjectDiv" class="single movie-subject-div">
+                            
+                        </div>
 	                </div>
 	                <div class="project-content-block">
 	                    <span>制片公司</span>

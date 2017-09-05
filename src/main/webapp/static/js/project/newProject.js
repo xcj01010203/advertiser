@@ -14,20 +14,29 @@ function loadSubject() {
 		}
 		var subjectList = response.data.subjectList;
 		
-		var subjectArray = [];
+		var tvSubjectArray = [];
+		var movieSubjectArray = [];
 		$.each(subjectList, function(index, item) {
+			var ownerType = item.ownerType;
 			var singleSubject = "";
 			if (index == 0) {
 				singleSubject = "<label><input name='subject.id' value='"+ item.id +"' type='radio' checked/><span>"+ item.name +"</span></label>";
 			} else {
 				singleSubject = "<label><input name='subject.id' value='"+ item.id +"' type='radio'/><span>"+ item.name +"</span></label>";
 			}
-			subjectArray.push(singleSubject);
+			
+			if (ownerType == 1) {
+				tvSubjectArray.push(singleSubject);
+			} else {
+				movieSubjectArray.push(singleSubject);
+			}
 		});
 		
-		$("#subjectDiv").empty();
-		$("#subjectDiv").append(subjectArray.join(''));
+		$("#tvSubjectDiv").empty();
+		$("#tvSubjectDiv").append(tvSubjectArray.join(''));
 		
+		$("#movieSubjectDiv").empty();
+		$("#movieSubjectDiv").append(movieSubjectArray.join(''));
 	};
 	
 	doPost(url, {}, successCall);
@@ -57,4 +66,19 @@ function saveProject() {
 	
 	var data = $("#projectForm").serialize();
 	doPost(url, data, successCall);
+}
+
+//选择项目类型
+function selectSubjectType(type) {
+	if (type == 1 || type == 3) {
+		$("#tvSubjectDiv").show();
+		$("#movieSubjectDiv").hide();
+		
+		$("#tvSubjectDiv").find("label").eq(0).click();
+	} else {
+		$("#tvSubjectDiv").hide();
+		$("#movieSubjectDiv").show();
+		
+		$("#movieSubjectDiv").find("label").eq(0).click();
+	}
 }
