@@ -205,8 +205,10 @@ function showRoleViewList(own,goodName) {
 				roundTrArray.push("				<td class='over-hide'>"+ filterNull(item.atmosphere) +"</td>");
 				roundTrArray.push("				<td class='over-hide'>"+ filterNull(item.site) +"</td>");
 				roundTrArray.push("				<td class='over-hide' title='"+ filterNull(item.firstLocation) +"'>"+ filterNull(item.firstLocation) +"</td>");
+				roundTrArray.push("				<td width='20%' class='over-hide'>" + filterNull(item.pageCount) + "</td>");
 				roundTrArray.push("				<td class='over-hide' title='"+ filterNull(item.majorRoleNameList.join("|")) +"'>"+ filterNull(item.majorRoleNameList.join("|")) +"</td>");
 				roundTrArray.push("				<td class='over-hide' title='"+ filterNull(item.goods) +"'>"+ filterNull(item.goods) +"</td>");
+				roundTrArray.push("				<td width='20%' class='over-hide'></td>");
 				roundTrArray.push("				<td class='over-hide'></td>");
 				roundTrArray.push("			</tr>");
 			});

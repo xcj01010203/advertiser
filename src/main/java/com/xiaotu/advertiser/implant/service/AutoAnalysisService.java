@@ -202,14 +202,13 @@ public class AutoAnalysisService extends BaseService
         Map<String, PlayRoundModel> roundMap = new ConcurrentHashMap<>();// 缓存场次列表
         Map<String, AnalysisResultModel> resultMap = new ConcurrentHashMap<>();// 分析结果数据
 
-        adFullList.parallelStream().forEach(oneMap -> this
-                .genAnalysisResult(project, oneMap, roundMap, resultMap));// 分析结果基本信息解析
+        adFullList.parallelStream().forEach(oneMap -> this.genAnalysisResult(project, oneMap, roundMap, resultMap));
+        // 分析结果基本信息解析
 
         Map<AnalysisWordModel, AnalysisWordModel> wordMap = new ConcurrentHashMap<>();// 分析结果-关联词
         Map<AnalysisWordRoleMapModel, AnalysisWordRoleMapModel> wordRoleMap = new ConcurrentHashMap<>();// 分析结果-关联词对应角色
-        adDetailList.parallelStream()
-                .forEach(oneMap -> this.genAnalysisDetail(project, roundMap,
-                        resultMap, oneMap, wordMap, wordRoleMap));// 分析结果详情解析
+        adDetailList.parallelStream().forEach(oneMap -> this.genAnalysisDetail(project, roundMap, resultMap, oneMap,
+                wordMap, wordRoleMap));// 分析结果详情解析
 
         return new AnalysisResults(new ArrayList<>(resultMap.values()),
                 new ArrayList<>(wordMap.values()),

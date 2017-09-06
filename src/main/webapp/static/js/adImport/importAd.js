@@ -24,6 +24,7 @@ function loadRecordList() {
 				recordTrArray.push("	<td width='25%' class='over-hide' title='"+ item.roleNameList.join("|") +"'>"+ item.roleNameList.join("|") +"</td>");
 				recordTrArray.push("	<td width='10%' class='over-hide' title='"+ item.implantMode.name +"'>"+ item.implantMode.name +"</td>");
 				recordTrArray.push("	<td width='10%' class='over-hide' title='"+ item.goods.goods +"'>"+ item.goods.goods +"</td>");
+				recordTrArray.push("	<td width='20%' class='over-hide'></td>");
 				recordTrArray.push("	<td width='25%' class='over-hide' title='"+ filterNull(item.desc) +"'>"+ filterNull(item.desc) +"</td>");
 				recordTrArray.push("</tr>");
 			});

@@ -21,6 +21,9 @@ public class ImplantRecordModel {
 	private GoodsModel goods;	//品类
 	private String desc;	//描述
 	private Date createTime;	//创建时间
+	private double pageCount;  //场次页数
+	private double wonderful;  //精彩指数
+	
 	public Date getCreateTime() {
 		return createTime;
 	}
@@ -68,5 +71,17 @@ public class ImplantRecordModel {
 	}
 	public void setDesc(String desc) {
 		this.desc = desc;
+	}
+	public double getPageCount() {
+		return pageCount;
+	}
+	public void setPageCount(double pageCount) {
+		this.pageCount = pageCount;
+	}
+	public double getWonderful() {
+		return wonderful;
+	}
+	public void setWonderful(double wonderful) {
+		this.wonderful = wonderful;
 	}
 }

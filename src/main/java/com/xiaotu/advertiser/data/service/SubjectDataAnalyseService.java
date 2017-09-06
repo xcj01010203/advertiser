@@ -1,6 +1,7 @@
 package com.xiaotu.advertiser.data.service;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -46,13 +47,7 @@ public class SubjectDataAnalyseService extends BaseService {
 	/**
 	 * 查询题材收视排行
 	 * @author xuchangjian 2017年7月18日下午1:46:56
-	 * @param areaId	区域ID
-	 * @param channelIdList	频道ID列表
-	 * @param channelLevelList	频道级别列表
-	 * @param startDate	开始日期
-	 * @param endDate	结束日期
-	 * @param startTime	开始时间
-	 * @param endTime	结束时间
+	 * @param filter 查询条件
 	 * @return
 	 */
 	public Map<String, Object> querySubjectRank(SubjectDataFilter filter)
@@ -61,6 +56,7 @@ public class SubjectDataAnalyseService extends BaseService {
 		
 		Map<String, Object> params = this.getFilterParamMap(filter);
 		List<Map<String, Object>> subjectRank = this.getList("selectSubjectRank", params);
+		subjectRank = this.removeRateNullData(subjectRank);
 		
 		DecimalFormat df = new DecimalFormat("0.000");
 		for (Map<String, Object> subjectInfo : subjectRank)
@@ -76,13 +72,7 @@ public class SubjectDataAnalyseService extends BaseService {
 	/**
 	 * 题材分城贡献
 	 * @author xuchangjian 2017年7月18日下午1:46:56
-	 * @param areaId	区域ID
-	 * @param channelIdList	频道ID列表
-	 * @param channelLevelList	频道级别列表
-	 * @param startDate	开始日期
-	 * @param endDate	结束日期
-	 * @param startTime	开始时间
-	 * @param endTime	结束时间
+	 * @param filter 查询条件
 	 * @return
 	 */
 	public Map<String, Object> querySubjectCity(SubjectDataFilter filter)
@@ -104,6 +94,7 @@ public class SubjectDataAnalyseService extends BaseService {
 		params.put("cityGroupId", cityGroupId);
 		params.put("cityId", cityId);
 		List<Map<String, Object>> subjectCity = this.getList("selectSubjectCity", params);
+		subjectCity = this.removeRateNullData(subjectCity);
 		
 		//计算偏好值
 		Double groupRate = 0.0;	
@@ -127,7 +118,7 @@ public class SubjectDataAnalyseService extends BaseService {
 			Double favor = 0.0;
 			if (groupRate > 0)
 			{
-				favor = BigDecimalUtil.divide(rate, groupRate);
+				favor = BigDecimalUtil.divide(rate, groupRate, 5);
 			}
 			map.put("favor", favor);
 		}
@@ -146,13 +137,7 @@ public class SubjectDataAnalyseService extends BaseService {
 	/**
 	 * 查询题材的人群年龄分布
 	 * @author xuchangjian 2017年7月18日下午3:16:45
-	 * @param areaId	区域ID
-	 * @param channelIdList	频道ID列表
-	 * @param channelLevelList	频道级别列表
-	 * @param startDate	开始日期
-	 * @param endDate	结束日期
-	 * @param startTime	开始时间
-	 * @param endTime	结束时间
+	 * @param filter 查询条件
 	 * @return
 	 */
 	public Map<String, Object> querySubjectAgeSpread(SubjectDataFilter filter)
@@ -161,6 +146,7 @@ public class SubjectDataAnalyseService extends BaseService {
 		
 		Map<String, Object> params = this.getFilterParamMap(filter);
 		List<Map<String, Object>> ageSpread = this.getList("selectSubjectAgaSpread", params);
+		ageSpread = this.removeRateNullData(ageSpread);
 		
 		double groupRate = this.get("selectRate", params);
 		
@@ -182,13 +168,7 @@ public class SubjectDataAnalyseService extends BaseService {
 	/**
 	 * 查询题材的人群收入分布
 	 * @author xuchangjian 2017年7月18日下午3:16:45
-	 * @param areaId	区域ID
-	 * @param channelIdList	频道ID列表
-	 * @param channelLevelList	频道级别列表
-	 * @param startDate	开始日期
-	 * @param endDate	结束日期
-	 * @param startTime	开始时间
-	 * @param endTime	结束时间
+	 * @param filter 查询条件
 	 * @return
 	 */
 	public Map<String, Object> querySubjectEarnSpread(SubjectDataFilter filter)
@@ -197,6 +177,7 @@ public class SubjectDataAnalyseService extends BaseService {
 		
 		Map<String, Object> params = this.getFilterParamMap(filter);
 		List<Map<String, Object>> earnSpread = this.getList("querySubjectEarnSpread", params);
+		earnSpread = this.removeRateNullData(earnSpread);
 		
 		double groupRate = this.get("selectRate", params);
 		
@@ -218,13 +199,7 @@ public class SubjectDataAnalyseService extends BaseService {
 	/**
 	 * 查询题材的人群教育水平分布
 	 * @author xuchangjian 2017年7月18日下午3:16:45
-	 * @param areaId	区域ID
-	 * @param channelIdList	频道ID列表
-	 * @param channelLevelList	频道级别列表
-	 * @param startDate	开始日期
-	 * @param endDate	结束日期
-	 * @param startTime	开始时间
-	 * @param endTime	结束时间
+	 * @param filter 查询条件
 	 * @return
 	 */
 	public Map<String, Object> querySubjectEduSpread(SubjectDataFilter filter)
@@ -233,6 +208,7 @@ public class SubjectDataAnalyseService extends BaseService {
 		
 		Map<String, Object> params = this.getFilterParamMap(filter);
 		List<Map<String, Object>> eduSpread = this.getList("querySubjectEduSpread", params);
+		eduSpread = this.removeRateNullData(eduSpread);
 		
 		double groupRate = this.get("selectRate", params);
 		
@@ -252,15 +228,40 @@ public class SubjectDataAnalyseService extends BaseService {
 	}
 	
 	/**
-	 * 查询题材的人群教育水平分布
+	 * 查询题材的人群性别分布
 	 * @author xuchangjian 2017年7月18日下午3:16:45
-	 * @param areaId	区域ID
-	 * @param channelIdList	频道ID列表
-	 * @param channelLevelList	频道级别列表
-	 * @param startDate	开始日期
-	 * @param endDate	结束日期
-	 * @param startTime	开始时间
-	 * @param endTime	结束时间
+	 * @param filter 查询条件
+	 * @return
+	 */
+	public Map<String, Object> querySubjectSexSpread(SubjectDataFilter filter)
+	{
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		
+		Map<String, Object> params = this.getFilterParamMap(filter);
+		List<Map<String, Object>> sexSpread = this.getList("querySubjectSexSpread", params);
+		sexSpread = this.removeRateNullData(sexSpread);
+		
+		double groupRate = this.get("selectRate", params);
+		
+		//计算偏好值
+		for (Map<String, Object> map : sexSpread)
+		{
+			Double rate = Double.parseDouble(map.get("rate").toString());
+			Double favor = 0.0;
+			if (groupRate > 0) {
+				favor = BigDecimalUtil.divide(rate, groupRate, 5);
+			}
+			map.put("favor", favor);	
+		}
+		
+		resultMap.put("sexSpread", sexSpread);
+		return resultMap;
+	}
+	
+	/**
+	 * 查询题材的人群分布（带有年龄、收入、教育水平、年龄三个维度的数据）
+	 * @author xuchangjian 2017年7月18日下午3:16:45
+	 * @param filter 查询条件
 	 * @return
 	 */
 	public Map<String, Object> querySubjectPeopleSpread(SubjectDataFilter filter) 
@@ -271,6 +272,12 @@ public class SubjectDataAnalyseService extends BaseService {
 		List<Map<String, Object>> ageSpread = this.getList("selectSubjectAgaSpread", params);
 		List<Map<String, Object>> earnSpread = this.getList("querySubjectEarnSpread", params);
 		List<Map<String, Object>> eduSpread = this.getList("querySubjectEduSpread", params);
+		List<Map<String, Object>> sexSpread = this.getList("querySubjectSexSpread", params);
+		
+		ageSpread = this.removeRateNullData(ageSpread);
+		earnSpread = this.removeRateNullData(earnSpread);
+		eduSpread = this.removeRateNullData(eduSpread);
+		sexSpread = this.removeRateNullData(sexSpread);
 		
 		Double groupRate = this.get("selectRate", params);
 		
@@ -307,11 +314,23 @@ public class SubjectDataAnalyseService extends BaseService {
 				}
 				map.put("favor", favor);	
 			}
+
+			//计算偏好值
+			for (Map<String, Object> map : sexSpread)
+			{
+				Double rate = Double.parseDouble(map.get("rate").toString());
+				Double favor = 0.0;
+				if (groupRate > 0) {
+					favor = BigDecimalUtil.divide(rate, groupRate, 5);
+				}
+				map.put("favor", favor);	
+			}
 		}
 
 		resultMap.put("earnSpread", earnSpread);
 		resultMap.put("ageSpread", ageSpread);
 		resultMap.put("eduSpread", eduSpread);
+		resultMap.put("sexSpread", sexSpread);
 		return resultMap;
 	}
 	
@@ -363,5 +382,22 @@ public class SubjectDataAnalyseService extends BaseService {
 		params.put("earnType", filter.getEarnType());
 		
 		return params;
+	}
+	
+	/**
+	 * 移除list中收视率数据为空的数据
+	 * @author xuchangjian 2017年9月5日下午4:32:51
+	 * @param list
+	 * @return
+	 */
+	public List<Map<String, Object>> removeRateNullData(List<Map<String, Object>> list) {
+		List<Map<String, Object>> toRemoveList = new ArrayList<Map<String, Object>>();
+		for (Map<String, Object> map : list) {
+			if (map.get("rate") == null) {
+				toRemoveList.add(map);
+			}
+		}
+		list.removeAll(toRemoveList);
+		return list;
 	}
 }

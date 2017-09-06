@@ -100,42 +100,20 @@
                 <div class="personal-content">
                     <div class="personal-con personal-name">
                         <span>姓名</span>
-                        <#if user.userName??>
-	                		<input type="text" id="uuserName" name="userName" value="${user.userName}">
-	                		<#else>
-                        		<input type="text" id="uuserName" name="userName">
-						</#if>
+                        <input type="text" id="uuserName" name="userName">
                     </div>
                     <div class="personal-con personal-sex">
                         <span>性别</span>
-                         <#if user.sex??>
-                         	<#if user.sex=0>
-                         			<label><input id="sex1" name="sex-type" value="0" type="radio" checked="checked"/>男</label>
-                         			<label><input id="sex2" name="sex-type" value="1" type="radio"/>女</label>
-                         		<#else>
-                         			<label><input id="sex1" name="sex-type" value="0" type="radio"/>男</label>
-                         			<label><input id="sex2" name="sex-type" value="1" type="radio" checked="checked"/>女</label>
-                         	</#if>
-                         		<#else>
-                        			<label><input id="sex1" name="sex-type" value="0" type="radio"/>男</label>
-                        			<label><input id="sex2" name="sex-type" value="1" type="radio"/>女</label>
-                        </#if>
+                   			<label><input id="sex1" name="sex-type" value="0" type="radio"/>男</label>
+                   			<label><input id="sex2" name="sex-type" value="1" type="radio"/>女</label>
                     </div>
                     <div class="personal-con personal-sex">
                         <span>公司</span>
-                        <#if user.company??>
-                        		<input type="text" id="ucompany" name="company" value="${user.company}">
-                        	<#else>
-                        		<input type="text" id="ucompany" name="company">
-                        </#if>
+                   		<input type="text" id="ucompany" name="company">
                     </div>
                     <div class="personal-con personal-sex">
                         <span>邮箱</span>
-                        <#if user.email??>
-                        		<input type="text" id="uemail" name="email" value="${user.email}">
-                        	<#else>
-                        		<input type="text" id="uemail" name="email">
-                        </#if>
+                   		<input type="text" id="uemail" name="email">
                     </div>
                     <button class="btn-ok" onclick="updateUser()">保存</button>
                 </div>

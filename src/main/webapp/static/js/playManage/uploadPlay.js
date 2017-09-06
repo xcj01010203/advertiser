@@ -118,6 +118,93 @@ function checkAnalyseStatus() {
 	}, 1000);
 }
 
+//精彩指数分析
+function autoLabel() {
+	$("#selectStatus").removeClass("hidden");
+	$("#selectStatus").removeClass("alert-success");
+	$("#selectStatus").removeClass("alert-danger");
+	$("#selectStatus").addClass("alert-warning");
+	
+	$("#selectLabel").attr("disabled", true);
+	
+	$("#selectStatus").find("strong").text("提示：");
+	$("#selectStatus").find("span").text("正在分析，请稍候...");
+	var url = "/label/savePlayEpisode";
+	var successFn = function(response) {
+		if (response.status == 1) {
+			return;
+		}
+		checkLabelStatus();
+	};
+	doPost(url, {pageSize:10000}, successFn);
+}
+
+//检查当前精彩指数分析状态
+function checkLabelStatus() {
+	var checkInterval = null;
+	
+	var url = "/label/queryLableJob";
+	var successFn = function(response) {
+		if (response.status == 1) {
+            modelWindow(response.msssage)
+			return;
+		}
+		var result = response.data;
+		if (result == null) {
+			clearInterval(checkInterval);
+			$("#selectLabel").attr("disabled", false);
+			return;
+		}
+		if (result.status == 0 || result.status == 1) {
+			clearInterval(checkInterval);
+		}
+		
+		if (result.status == 0) {	//执行成功
+			$("#selectStatus").removeClass("hidden");
+			$("#selectStatus").removeClass("alert-warning");
+			$("#selectStatus").removeClass("alert-danger");
+			$("#selectStatus").addClass("alert-success");
+			
+			$("#selectLabel").attr("disabled", false);
+			
+			$("#selectStatus").find("strong").text("分析成功！");
+			
+			var startTime = new Date(result.startTime).getTime();
+			var endTime = new Date(result.endTime).getTime();
+			var timeInterval = calculateTime(endTime - startTime);
+			
+			$("#selectStatus").find("span").text("分析时间：" + new Date(result.startTime).format("yyyy-MM-dd HH:mm:ss") + "，用时" + timeInterval);
+		}
+		if (result.status == 1) {	//执行失败
+			$("#selectStatus").removeClass("hidden");
+			$("#selectStatus").removeClass("alert-warning");
+			$("#selectStatus").removeClass("alert-success");
+			$("#selectStatus").addClass("alert-danger");
+
+			$("#selectLabel").attr("disabled", false);
+			
+			$("#selectStatus").find("strong").text("分析失败！");
+			$("#selectStatus").find("span").text("分析失败，分析时间：" + new Date(result.startTime).format("yyyy-MM-dd HH:mm:ss"));
+		}
+		if (result.status == 2) {	//执行中
+			$("#selectStatus").removeClass("hidden");
+			$("#selectStatus").removeClass("alert-success");
+			$("#selectStatus").removeClass("alert-danger");
+			$("#selectStatus").addClass("alert-warning");
+			
+			$("#selectLabel").attr("disabled", true);
+			
+			$("#selectStatus").find("strong").text("提示：");
+			$("#selectStatus").find("span").text("正在分析，请稍候...");
+		}
+		
+	};
+	
+	checkInterval = setInterval(function() {
+		doPost(url, {}, successFn);
+	}, 1000);
+}
+
 //把给定的毫秒值转化为时分秒的格式
 function calculateTime(timeNumber) {
 	var hours = parseInt(divide(timeNumber, 1000 * 60 * 60));

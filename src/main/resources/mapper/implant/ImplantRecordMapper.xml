@@ -45,6 +45,7 @@
 			tpr.id as 'playRound.id',
 			tpr.seriesno as 'playRound.seriesNo',
 			tpr.roundno as 'playRound.roundNo',
+			tpr.pageCount,
 			tir.mode_id as 'implantMode.id', 
 			tim.name as 'implantMode.name', 
 			tir.goods_id as 'goods.id', 

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 维护剧本内容相关信息 -->
+<mapper namespace="PlayLabelMapper">
+	<!-- 查询标签 -->
+	<select id="queryPlayLabelList" resultType="PlayLabel">
+		SELECT
+			id,
+			label,
+			parentId,
+			score
+		FROM
+			tab_play_label
+	</select>
+	
+	<!-- 根据id查询标签label -->
+	<select id="queryLabelName" resultType="PlayLabel" parameterType="PlayLabel">
+		SELECT
+			id,
+			label,
+			parentId,
+			score
+		FROM
+			tab_play_label
+		 WHERE 
+            id=#{id}
+	</select>
+	
+	<!-- 根据parentId增加标签label -->
+	<insert id="returnMaxId"  parameterType="PlayLabel">
+		insert into tab_play_label (label,parentId,score) values (#{label},#{id},#{score})
+	</insert>
+	
+	
+	<!-- 查询最大的id记录 -->
+	<select id="queryMaxLabel" resultType="PlayLabel" parameterType="PlayLabel">
+		SELECT
+			max(id) id
+		FROM
+			tab_play_label
+	</select>
+	
+	<!-- 增加标签label -->
+	<update id="savePlayLabel"  parameterType="PlayLabel">
+			UPDATE tab_play_label
+			SET label = #{label},
+			 score = #{score}
+			WHERE
+				id = #{id}
+	</update>
+	<!-- 设置parentId为0增加一级标签label -->
+	<insert id="returnOneLevelMaxId"  parameterType="PlayLabel">
+		insert into tab_play_label (label,parentId,score) values (#{label},#{id},#{score})
+	</insert>
+	<!-- 删除一级标签及一下的二级标签标签 -->
+	<delete id="deleteAllLabel"  parameterType="java.util.List">
+		DELETE
+		FROM
+			tab_play_label
+		WHERE
+			id IN
+		<foreach item="id" collection="list" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+	</delete>
+	<!-- 修改标签前的查询通过id -->
+	<select id="beforeUpdateQueryById" parameterType="PlayLabel" resultType="PlayLabel">
+		SELECT
+			id,
+			label,
+			parentId,
+			score
+		FROM
+			tab_play_label
+		WHERE
+			id = #{id}
+	</select>
+	
+	<!--修改标签label  -->
+	<update id="updatePlayLabel" parameterType="PlayLabel" >
+		UPDATE tab_play_label
+			SET label = #{label},
+				parentId = #{parentId},
+			 score = #{score}
+			WHERE
+				id = #{id}
+    </update>
+	
+		<!-- 根据场次ID获取标签评分 -->
+	<select id="queryLableRoundId" parameterType="Map"  resultType="Double">
+		SELECT
+			tpl.score
+		FROM
+			tab_play_label tpl
+		LEFT JOIN 
+			tab_round_label_map trl 
+		ON tpl.id = trl.label_id
+		WHERE 1=1
+		<if test="roundId != null">
+		  	AND trl.round_id = #{roundId}
+	  </if>
+	</select>
+	
+	
+	<!-- 取消按钮删除删除点击确定时生成的标签记录根据id-->
+	<delete id="removePlayLabelById" parameterType="PlayLabel">
+		DELETE
+		FROM
+			tab_play_label
+		WHERE
+			id = #{id}
+	</delete>
+	
+	
+	
+	
+</mapper>

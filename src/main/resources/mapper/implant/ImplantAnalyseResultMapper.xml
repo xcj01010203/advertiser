@@ -148,6 +148,7 @@
 			tpr.atmosphere,
 			tpr.site,
 			tpr.firstLocation,
+			tpr.pageCount,
 			GROUP_CONCAT(tg.goods SEPARATOR '|') goods,
 			tmp.roleIds
 		FROM tab_implant_analyse_result tiar, 

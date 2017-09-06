@@ -1,6 +1,6 @@
 //题材map
 var subjecJson = {};
-//subjecJson['-1'] = '全部题材';
+// subjecJson[] = '全部题材';
 subjecJson['1'] = '当代主旋律';
 subjecJson['2'] = '武侠';
 subjecJson['3'] = '地下斗争';
@@ -37,13 +37,10 @@ subjecJson['33'] = '当代传奇';
 subjecJson['34'] = '近代传奇';
 subjecJson['0'] = '未知题材';//这个放到最后
 //分类后的题材
-var subjectTypeJson = {};
-subjectTypeJson['历史类'] = [10,5,27,26,15,33,34,30];
-subjectTypeJson['生活类'] = [21,13,23,29,25,19,6,20];
-subjectTypeJson['动作类'] = [2,12,14,32,22];
-subjectTypeJson['战争类'] = [9,16,3,8,28,31];
-subjectTypeJson['幻想类'] = [24,18];
-subjectTypeJson['其他类'] = [1,7,17,4,11,0];
-
-console.log(subjecJson);
-console.log(subjectTypeJson);
+var subjectTypeJson = [];
+subjectTypeJson.push(['history','历史类',10,5,27,26,15,33,34,30])
+subjectTypeJson.push(['live','生活类',21,13,23,29,25,19,6,20])
+subjectTypeJson.push(['action','动作类',2,12,14,32,22])
+subjectTypeJson.push(['live','战争类',9,16,3,8,28,31])
+subjectTypeJson.push(['fantasy','幻想类',24,18])
+subjectTypeJson.push(['else','其他类',1,7,17,4,11,0])

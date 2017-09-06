@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
+import com.xiaotu.advertiser.project.model.PlayLabel;
 import com.xiaotu.common.db.MyBatisDao;
 import com.xiaotu.common.db.Page;
 

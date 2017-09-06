@@ -11,6 +11,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.xiaotu.advertiser.dictionary.model.GoodsModel;
@@ -24,6 +25,7 @@ import com.xiaotu.advertiser.project.model.map.PlayMarkRoleMapModel;
 import com.xiaotu.common.db.Page;
 import com.xiaotu.common.exception.BusinessException;
 import com.xiaotu.common.mvc.BaseService;
+import com.xiaotu.common.util.BigDecimalUtil;
 import com.xiaotu.common.util.ExcelUtils;
 import com.xiaotu.common.util.SessionUtil;
 
@@ -34,6 +36,9 @@ import com.xiaotu.common.util.SessionUtil;
 @Service
 public class PlayMarkService extends BaseService {
 
+	@Autowired
+	PlayLabelService playLabelService;
+	
 	@Override
 	protected String getKey() {
 		return "PlayMarkMapper";
@@ -342,7 +347,16 @@ public class PlayMarkService extends BaseService {
 			markDto.setDescription(mark.getDescription());
 			markDto.setGoodsList(groupGoodsMap.get(id));
 			markDto.setRoleNameList(groupRoleMap.get(id));
+			markDto.setPageCount(mark.getPageCount());
 			
+			String roundId =mark.getPlayRound().getId();
+			List<Double> lableList = playLabelService.queryLableRoundId(roundId);
+			Double sum = 0d;
+			for (Double LabelScore : lableList) {
+				sum += LabelScore;
+			}
+			//最终精彩指数
+			markDto.setWonderful(BigDecimalUtil.addMultiply(sum,mark.getPageCount()));
 			markDtoList.add(markDto);
 		}
 		

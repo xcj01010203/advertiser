@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 项目标签自动分析结果 -->
+<mapper namespace="LabelTargetstateMapper">
+	<select id="selectJob" parameterType="Project" resultType="LabelTargetstate">
+		SELECT id,project_id AS 'project.id',targetState AS status,start_time AS startTime,end_time AS endTime
+		  FROM tab_project_label_targetstate
+		 WHERE project_id=#{id}
+	</select>
+</mapper>

@@ -23,13 +23,7 @@ public class SubjectDataAnalyseController {
 	/**
 	 * 查询题材市场定位
 	 * @author xuchangjian 2017年7月18日上午9:34:52
-	 * @param areaId	区域ID
-	 * @param channelIdList	频道ID列表
-	 * @param channelLevelList	频道级别列表
-	 * @param startDate	开始日期
-	 * @param endDate	结束日期
-	 * @param startTime	开始时间
-	 * @param endTime	结束时间
+	 * @param filter 查询条件
 	 * @return
 	 */
 	@RequestMapping("/querySubjectMarketPos")
@@ -42,13 +36,7 @@ public class SubjectDataAnalyseController {
 	/**
 	 * 查询题材收视排行
 	 * @author xuchangjian 2017年7月18日下午1:46:56
-	 * @param areaId	区域ID
-	 * @param channelIdList	频道ID列表
-	 * @param channelLevelList	频道级别列表
-	 * @param startDate	开始日期
-	 * @param endDate	结束日期
-	 * @param startTime	开始时间
-	 * @param endTime	结束时间
+	 * @param filter 查询条件
 	 * @return
 	 */
 	@RequestMapping("/querySubjectRank")
@@ -61,13 +49,7 @@ public class SubjectDataAnalyseController {
 	/**
 	 * 题材分城贡献
 	 * @author xuchangjian 2017年7月18日下午1:46:56
-	 * @param areaId	区域ID
-	 * @param channelIdList	频道ID列表
-	 * @param channelLevelList	频道级别列表
-	 * @param startDate	开始日期
-	 * @param endDate	结束日期
-	 * @param startTime	开始时间
-	 * @param endTime	结束时间
+	 * @param filter 查询条件
 	 * @return
 	 */
 	@RequestMapping("/querySubjectCity")
@@ -80,13 +62,7 @@ public class SubjectDataAnalyseController {
 	/**
 	 * 查询题材的人群年龄分布
 	 * @author xuchangjian 2017年7月18日下午3:16:45
-	 * @param areaId	区域ID
-	 * @param channelIdList	频道ID列表
-	 * @param channelLevelList	频道级别列表
-	 * @param startDate	开始日期
-	 * @param endDate	结束日期
-	 * @param startTime	开始时间
-	 * @param endTime	结束时间
+	 * @param filter 查询条件
 	 * @return
 	 */
 	@RequestMapping("/querySubjectAgeSpread")
@@ -99,13 +75,7 @@ public class SubjectDataAnalyseController {
 	/**
 	 * 查询题材的人群收入分布
 	 * @author xuchangjian 2017年7月18日下午3:16:45
-	 * @param areaId	区域ID
-	 * @param channelIdList	频道ID列表
-	 * @param channelLevelList	频道级别列表
-	 * @param startDate	开始日期
-	 * @param endDate	结束日期
-	 * @param startTime	开始时间
-	 * @param endTime	结束时间
+	 * @param filter 查询条件
 	 * @return
 	 */
 	@RequestMapping("/querySubjectEarnSpread")
@@ -118,13 +88,7 @@ public class SubjectDataAnalyseController {
 	/**
 	 * 查询题材的人群教育水平分布
 	 * @author xuchangjian 2017年7月18日下午3:16:45
-	 * @param areaId	区域ID
-	 * @param channelIdList	频道ID列表
-	 * @param channelLevelList	频道级别列表
-	 * @param startDate	开始日期
-	 * @param endDate	结束日期
-	 * @param startTime	开始时间
-	 * @param endTime	结束时间
+	 * @param filter 查询条件
 	 * @return
 	 */
 	@RequestMapping("/querySubjectEduSpread")
@@ -133,17 +97,24 @@ public class SubjectDataAnalyseController {
 		DynamicDataSource.setDataSource(DynamicDataSource.DATA_SOURCE_PG);
 		return this.subjectDataAnalyseService.querySubjectEduSpread(filter);
 	}
+	
+	/**
+	 * 查询题材的人群性别分布
+	 * @author xuchangjian 2017年7月18日下午3:16:45
+	 * @param filter 查询条件
+	 * @return
+	 */
+	@RequestMapping("/querySubjectSexSpread")
+	public Object querySubjectSexSpread(@RequestBody SubjectDataFilter filter)
+	{
+		DynamicDataSource.setDataSource(DynamicDataSource.DATA_SOURCE_PG);
+		return this.subjectDataAnalyseService.querySubjectSexSpread(filter);
+	}
 
 	/**
-	 * 查询题材的人群分布
+	 * 查询题材的人群分布（带有年龄、收入、教育水平、年龄三个维度的数据）
 	 * @author xuchangjian 2017年7月18日下午3:16:45
-	 * @param areaId	区域ID
-	 * @param channelIdList	频道ID列表
-	 * @param channelLevelList	频道级别列表
-	 * @param startDate	开始日期
-	 * @param endDate	结束日期
-	 * @param startTime	开始时间
-	 * @param endTime	结束时间
+	 * @param filter 查询条件
 	 * @return
 	 */
 	@RequestMapping("/querySubjectPeopleSpread")

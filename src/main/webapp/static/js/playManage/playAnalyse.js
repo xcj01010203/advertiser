@@ -1977,87 +1977,95 @@ function clickCancelFunc() {
 // 角色列表
 function pickRoleList() {
     $(".project-list-four .four-content .four-right .pick-role").click(function () {
-        $(".shade-role").css({
-            "backgroundColor": "rgba(0,0,0,0.3)",
-            "opacity": "1",
-            "transition": "all 0.15s ease-in",
-            "zIndex": "100"
-        })
-        $(".shade-role .shade-loading").css("display", "block")
+        modelWindow('确定要提取整个剧本的角色？')
+        $("#modal-footer").show()
+        $("#modal-footer").html('<button type="button" class="btn btn-primary">确定</button>' +
+            '<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>')
 
-        doPost(basePath + '/playContent/extractRoleList', {}, function (data) {
-            $(".shade-role .shade-loading").css("display", "none")
-            $(".shade-role .shade-con-role").css({
+        $("#modal-footer").find('.btn-primary').on('click',function () {
+            $("#modal-footer").find('.btn-default').click()
+            $(".shade-role").css({
+                "backgroundColor": "rgba(0,0,0,0.3)",
                 "opacity": "1",
-                "top": "50%",
-                "marginTop": "-300px",
-                "transition": "all 0.3s ease-in",
+                "transition": "all 0.15s ease-in",
                 "zIndex": "100"
             })
-            if (data.status == 0) {
-                var data = data.data
-                var html = "", roleList = data.roleList, len = roleList.length;
-                for (var i = 0; i < len; i++) {
-                    html += '<li><a href="javascript:;"><span class="content">' + roleList[i].roleName + '</span>' +
-                        '<span class="gather">(' + roleList[i].roundCount + ')</span></a>' +
-                        '<i class="icon iconfont">&#xe600;</i></li>';
-                }
-                $(".shade-role .shade-con-role .panel-body h5 span").html(len)
-                $(".shade-role .shade-con-role .panel-body .role-details").html(html);
+            $(".shade-role .shade-loading").css("display", "block")
 
-                // 全部按钮
-                $(".shade-role .shade-con-role .panel-body .role-all li").click(function () {
-                    if ($(this).hasClass("active")) {
-                        $(this).removeClass("active")
-                        $(".shade-role .shade-con-role .panel-body .role-details li").removeClass("active")
-                    } else {
-                        $(this).addClass("active")
-                        $(".shade-role .shade-con-role .panel-body .role-details li").addClass("active")
-                    }
+            doPost(basePath + '/playContent/extractRoleList', {}, function (data) {
+                $(".shade-role .shade-loading").css("display", "none")
+                $(".shade-role .shade-con-role").css({
+                    "opacity": "1",
+                    "top": "50%",
+                    "marginTop": "-300px",
+                    "transition": "all 0.3s ease-in",
+                    "zIndex": "100"
                 })
-                // 每个按钮
-                $(".shade-role .shade-con-role .panel-body .role-details li").click(function () {
-                    if ($(this).hasClass("active")) {
-                        $(this).removeClass("active")
-                    } else {
-                        $(this).addClass("active")
+                if (data.status == 0) {
+                    var data = data.data
+                    var html = "", roleList = data.roleList, len = roleList.length;
+                    for (var i = 0; i < len; i++) {
+                        html += '<li><a href="javascript:;"><span class="content">' + roleList[i].roleName + '</span>' +
+                            '<span class="gather">(' + roleList[i].roundCount + ')</span></a>' +
+                            '<i class="icon iconfont">&#xe600;</i></li>';
                     }
-                })
+                    $(".shade-role .shade-con-role .panel-body h5 span").html(len)
+                    $(".shade-role .shade-con-role .panel-body .role-details").html(html);
 
-                // 确定按钮
-                $(".shade-role .shade-con-role .panel-foot .confirm-btn").click(function () {
-                    var roleListArr = [];
-                    $(".shade-role .shade-con-role .panel-body .role-details li").each(function (index, value) {
-                        var hasActive = $(value).hasClass("active");
-                        var text = $(value).find(".content").html();
-                        if (hasActive) {
-                            roleListArr.push(text)
+                    // 全部按钮
+                    $(".shade-role .shade-con-role .panel-body .role-all li").click(function () {
+                        if ($(this).hasClass("active")) {
+                            $(this).removeClass("active")
+                            $(".shade-role .shade-con-role .panel-body .role-details li").removeClass("active")
+                        } else {
+                            $(this).addClass("active")
+                            $(".shade-role .shade-con-role .panel-body .role-details li").addClass("active")
                         }
                     })
-                    if (roleListArr.length != 0) {
-                        doPost(basePath + '/playRole/saveAnalyseRole', {roleList: roleListArr}, function (data) {
-                            if (data.status == 0) {
-                                // 关闭角色列表
-                                $(".shade-role .shade-con-role .panel-heading h4 i").click()
-                                modelWindow('角色添加成功', 1000)
-                            } else {
-                                modelWindow(data.message)
+                    // 每个按钮
+                    $(".shade-role .shade-con-role .panel-body .role-details li").click(function () {
+                        if ($(this).hasClass("active")) {
+                            $(this).removeClass("active")
+                        } else {
+                            $(this).addClass("active")
+                        }
+                    })
+
+                    // 确定按钮
+                    $(".shade-role .shade-con-role .panel-foot .confirm-btn").click(function () {
+                        var roleListArr = [];
+                        $(".shade-role .shade-con-role .panel-body .role-details li").each(function (index, value) {
+                            var hasActive = $(value).hasClass("active");
+                            var text = $(value).find(".content").html();
+                            if (hasActive) {
+                                roleListArr.push(text)
                             }
-                        }, function (error) {
-                            console.log(error)
                         })
-                    } else {
-                        modelWindow("请在角色表中选中要加入的角色", 1000)
-                    }
-                })
-                // 取消按钮
-                $(".shade-role .shade-con-role .panel-foot .cancel-btn").click(function () {
-                    // 关闭角色列表
-                    $(".shade-role .shade-con-role .panel-heading h4 i").click()
-                })
-            }
-        }, function (error) {
-            console.log(error)
+                        if (roleListArr.length != 0) {
+                            doPost(basePath + '/playRole/saveAnalyseRole', {roleList: roleListArr}, function (data) {
+                                if (data.status == 0) {
+                                    // 关闭角色列表
+                                    $(".shade-role .shade-con-role .panel-heading h4 i").click()
+                                    modelWindow('角色添加成功', 1000)
+                                } else {
+                                    modelWindow(data.message)
+                                }
+                            }, function (error) {
+                                console.log(error)
+                            })
+                        } else {
+                            modelWindow("请在角色表中选中要加入的角色", 1000)
+                        }
+                    })
+                    // 取消按钮
+                    $(".shade-role .shade-con-role .panel-foot .cancel-btn").click(function () {
+                        // 关闭角色列表
+                        $(".shade-role .shade-con-role .panel-heading h4 i").click()
+                    })
+                }
+            }, function (error) {
+                console.log(error)
+            })
         })
 
     })
@@ -2156,7 +2164,7 @@ function openCountPage() {
             setTimeout(function () {
                 modelWindow('保存成功', 1000)
             }, 300)
-        },function (error) {
+        }, function (error) {
             console.log(error)
         })
     })

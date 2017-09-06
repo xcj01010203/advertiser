@@ -235,7 +235,8 @@ function roleUserButton(type){
 	}
 	if(type == "icon iconfont" || type == "btn-cancel"){
 		$("#roleUserpop").attr("style", "display:none;");
-		$("#roleUserShade").attr("style", "display:none;");  
+		$("#roleUserShade").attr("style", "display:none;");
+		window.location.href=basePath+"/base/forward/user/userManage";
 	}
 }
 
@@ -544,6 +545,7 @@ function flushRoleUserButton(type){
 	}
 	if(type == "icon iconfont" || type == "btn-cancel"){
 		$("#roleUserpop").attr("style", "display:none;");
-		$("#roleUserShade").attr("style", "display:none;");  
+		$("#roleUserShade").attr("style", "display:none;");
+		window.location.href=basePath+"/base/forward/user/userManage";
 	}
 }

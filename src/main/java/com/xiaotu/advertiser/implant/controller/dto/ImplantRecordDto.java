@@ -19,6 +19,9 @@ public class ImplantRecordDto {
 	private ImplantModeModel implantMode;	//植入方式
 	private GoodsModel goods;	//品类列表
 	private String desc;	//描述
+	private double pageCount;  //场次页数
+	private double wonderful;  //精彩指数
+	
 	public String getId() {
 		return id;
 	}
@@ -60,5 +63,17 @@ public class ImplantRecordDto {
 	}
 	public void setDesc(String desc) {
 		this.desc = desc;
+	}
+	public double getPageCount() {
+		return pageCount;
+	}
+	public void setPageCount(double pageCount) {
+		this.pageCount = pageCount;
+	}
+	public double getWonderful() {
+		return wonderful;
+	}
+	public void setWonderful(double wonderful) {
+		this.wonderful = wonderful;
 	}
 }

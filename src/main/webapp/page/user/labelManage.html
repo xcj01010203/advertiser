@@ -11,7 +11,9 @@
     <title>标签管理</title>
     <#include "/common/context.html"/>
     <link rel="stylesheet" href="${basePath}/static/css/user/labelManage.css">
+    <script src="${basePath}/static/component/bootstrap-treeview.min.js"></script>
     <script src="${basePath}/static/js/user/labelManage.js"></script>
+    <script src="${basePath}/static/js/user/alertify.js"></script>
 </head>
 <body>
 <#include '/component/header.html'/>
@@ -78,12 +80,17 @@
                 <span>标签名称</span>
                 <input type="text" id="menuName" name="menuName">
             </div>
-            <div class="project-content-block">
-                <span>评分</span>
-                <input type="text" id="menuExplain" name="menuExplain">
+            <div class="project-content-block" id="oneLevelDiv">
+                <span>上级菜单</span>
+            <input type="text" id="fid" name="fid">
             </div>
-            <button class="btn-ok" onclick="addMenu()">确定</button>
-            <button class="btn-cancel" onclick="addButton('btn-cancel')">取消</button>
+            <div class="project-content-block" id="labelScoreDiv">
+                <span>评分</span>
+                <input type="text" id="labelScore" name="labelScore"><span id="validationNumber"></span>
+            </div>
+            <button class="btn-ok" onclick="addMenu()">确定</button> 
+            <!-- <button class="btn-ok" id="addMenu">确定</button> -->
+            <button class="btn-cancel" onclick="cancelButton('btn-cancel')">取消</button>
         </div>
     </div>
 </div>
@@ -106,7 +113,7 @@
                 <span>标签名称</span>
                 <input type="text" id="menuNames" name="menuName">
             </div>
-            <div class="project-content-block">
+            <div class="project-content-block" id="checkIsOrOneLevel">
                 <span>评分</span>
                 <input type="text" id="menuExplains" name="menuExplain">
             </div>

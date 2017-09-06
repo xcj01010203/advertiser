@@ -40,6 +40,7 @@ function loadRecordLists() {
 				}else{
 					recordTrArray.push("	<td width='10%' class='over-hide' title=''></td>");
 				}
+				recordTrArray.push("	<td width='20%' class='over-hide'></td>");
 				recordTrArray.push("	<td width='10%' class='over-hide' title='"+ item.description +"'>"+ item.description +"</td>");
 				recordTrArray.push("</tr>");
 			});

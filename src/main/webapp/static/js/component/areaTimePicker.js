@@ -1,6 +1,12 @@
 var updatedDate;
 $(function () {
 
+	// 获取全部题材数据
+    getAllSubject();
+
+    // 给人群范围添加事件
+	peopleClick()
+
     // 条件设置的收起展示
     clickShowOrHide($(".project-list-four .four-content .four-middle"), $(".project-list-five"));
     // 收视地区
@@ -11,6 +17,10 @@ $(function () {
     clickShowOrHide($(".project-list-five .broadcast-date .select"), $(".project-list-five .broadcast-date .date"));
     // 播出时间
     clickShowOrHide($(".project-list-five .broadcast-time .select"), $(".project-list-five .broadcast-time .time"));
+    // 题材选择
+    clickShowOrHide($(".project-list-five .subject-select .select"), $(".project-list-five .subject-select .subject"));
+    // 人群分布
+    clickShowOrHide($(".project-list-five .people-select .select"), $(".project-list-five .people-select .people"));
 
     //获取有收视数据的最新一天
     queryUpdatedDate();
@@ -29,10 +39,11 @@ $(function () {
     	hideAllDropDown();
     });
     
-    //如果频道是单选，移除全选按钮
-    var singleChannelFlag = $("#singleChannelFlag").val();	//频道是否单选
-    if (singleChannelFlag == "true") {
+    //如果模块类型是投放环境，则把频道做成单选，移除全选按钮
+    var modelType = $("#modelType").val();
+    if (modelType == 1) {
     	$(".select-all-li").parent("ul").remove();
+    	$(".subject-select").remove();
     }
     
     initQueryCondition();
@@ -46,6 +57,62 @@ $(function () {
     
 });
 
+// 获取全部题材数据
+function getAllSubject() {
+    // subjecJson subjectTypeJson 在subject.js中
+	var html = '';
+	for (var i = 0; i < subjectTypeJson.length; i++) {
+		var item = subjectTypeJson[i]
+        html += '<ul class="slite clearfix '+ item[0] +'">'
+        html += '<h4>'+ item[1] +'</h4>'
+		for (var j = 2; j < item.length; j++) {
+			html += '<li flagId='+[item[j]]+'><a href="javascript:;">'+ subjecJson[item[j]] +'</a><i class="icon iconfont">&#xe600;</i></li>';
+		}
+		html += '</ul>'
+	}
+	$('.project-list-five .subject-select > .select-subject > .subject .subject-body').append(html)
+
+	// 给全部题材注册事件
+	subjectClick()
+}
+
+// 给全部题材注册事件
+function subjectClick() {
+	var subjectBody = $('.project-list-five .subject-select > .select-subject > .subject .subject-body');
+	var allSubLi = subjectBody.find(".all-sub li"), sliteLi = subjectBody.find(".slite li"), subjectIdListArr = [];
+	allSubLi.click(function () {
+		$(this).addClass("active")
+        sliteLi.removeClass("active")
+    })
+    sliteLi.click(function () {
+        allSubLi.removeClass("active")
+		if ($(this).hasClass("active")) {
+            $(this).removeClass("active")
+		}else {
+            $(this).addClass("active")
+		}
+        subjectIdListArr = []
+        sliteLi.each(function (index, value) {
+            if ($(value).hasClass('active')) {
+                subjectIdListArr.push($(value).find("a").html())
+            }
+        })
+		$("#subjectNames").html(subjectIdListArr.join(','))
+    })
+}
+
+// 给人群范围添加事件
+function peopleClick() {
+	var peopleBodyLi = $('.project-list-five .people-select > .select-people > .people .people-body ul li');
+    var peopleBodySpan = $('.project-list-five .people-select > .select-people > .select > span');
+    peopleBodyLi.on('click', function () {
+    	peopleBodyLi.removeClass('active')
+		$(this).addClass('active')
+		peopleBodySpan.html($(this).find("a").html())
+        $(document).click()
+    })
+}
+
 //初始化查询条件
 function initQueryCondition() {
 	//默认选中第一个时间选择器
@@ -57,8 +124,8 @@ function initQueryCondition() {
     //默认选中”34城市组“
 	$("#province").find("li").eq(2).click();
     
-    var singleChannelFlag = $("#singleChannelFlag").val();	//频道是否单选
-    if (singleChannelFlag == "true") {
+    var modelType = $("#modelType").val();	//如果模块类型是投放环境，则把频道做成单选，移除全选按钮
+    if (modelType == 1) {
 		//默认选中第一个央视
 		$("#cctvChannels").find("li").eq(0).click();
 	} else {
@@ -161,9 +228,9 @@ function loadChannel() {
 
 //选择频道
 function selectChannel(own) {
-	var singleChannelFlag = $("#singleChannelFlag").val();	//频道是否单选
+	var modelType = $("#modelType").val();	//如果模块类型是投放环境，则把频道做成单选，移除全选按钮
 	
-	if (singleChannelFlag == "true") {	//单选
+	if (modelType == 1) {	//单选
 		$(".channel-con").find("li").removeClass("active");
 		$(own).toggleClass("active");
 		
@@ -438,9 +505,6 @@ function checkDateType() {
 	$(".date-li").eq(6).click();	//自定义
 }
 
-
-
-
 //查询分析数据
 function queryData() {
 	var areaId = $("#selectedAreaId").val();
@@ -451,6 +515,11 @@ function queryData() {
 	var startTime = $("#startTime").val();
 	var endTime = $("#endTime").val();
 	var channelNames = $("#channelNames").text();
+    var subjectBody = $('.project-list-five .subject-select > .select-subject > .subject .subject-body');
+    var allSubLi = subjectBody.find(".all-sub li");
+	var sliteLi = subjectBody.find(".slite li");
+    var peopleBodyLi = $('.project-list-five .people-select > .select-people > .people .people-body ul li');
+    var subjectIdList, flagType, flagId;
 	
 	if (!channelLevelList && !channelIdList) {
 		alert("请选择频道");
@@ -465,17 +534,83 @@ function queryData() {
 	if (channelIdList) {
 		channelIdJson = JSON.parse(channelIdList);
 	}
-	
-	var params = {
-		areaId: areaId, 
-		channelLevelList: channelLevelJson,
-		channelIdList: channelIdJson,
-		startDate: startDate,
-		endDate: endDate,
-		startTime: startTime,
-		endTime: endTime,
-		channelNames: channelNames
-	};
+
+	// 题材
+	if (allSubLi.hasClass('active')) {
+        subjectIdList = []
+	} else {
+        subjectIdList = []
+        sliteLi.each(function (index, value) {
+			if ($(value).hasClass('active')) {
+                subjectIdList.push(parseInt($(value).attr('flagId')))
+			}
+        })
+	}
+	// 人群
+    peopleBodyLi.each(function (index, value) {
+		if ($(value).hasClass("active")) {
+			flagId = $(value).attr('flagId');
+			flagType = $(value).parents("ul").attr('flagType')
+			return false;
+		}
+    })
+	// console.log(typeof flagId)
+	// console.log(flagType)
+	if (flagType == 'ageType') {
+        var params = {
+            areaId: areaId,
+            channelLevelList: channelLevelJson,
+            channelIdList: channelIdJson,
+            startDate: startDate,
+            endDate: endDate,
+            startTime: startTime,
+            endTime: endTime,
+            channelNames: channelNames,
+            subjectIdList: subjectIdList,
+            ageType: parseInt(flagId)
+        };
+	} else if (flagType == 'sexType') {
+        var params = {
+            areaId: areaId,
+            channelLevelList: channelLevelJson,
+            channelIdList: channelIdJson,
+            startDate: startDate,
+            endDate: endDate,
+            startTime: startTime,
+            endTime: endTime,
+            channelNames: channelNames,
+            subjectIdList: subjectIdList,
+            sexType: parseInt(flagId)
+        };
+	} else if (flagType == 'eduType') {
+        var params = {
+            areaId: areaId,
+            channelLevelList: channelLevelJson,
+            channelIdList: channelIdJson,
+            startDate: startDate,
+            endDate: endDate,
+            startTime: startTime,
+            endTime: endTime,
+            channelNames: channelNames,
+            subjectIdList: subjectIdList,
+            eduType: parseInt(flagId)
+        };
+    } else if (flagType == 'earnType') {
+        var params = {
+            areaId: areaId,
+            channelLevelList: channelLevelJson,
+            channelIdList: channelIdJson,
+            startDate: startDate,
+            endDate: endDate,
+            startTime: startTime,
+            endTime: endTime,
+            channelNames: channelNames,
+            subjectIdList: subjectIdList,
+            earnType: parseInt(flagId)
+        };
+    } else {}
+    console.log(params)
+    // return;
 	parentQueryData(params);
 }
 

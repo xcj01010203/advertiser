@@ -50,6 +50,5 @@ public class AnalyseResultController
 	{
 		DynamicDataSource.setDataSource(DynamicDataSource.DATA_SOURCE_PG);
 		return null;
-	}
-	
+	}	
 }

@@ -96,6 +96,7 @@
 			tpr.firstLocation,
 			tpr.remark,
 			tpr.isManualSaved,
+			tpr.pageCount,
 			tprrm.roleIds,
 			tprpm.propIds
 		FROM

@@ -1,6 +1,7 @@
 package com.xiaotu.advertiser.implant.service;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -12,12 +13,14 @@ import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.xiaotu.advertiser.implant.controller.dto.GoodsImplantDto;
 import com.xiaotu.advertiser.implant.controller.dto.RoleImplantDto;
 import com.xiaotu.advertiser.project.model.PlayRoleModel;
 import com.xiaotu.advertiser.project.model.ProjectModel;
+import com.xiaotu.advertiser.project.service.PlayLabelService;
 import com.xiaotu.common.db.Page;
 import com.xiaotu.common.exception.BusinessException;
 import com.xiaotu.common.mvc.BaseService;
@@ -32,6 +35,9 @@ import com.xiaotu.common.util.SessionUtil;
  */
 @Service
 public class ImplantAnalyseResultService extends BaseService {
+	
+	@Autowired
+	PlayLabelService playLabelService;
 
 	@Override
 	protected String getKey() {
@@ -332,7 +338,15 @@ public class ImplantAnalyseResultService extends BaseService {
 			roundMap.put("id", roundId);
 			roundMap.put("majorRoleNameList", majorRoleNameList);
 			
-			
+			Double pageCount = (Double) result.get("pageCount");
+			roundMap.put("pageCount", result.get("pageCount"));
+			List<Double> lableList = playLabelService.queryLableRoundId(roundId);
+			Double sum = 0d;
+			for (Double LabelScore : lableList) {
+				sum += LabelScore;
+			}
+			//最终精彩指数
+			roundMap.put("wonderful", BigDecimalUtil.addMultiply(sum,pageCount));
 			dealedRoundList.add(roundMap);
 		}
 		
@@ -443,5 +457,13 @@ public class ImplantAnalyseResultService extends BaseService {
 		}
 		
 		ExcelUtils.exportPropsInfoForExcel(dealedRoundList,roleNames,response,CREW_PROPS_MAP,project.getName());
+	}
+	
+	public static void main(String[] args) {
+			double v1 =9.5; double v2 =1.55;
+	        BigDecimal b1 = new BigDecimal(Double.toString(v1));  
+	        BigDecimal b2 = new BigDecimal(Double.toString(v2));  
+	        double score = b1.add(b2).doubleValue();  
+	        System.out.println(score);
 	}
 }

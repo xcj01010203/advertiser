@@ -81,8 +81,10 @@ function loadViewList() {
                 viewTrArray.push("				<td class='over-hide'>" + filterNull(item.atmosphere) + "</td>");
                 viewTrArray.push("				<td class='over-hide'>" + filterNull(item.site) + "</td>");
                 viewTrArray.push("				<td class='over-hide' title='" + filterNull(item.firstLocation) + "'>" + filterNull(item.firstLocation) + "</td>");
+                viewTrArray.push("				<td width='20%' class='over-hide'>" + filterNull(item.pageCount) + "</td>");
                 viewTrArray.push("				<td class='over-hide' title='" + filterNull(item.majorRoleNameList.join("|")) + "'>" + filterNull(item.majorRoleNameList.join("|")) + "</td>");
                 viewTrArray.push("				<td class='over-hide' title='" + filterNull(item.goods) + "'>" + filterNull(item.goods) + "</td>");
+                viewTrArray.push("				<td width='20%' class='over-hide'></td>");
                 viewTrArray.push("				<td width='26%' class='over-hide pie-td'></td>");
                 viewTrArray.push("			</tr>");
             });

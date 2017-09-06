@@ -96,7 +96,7 @@
 	        <bean class="com.xiaotu.advertiser.common.interceptor.LoginInterceptor"/>
 	    </mvc:interceptor>
 	    <!-- 权限功能拦截器 -->
-	     <mvc:interceptor>
+	      <mvc:interceptor>
 	      	<mvc:mapping path="/**"/>
 	        <mvc:exclude-mapping path="/login/toLogin"/>
 	        <mvc:exclude-mapping path="/login/exit"/>
@@ -105,7 +105,7 @@
 	        <mvc:exclude-mapping path="/static/**"/>
 	        <mvc:exclude-mapping path="/"/>
 	        <bean class="com.xiaotu.advertiser.common.interceptor.UserPermInterceptor"/>
-	    </mvc:interceptor>
+	    </mvc:interceptor> 
 	</mvc:interceptors>
 	
 	

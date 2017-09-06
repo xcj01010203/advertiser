@@ -65,5 +65,13 @@ public class BigDecimalUtil {
 
 		return bd1.divide(bd2, scale, BigDecimal.ROUND_HALF_UP).doubleValue();
 	}
+	
+	public static double addMultiply(double a, double b) {
+		BigDecimal bd1 = new BigDecimal(Double.toString(a));
+		BigDecimal bd2 = new BigDecimal(Double.toString(b));
+		BigDecimal bd3 = new BigDecimal(Double.toString(1.7));
+		BigDecimal bd4 = bd2.multiply(bd3);
+		return bd1.add(bd4).doubleValue();
+	}
 
 }

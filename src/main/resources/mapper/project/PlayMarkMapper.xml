@@ -50,7 +50,8 @@
 		tpm.description,
 		tpr.id as 'playRound.id',
 		tpr.seriesno as 'playRound.seriesNo',
-		tpr.roundno as 'playRound.roundNo'
+		tpr.roundno as 'playRound.roundNo',
+		tpr.pageCount
 		FROM tab_play_mark tpm,
 		tab_play_round tpr
 		WHERE 1 = 1

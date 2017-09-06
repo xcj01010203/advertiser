@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.xiaotu.advertiser.dictionary.model.GoodsModel;
@@ -30,6 +31,7 @@ import com.xiaotu.common.db.Page;
 import com.xiaotu.common.db.util.UUIDUtils;
 import com.xiaotu.common.exception.BusinessException;
 import com.xiaotu.common.mvc.BaseService;
+import com.xiaotu.common.util.BigDecimalUtil;
 import com.xiaotu.common.util.EntityUtils;
 import com.xiaotu.common.util.SessionUtil;
 import com.xiaotu.common.util.StringUtil;
@@ -40,6 +42,9 @@ import com.xiaotu.common.util.StringUtil;
  */
 @Service
 public class PlayRoundService extends BaseService{
+	
+	@Autowired
+	PlayLabelService playLabelService;
 	
 	/**
 	 * 根据多个场次ID批量删除场次
@@ -954,6 +959,15 @@ public class PlayRoundService extends BaseService{
 			roundMap.put("massRoleNameList", massRoleNameList);
 			roundMap.put("propNameList", propNameList);
 			
+			Double pageCount = (Double) round.get("pageCount");
+			roundMap.put("pageCount", round.get("pageCount"));
+			List<Double> lableList = playLabelService.queryLableRoundId(roundId);
+			Double sum = 0d;
+			for (Double LabelScore : lableList) {
+				sum += LabelScore;
+			}
+			//最终精彩指数
+			roundMap.put("wonderful", BigDecimalUtil.addMultiply(sum,pageCount));
 			myRoundList.add(roundMap);
 		}
 		

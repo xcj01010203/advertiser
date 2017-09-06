@@ -16,6 +16,9 @@ public class PlayMarkModel {
 	private Integer word_order;	//标记序号
 	private String description;	//描述信息
 	private Date createTime;	//创建时间
+	private double pageCount;  //场次页数
+	private double wonderful;  //精彩指数
+	
 	public String getId() {
 		return id;
 	}
@@ -63,5 +66,17 @@ public class PlayMarkModel {
 	}
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
+	}
+	public double getPageCount() {
+		return pageCount;
+	}
+	public void setPageCount(double pageCount) {
+		this.pageCount = pageCount;
+	}
+	public double getWonderful() {
+		return wonderful;
+	}
+	public void setWonderful(double wonderful) {
+		this.wonderful = wonderful;
 	}
 }

@@ -10,6 +10,7 @@ $(function () {
 	channelSubjectMarketCharts = echarts.init($("#channelSubjectMarket")[0], "wonderland");
 	channelCityCharts = echarts.init($("#channelCity")[0], "wonderland");
 	peopleSpreadCharts = echarts.init($("#peopleSpread")[0], "wonderland");
+
 });
 
 //查询数据
@@ -346,7 +347,7 @@ function loadChannelSubjectMarket(params) {
 
 //加载分城贡献
 function loadChannelCity(params) {
-	channelCityCharts.hideLoading();
+	channelCityCharts.showLoading();
 	var url = "/channelDataAnalyse/queryChannelCity";
 	var successFn = function(response) {
 		if (response.status == 1) {
@@ -458,8 +459,7 @@ function loadPeopleSpread(params) {
 		var ageSpread = response.data.ageSpread;
 		var earnSpread = response.data.earnSpread;
 		var eduSpread = response.data.eduSpread;
-		
-		console.log(ageSpread);
+		var sexSpread = response.data.sexSpread;
 		
 		//年龄
 		var maxAgeFavor = 0;
@@ -494,13 +494,20 @@ function loadPeopleSpread(params) {
 		});
 		maxEduFavor = multiply(maxEduFavor, 150);
 		
+		//性别
+		var sexFavorArray = [];
+		$.each(sexSpread, function(index, item) {
+			var singleData = {name: item.iddetail, value: item.rate000};
+			sexFavorArray.push(singleData);
+		});
+		
 		if (ageSpread.length > 0 || earnSpread.length > 0 || eduSpread.length > 0) {
 			$("#peopleSpread").removeClass("hidden");
 			$("#peopleSpread").next("div").addClass("hidden");
 			
 			option = {
 				title: {
-					text: params.channelNames + "-人群分布（年龄、收入、教育水平）",
+					text: params.channelNames + "-人群分布（年龄、收入、教育水平、性别）",
 					left: "center"
 				},
 				tooltip: {
@@ -517,7 +524,7 @@ function loadPeopleSpread(params) {
 							{ text: '55-64', max: maxAgeFavor},
 							{ text: '64+', max: maxAgeFavor}
 		                ],
-		                center: ['16%','50%'],
+		                center: ['12.5%','50%'],
 		                radius: "60%"
 			        },
 			        {
@@ -527,7 +534,7 @@ function loadPeopleSpread(params) {
 							{ text: '4000-6000', max: maxEarnFavor},
 							{ text: '6000+', max: maxEarnFavor}
 		                ],
-		                center: ['50%','50%'],
+		                center: ['37.5%','50%'],
 		                radius: "60%"
 			        },
 			        {
@@ -538,13 +545,14 @@ function loadPeopleSpread(params) {
 							{ text: '高中', max: maxEduFavor},
 							{ text: '大学及以上', max: maxEduFavor},
 		                ],
-		                center: ['83%','50%'],
+		                center: ['62.5%','50%'],
 		                radius: "60%"
 			        }
 			    ],
 			    series: [
 			    {
 			        type: 'radar',
+		            radarIndex: 0,
 			        data : [
 			            {
 			            	name: "年龄分布（偏好%）",
@@ -574,7 +582,24 @@ function loadPeopleSpread(params) {
 			                symbolSize: 5
 		                }
 		            ]
-			    }]
+			    },
+			    {
+		            type: 'pie',
+		            data: sexFavorArray,
+		            center: ['87.5%','50%'],
+	                radius: "60%",
+	                tooltip : {
+	        	        trigger: 'item',
+	        	        formatter: "性别：{b}<br>收视率(000)：{c}（{d}%）"
+	        	    },
+		            itemStyle: {
+		                emphasis: {
+		                    shadowBlur: 10,
+		                    shadowOffsetX: 0,
+		                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+		                }
+		            }
+		        }]
 			};
 			peopleSpreadCharts.setOption(option);
 			peopleSpreadCharts.hideLoading();

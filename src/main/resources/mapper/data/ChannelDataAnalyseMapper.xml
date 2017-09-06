@@ -30,7 +30,7 @@
 			AVG (avg_c_0_rate000) AS rate000,
 			AVG (avg_c_0_market) AS market
 		</if>
-		<if test="ageType != null and ageType > 1">
+		<if test="ageType != null and ageType > 0">
 			AVG (avg_c_age_rate[#{ageType}]) AS rate,
 			AVG (avg_c_age_rate000[#{ageType}]) AS rate000,
 			AVG (avg_c_age_market[#{ageType}]) AS market
@@ -67,6 +67,7 @@
 			<include refid="peopleResult"></include>
 		FROM
 			stat.tab_city_tvprogram_rounds_week T32
+		LEFT JOIN basicinfo.tab_tv_info tv ON T32.tvid = tv.tvid AND tvtype = 1
 		INNER JOIN dim_channel chl ON T32.ichannelid = chl.chid
 		WHERE
 			T32.ichannellevel IN (1, 2)
@@ -279,6 +280,44 @@
 					) AS idDetail,
 					UNNEST (avg_c_edu_rate) rate,
 					UNNEST (avg_c_edu_rate000) rate000
+				FROM
+					stat.tab_city_tvprogram_rounds_week T32
+					LEFT JOIN basicinfo.tab_tv_info tv ON T32.tvid = tv.tvid AND tvtype = 1
+				WHERE
+					1 = 1
+				AND iareaid = #{areaId}
+				AND ichannelid IN (#{channelId})
+				<include refid="dateTimeCondition"></include>
+				<if test="subjectIdList != null">
+					AND tv.subject IN
+					<foreach collection="subjectIdList" open="(" separator="," close=")" item="subjectId">
+						#{subjectId}
+					</foreach>
+				</if>
+			) mytable
+		GROUP BY
+			ID,
+			idDetail
+		ORDER BY
+			ID
+	</select>
+	
+	<!-- 查询频道的人群性别分布 -->
+	<select id="selectChannelSexSpread" parameterType="map" resultType="map">
+		SELECT
+			ID,
+			idDetail,
+			AVG(rate) rate,
+			round(AVG(rate000), 3) rate000
+		FROM
+			(
+				SELECT
+					UNNEST (ARRAY [1, 2]) AS ID,
+					UNNEST (
+						ARRAY ['男', '女']
+					) AS idDetail,
+					UNNEST (avg_c_sex_rate) rate,
+					UNNEST (avg_c_sex_rate000) rate000
 				FROM
 					stat.tab_city_tvprogram_rounds_week T32
 					LEFT JOIN basicinfo.tab_tv_info tv ON T32.tvid = tv.tvid AND tvtype = 1

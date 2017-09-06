@@ -13,12 +13,11 @@
     <link rel="stylesheet" href="${basePath}/static/component/bootstrap-datepicker/css/bootstrap-datepicker3.css">
     <link rel="stylesheet" href="${basePath}/static/css/common/reset.css">
     <link rel="stylesheet" href="${basePath}/static/css/component/areaTimePicker.css">
-    
+
+    <script src="${basePath}/static/data/subject.js"></script>
     <script src="${basePath}/static/component/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
     <script src="${basePath}/static/component/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js"></script>
     <script src="${basePath}/static/js/component/areaTimePicker.js"></script>
-    
-    <script src="${basePath}/static/data/subject.js"></script>
     
 </head>
 <body>
@@ -164,9 +163,9 @@
             <span>播出时间</span>
             <div class="select-time">
                 <div class="select">
-	                <span>选择时段</span>
-	                <i class="icon iconfont down">&#xe604;</i>
-	                <i class="icon iconfont top hide">&#xe608;</i>
+                    <span>选择时段</span>
+                    <i class="icon iconfont down">&#xe604;</i>
+                    <i class="icon iconfont top hide">&#xe608;</i>
                 </div>
                 <div class="five-siblings-con time clearfix hide">
                     <ul class="time-ul">
@@ -188,8 +187,142 @@
                 <input class="select-end-time" id="endTime" disabled>
             </div>
         </div>
+        <div class="five-siblings subject-select clearfix">
+            <span>题材选择</span>
+            <div class="select-subject">
+                <div class="select">
+                    <span>全部题材</span>
+                    <input type="hidden" value="">
+                    <i class="icon iconfont down">&#xe604;</i>
+                    <i class="icon iconfont top hide">&#xe608;</i>
+                    <p class="selected-channel text-primary over-hide" id="subjectNames">全部题材</p>
+                </div>
+                <div class="five-siblings-con subject clearfix hide scrollbar">
+                    <div class="subject-top">
+                        <li><a href="javascript:;">题材</a></li>
+                        <a onclick='javascript:$(document).click();' href="javascript:;" class="confirm">确定</a>
+                    </div>
+                    <div class="subject-body">
+                        <ul class="all-sub clearfix">
+                            <li flagId='-1' class="active">
+                                <a href="javascript:;">全部题材</a>
+                                <i class="icon iconfont">&#xe600;</i>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="five-siblings people-select clearfix">
+            <span>人群选择</span>
+            <div class="select-people">
+                <div class="select">
+                    <span>4+人群</span>
+                    <input type="hidden" value="">
+                    <i class="icon iconfont down">&#xe604;</i>
+                    <i class="icon iconfont top hide">&#xe608;</i>
+                </div>
+                <div class="five-siblings-con people clearfix hide">
+                    <div class="people-top">
+                        <span>人群</span>
+                    </div>
+                    <div class="people-body">
+                        <ul flagType='ageType' class="age clearfix">
+                            <h4>年龄</h4>
+                            <!--<li class="select-all-li">-->
+                            <li flagId='0' class="active">
+                                <a href="javascript:;">4+人群</a>
+                                <i class="icon iconfont">&#xe600;</i>
+                            </li>
+                            <li flagId='1'>
+                                <a href="javascript:;">4-14人群</a>
+                                <i class="icon iconfont">&#xe600;</i>
+                            </li>
+                            <li flagId='2'>
+                                <a href="javascript:;">15-24人群</a>
+                                <i class="icon iconfont">&#xe600;</i>
+                            </li>
+                            <li flagId='3'>
+                                <a href="javascript:;">25-34人群</a>
+                                <i class="icon iconfont">&#xe600;</i>
+                            </li>
+                            <li flagId='4'>
+                                <a href="javascript:;">35-44人群</a>
+                                <i class="icon iconfont">&#xe600;</i>
+                            </li>
+                            <li flagId='5'>
+                                <a href="javascript:;">45-54人群</a>
+                                <i class="icon iconfont">&#xe600;</i>
+                            </li>
+                            <li flagId='6'>
+                                <a href="javascript:;">55-64人群</a>
+                                <i class="icon iconfont">&#xe600;</i>
+                            </li>
+                            <li flagId='7'>
+                                <a href="javascript:;">65+人群</a>
+                                <i class="icon iconfont">&#xe600;</i>
+                            </li>
+                        </ul>
+                        <ul flagType='sexType' class="sex clearfix">
+                            <h4>性别</h4>
+                            <li flagId='1'>
+                                <a href="javascript:;">男</a>
+                                <i class="icon iconfont">&#xe600;</i>
+                            </li>
+                            <li>
+                                <a href="javascript:;">女</a>
+                                <i class="icon iconfont">&#xe600;</i>
+                            </li>
+                        </ul>
+                        <ul flagType='eduType' class="edu-level clearfix">
+                            <h4>教育程度</h4>
+                            <li flagId='1'>
+                                <a href="javascript:;">未受过正规教育</a>
+                                <i class="icon iconfont">&#xe600;</i>
+                            </li>
+                            <li flagId='2'>
+                                <a href="javascript:;">小学</a>
+                                <i class="icon iconfont">&#xe600;</i>
+                            </li>
+                            <li flagId='3'>
+                                <a href="javascript:;">初中</a>
+                                <i class="icon iconfont">&#xe600;</i>
+                            </li>
+                            <li flagId='4'>
+                                <a href="javascript:;">高中</a>
+                                <i class="icon iconfont">&#xe600;</i>
+                            </li>
+                            <li flagId='5'>
+                                <a href="javascript:;">大学及以上</a>
+                                <i class="icon iconfont">&#xe600;</i>
+                            </li>
+                        </ul>
+                        <ul flagType='earnType' class="income clearfix">
+                            <h4>收入</h4>
+                            <li flagId='1'>
+                                <a href="javascript:;">0-2000</a>
+                                <i class="icon iconfont">&#xe600;</i>
+                            </li>
+                            <li flagId='2'>
+                                <a href="javascript:;">2000-4000</a>
+                                <i class="icon iconfont">&#xe600;</i>
+                            </li>
+                            <li flagId='3'>
+                                <a href="javascript:;">4000-6000</a>
+                                <i class="icon iconfont">&#xe600;</i>
+                            </li>
+                            <li flagId='4'>
+                                <a href="javascript:;">6000+</a>
+                                <i class="icon iconfont">&#xe600;</i>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
         <button class="confirm btn btn-primary" onclick="queryData()">确定</button>
     </div>
 </div>
+
 </body>
 </html>

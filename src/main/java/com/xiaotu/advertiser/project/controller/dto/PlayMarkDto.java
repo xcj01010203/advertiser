@@ -15,6 +15,8 @@ public class PlayMarkDto {
 	private List<String> roleNameList; 	//角色名称列表
 	private String description;	//描述
 	private PlayRoundModel playRound;	//场次
+	private double pageCount;  //场次页数
+	private double wonderful;  //精彩指数
 	
 	public String getId() {
 		return id;
@@ -64,4 +66,17 @@ public class PlayMarkDto {
 	public void setPlayRound(PlayRoundModel playRound) {
 		this.playRound = playRound;
 	}
+	public double getPageCount() {
+		return pageCount;
+	}
+	public void setPageCount(double pageCount) {
+		this.pageCount = pageCount;
+	}
+	public double getWonderful() {
+		return wonderful;
+	}
+	public void setWonderful(double wonderful) {
+		this.wonderful = wonderful;
+	}
+	
 }

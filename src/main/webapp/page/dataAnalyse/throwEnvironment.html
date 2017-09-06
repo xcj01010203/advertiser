@@ -30,7 +30,8 @@
             </div>
         </div>
     </div>
-<input type="hidden" id="singleChannelFlag" value="true">
+<!-- 模块类型，1表示投放环境，2表示题材市场-->
+<input type="hidden" id="modelType" value="1">
 <#include '../component/areaTimePicker.html'>
     <div class="center content channel">
     	<div class="panel panel-default">
@@ -71,7 +72,7 @@
                 <h4><#include '../component/dobuleBias.html'/>人群分布</h4>
     		</div>
     		<div class="panel-body" id="peopleSpread">
-    		
+    			
     		</div>
     		<div class="panel-body hidden">
     			暂无数据

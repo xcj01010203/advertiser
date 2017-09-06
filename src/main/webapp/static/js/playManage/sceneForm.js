@@ -103,10 +103,12 @@ function loadViewList() {
                 roundListTrArray.push("				<td width='5%' class='over-hide'>" + filterNull(item.atmosphere) + "</td>");
                 roundListTrArray.push("				<td width='5%' class='over-hide'>" + filterNull(item.site) + "</td>");
                 roundListTrArray.push("				<td width='15%' class='over-hide' title='" + filterNull(item.firstLocation) + "'>" + filterNull(item.firstLocation) + "</td>");
+                roundListTrArray.push("				<td width='5%' class='over-hide'>" + filterNull(item.pageCount) + "</td>");
                 roundListTrArray.push("				<td width='20%' class='over-hide' title='" + filterNull(item.majorRoleNameList.join("|")) + "'>" + filterNull(item.majorRoleNameList.join("|")) + "</td>");
                 roundListTrArray.push("				<td width='10%' class='over-hide' title='" + filterNull(item.guestRoleNameList.join("|")) + "'>" + filterNull(item.guestRoleNameList.join("|")) + "</td>");
                 roundListTrArray.push("				<td width='10%' class='over-hide' title='" + filterNull(item.massRoleNameList.join("|")) + "'>" + filterNull(item.massRoleNameList.join("|")) + "</td>");
                 roundListTrArray.push("				<td width='20%' class='over-hide' title='" + filterNull(item.propNameList.join("|")) + "'>" + filterNull(item.propNameList.join("|")) + "</td>");
+                roundListTrArray.push("				<td width='20%' class='over-hide'></td>");
                 roundListTrArray.push("				<td width='10%' class='over-hide' title='" + filterNull(item.remark) + "'>" + filterNull(item.remark) + "</td>");
                 roundListTrArray.push("			</tr>");
             });

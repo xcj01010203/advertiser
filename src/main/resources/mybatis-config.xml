@@ -35,7 +35,8 @@
     	<typeAlias alias="PlayMark" type="com.xiaotu.advertiser.project.model.PlayMarkModel" />
     	<typeAlias alias="RoleAnalyseResult" type="com.xiaotu.advertiser.project.model.RoleAnalyseResultModel" />
     	<typeAlias alias="PlayFormat" type="com.xiaotu.advertiser.project.model.PlayFormatModel" />
-    	
+    	<typeAlias alias="PlayLabel" type="com.xiaotu.advertiser.project.model.PlayLabel" />
+    	<typeAlias alias="LabelTargetstate" type="com.xiaotu.advertiser.project.model.LabelTargetstateModel" />
     	<!-- 广告相关 -->
     	<typeAlias alias="ImplantRecord" type="com.xiaotu.advertiser.implant.model.ImplantRecordModel" />
     	<typeAlias alias="AnalysisJob" type="com.xiaotu.advertiser.implant.model.AnalysisJobModel" />
@@ -86,7 +87,8 @@
     	<mapper resource="mapper/project/PlayMarkGoodsMapMapper.xml"/>
     	<mapper resource="mapper/project/RoleAnalyseResultMapper.xml"/>
     	<mapper resource="mapper/project/PlayFormatMapper.xml"/>
-    	
+    	<mapper resource="mapper/project/PlayLabelMapper.xml"/>
+    	<mapper resource="mapper/project/LabelTargetstateMapper.xml"/>
     	<!-- 广告相关 -->
     	<mapper resource="mapper/implant/ImplantRecordMapper.xml"/>
     	<mapper resource="mapper/implant/ImplantRoleMapMapper.xml"/>

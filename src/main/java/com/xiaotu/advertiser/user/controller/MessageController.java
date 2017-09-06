@@ -1,13 +1,17 @@
 package com.xiaotu.advertiser.user.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.xiaotu.advertiser.user.model.MessageModel;
+import com.xiaotu.advertiser.user.model.UserModel;
 import com.xiaotu.advertiser.user.service.MessageService;
 import com.xiaotu.common.db.Page;
+import com.xiaotu.common.mvc.BaseService;
+import com.xiaotu.common.util.SessionUtil;
 
 /**
  * 消息信息
@@ -19,6 +23,9 @@ public class MessageController {
 
 	@Autowired 
 	private MessageService messageService;
+	@Autowired
+	@Qualifier(BaseService.BEAN_NAME)
+	private BaseService service;
 	
 	/**
 	 * 获取管理员消息列表
@@ -49,5 +56,15 @@ public class MessageController {
 	public @ResponseBody Object saveMessage(MessageModel messageModel){
 		 messageService.saveMessage(messageModel);
 		 return null;
+	}
+	
+	/**
+	 * 查询个人信息用户列表
+	 * @return
+	 */
+	@RequestMapping(value="/queryMessageUser")
+	public @ResponseBody Object queryMessageUser(){
+		 UserModel user =SessionUtil.getSessionUser();
+		 return service.getList("selectUser", user);
 	}
 }

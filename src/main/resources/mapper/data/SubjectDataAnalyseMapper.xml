@@ -60,7 +60,7 @@
 			AVG (avg_c_0_rate000) AS rate000,
 			AVG (avg_c_0_market) AS market
 		</if>
-		<if test="ageType != null and ageType > 1">
+		<if test="ageType != null and ageType > 0">
 			AVG (avg_c_age_rate[#{ageType}]) AS rate,
 			AVG (avg_c_age_rate000[#{ageType}]) AS rate000,
 			AVG (avg_c_age_market[#{ageType}]) AS market
@@ -225,7 +225,7 @@
 			throngId,
 			throngName,
 			AVG(rate) rate,
-			AVG (rate000) AS rate000,
+			round(AVG(rate000), 3) rate000,
 			AVG (market) AS market
 		FROM
 			(
@@ -273,7 +273,7 @@
 			throngId,
 			throngName,
 			AVG(rate) rate,
-			AVG (rate000) AS rate000,
+			round(AVG(rate000), 3) rate000,
 			AVG (market) AS market
 		FROM
 			(
@@ -304,7 +304,6 @@
 						#{subjectId}
 					</foreach>
 				</if>
-				AND T32.avg_c_earn_rate [ 1 ] IS NOT NULL
 			) mytable
 		GROUP BY
 			mytable.throngid,
@@ -319,7 +318,7 @@
 			throngId,
 			throngName,
 			AVG(rate) rate,
-			AVG (rate000) AS rate000,
+			round(AVG(rate000), 3) rate000,
 			AVG (market) AS market
 		FROM
 			(
@@ -351,7 +350,48 @@
 						#{subjectId}
 					</foreach>
 				</if>
-				AND T32.avg_c_edu_rate [ 1 ] IS NOT NULL
+			) mytable
+		GROUP BY
+			mytable.throngid,
+			mytable.throngname
+		ORDER BY
+			throngid
+	</select>
+	
+	<!-- 查询题材的人群性别分布 -->
+	<select id="querySubjectSexSpread" parameterType="map" resultType="map">
+		SELECT
+			throngId,
+			throngName,
+			AVG(rate) rate,
+			round(AVG(rate000), 3) rate000,
+			AVG (market) AS market
+		FROM
+			(
+				SELECT
+					UNNEST (ARRAY [1, 2]) AS throngId,
+					UNNEST (
+						ARRAY ['男', '女']
+					) AS throngName,
+					iname,
+					UNNEST (avg_c_sex_rate) rate,
+					UNNEST (avg_c_sex_rate000) rate000,
+					UNNEST (avg_c_sex_market) market
+				FROM
+					stat.tab_city_tvprogram_rounds_week T32
+				LEFT JOIN basicinfo.tab_tv_info tv ON T32.tvid = tv.tvid AND tvtype = 1
+				WHERE
+					1 = 1
+				AND T32.iareaid = #{areaId}
+				<!-- 频道查询条件 -->
+				<include refid="channelCondition"></include>
+				<include refid="dateTimeCondition"></include>
+				<if test="subjectIdList != null">
+					AND tv.subject IN
+					<foreach collection="subjectIdList" open="(" separator="," close=")" item="subjectId">
+						#{subjectId}
+					</foreach>
+				</if>
 			) mytable
 		GROUP BY
 			mytable.throngid,

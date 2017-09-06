@@ -132,6 +132,7 @@
     margin-left: 16px;
     display: inline-block;
     width: 600px;
+    line-height: 11px;
 }
 
 .project-list-five .broadcast-channel > .select-channel > .channel {
@@ -419,3 +420,249 @@
     background-color: white;
 }
 /*时间  end*/
+
+/*题材  start*/
+.project-list-five .five-content .subject-select {
+    margin-top: 40px;
+}
+
+.project-list-five .five-content .subject-select > span {
+    display: block;
+    float: left;
+    margin-left: 20px;
+    color: rgb(153, 153, 153);
+    font-size: 14px;
+}
+
+.project-list-five .five-content .subject-select > .select-subject {
+    float: left;
+    width: 700px;
+    margin-left: 60px;
+    cursor: pointer;
+    font-size: 14px;
+    position: relative;
+}
+
+.project-list-five .five-content .subject-select > .select-subject > .select {
+    color: rgb(26, 26, 26);
+}
+.project-list-five .five-content .subject-select > .select-subject > .select p {
+    display: inline-block;
+    width: 500px;
+    margin-left: 20px;
+    font-size: 12px;
+    line-height: 11px;
+}
+
+.project-list-five .five-content .subject-select > .select-subject > .select > i {
+    color: #999999;
+}
+
+.project-list-five .subject-select > .select-subject > .subject {
+    position: absolute;
+    top: 30px;
+    left: 0px;
+    background-color: #ffffff;
+    box-shadow: 2px 2px 4px #dedede, -2px -2px 4px #dedede;
+    border-radius: 3px;
+    width: 560px;
+    z-index: 10;
+    max-height: 480px;
+    overflow-y: scroll;
+}
+
+.project-list-five .subject-select > .select-subject > .subject .subject-top {
+    height: 40px;
+    border-bottom: 1px solid #ededed;
+    padding: 0 30px;
+}
+
+.project-list-five .subject-select > .select-subject > .subject .subject-top > li {
+    float: left;
+    color: rgb(153, 153, 153);
+    font-size: 14px;
+    height: 40px;
+    line-height: 40px;
+    border-bottom: 2px solid #29d9c2;
+}
+.project-list-five .subject-select > .select-subject > .subject .subject-top > li > a {
+    color: rgb(153, 153, 153);
+    font-size: 14px;
+}
+
+.project-list-five .subject-select > .select-subject > .subject .subject-top > .confirm {
+    float: right;
+    font-size: 14px;
+    color: rgb(41, 41, 41);
+    line-height: 39px;
+    background-color: #ffffff;
+    margin: 0;
+    width: 60px;
+    height: 39px;
+    text-align: right;
+}
+
+.project-list-five .subject-select > .select-subject > .subject .subject-top > .confirm:hover {
+    color: #29d9c2;
+}
+
+.project-list-five .subject-select > .select-subject > .subject .subject-body {
+    padding: 20px;
+}
+
+.project-list-five .subject-select > .select-subject > .subject .subject-body {
+    padding: 20px;
+}
+
+
+.project-list-five .subject-select > .select-subject > .subject .subject-body > ul {
+    min-height: 50px;
+}
+
+.project-list-five .subject-select > .select-subject > .subject .subject-body > ul > li {
+    display: block;
+    position: relative;
+    float: left;
+    margin: 10px;
+}
+.project-list-five .subject-select > .select-subject > .subject .subject-body > ul > li a {
+    display: block;
+    width: 102px;
+    height: 30px;
+    background-color: #ffffff;
+    border: 1px solid #d6d6d6;
+    font-size: 14px;
+    color: rgb(41, 41, 41);
+    text-align: center;
+    line-height: 30px;
+}
+
+.project-list-five .subject-select > .select-subject > .subject .subject-body > ul > li i {
+    position: absolute;
+    top: 15px;
+    right: -3px;
+    z-index: -1;
+}
+
+.project-list-five .subject-select > .select-subject > .subject .subject-body > ul > li.active a,
+.project-list-five .subject-select > .select-subject > .subject .subject-body > ul > li:hover a {
+    border: 1px solid #29d9c2;
+    color: #29d9c2;
+}
+
+.project-list-five .subject-select > .select-subject > .subject .subject-body > ul > li.active i,
+.project-list-five .subject-select > .select-subject > .subject .subject-body > ul > li:hover i {
+    z-index: 0;
+    color: #29d9c2;
+}
+
+
+/*题材  end*/
+
+/*人群  start*/
+.project-list-five .five-content .people-select {
+    margin-top: 40px;
+}
+
+.project-list-five .five-content .people-select > span {
+    display: block;
+    float: left;
+    margin-left: 20px;
+    color: rgb(153, 153, 153);
+    font-size: 14px;
+}
+
+.project-list-five .five-content .people-select > .select-people {
+    float: left;
+    width: 200px;
+    margin-left: 60px;
+    cursor: pointer;
+    font-size: 14px;
+    position: relative;
+}
+
+.project-list-five .five-content .people-select > .select-people > .select {
+    color: rgb(26, 26, 26);
+}
+
+.project-list-five .five-content .people-select > .select-people > .select > i {
+    color: #999999;
+}
+
+.project-list-five .people-select > .select-people > .people {
+    position: absolute;
+    top: 30px;
+    left: 0px;
+    background-color: #ffffff;
+    box-shadow: 2px 2px 4px #dedede, -2px -2px 4px #dedede;
+    border-radius: 3px;
+    width: 560px;
+    z-index: 10;
+}
+
+.project-list-five .people-select > .select-people > .people .people-top {
+    height: 40px;
+    border-bottom: 1px solid #ededed;
+}
+
+.project-list-five .people-select > .select-people > .people .people-top span {
+    line-height: 40px;
+    padding-bottom: 8px;
+    margin-left: 20px;
+    border-bottom: 2px solid #29d9c2;
+}
+
+.project-list-five .people-select > .select-people > .people .people-body {
+    padding: 20px;
+}
+
+.project-list-five .people-select > .select-people > .people .people-body {
+    padding: 20px;
+}
+
+
+.project-list-five .people-select > .select-people > .people .people-body > ul {
+    min-height: 50px;
+    margin-bottom: 10px;
+}
+.project-list-five .people-select > .select-people > .people .people-body > ul > h4 {
+
+}
+
+.project-list-five .people-select > .select-people > .people .people-body > ul > li {
+    display: block;
+    position: relative;
+    float: left;
+    margin: 10px;
+}
+.project-list-five .people-select > .select-people > .people .people-body > ul > li a {
+    display: block;
+    width: 102px;
+    height: 30px;
+    background-color: #ffffff;
+    border: 1px solid #d6d6d6;
+    font-size: 14px;
+    color: rgb(41, 41, 41);
+    text-align: center;
+    line-height: 30px;
+}
+
+.project-list-five .people-select > .select-people > .people .people-body > ul > li i {
+    position: absolute;
+    top: 15px;
+    right: -3px;
+    z-index: -1;
+}
+
+.project-list-five .people-select > .select-people > .people .people-body > ul > li.active a,
+.project-list-five .people-select > .select-people > .people .people-body > ul > li:hover a {
+    border: 1px solid #29d9c2;
+    color: #29d9c2;
+}
+
+.project-list-five .people-select > .select-people > .people .people-body > ul > li.active i,
+.project-list-five .people-select > .select-people > .people .people-body > ul > li:hover i {
+    z-index: 0;
+    color: #29d9c2;
+}
+/*人群  end*/

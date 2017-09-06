@@ -48,6 +48,8 @@ public class Constants
 	
 	public static final String ROLE_ANALYSE_PROT = "roleAnalyse.port";	//角色分析远程服务端口
 	
+	public static final String AUTOMATIC_TAG_SCRIPT = "AUTOMATIC_TAG_SCRIPT";	//提取标签远程服务脚本路径
+	
 	public static String getFileEncode()
 	{
 		return PropertiesUtil.getProperty(FILE_ENCODE);

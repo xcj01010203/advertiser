@@ -11,6 +11,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.xiaotu.advertiser.implant.controller.dto.ImplantRecordDto;
@@ -18,9 +19,11 @@ import com.xiaotu.advertiser.implant.model.ImplantRecordModel;
 import com.xiaotu.advertiser.implant.model.map.ImplantRoleMapModel;
 import com.xiaotu.advertiser.project.model.PlayRoleModel;
 import com.xiaotu.advertiser.project.model.ProjectModel;
+import com.xiaotu.advertiser.project.service.PlayLabelService;
 import com.xiaotu.common.db.Page;
 import com.xiaotu.common.exception.BusinessException;
 import com.xiaotu.common.mvc.BaseService;
+import com.xiaotu.common.util.BigDecimalUtil;
 import com.xiaotu.common.util.ExcelUtils;
 import com.xiaotu.common.util.SessionUtil;
 
@@ -31,6 +34,9 @@ import com.xiaotu.common.util.SessionUtil;
 @Service
 public class ImplantRecordService extends BaseService {
 
+	@Autowired
+	PlayLabelService playLabelService;
+	
 	@Override
 	protected String getKey() {
 		return "ImplantRecordMapper";
@@ -216,6 +222,17 @@ public class ImplantRecordService extends BaseService {
 			recordDto.setImplantMode(record.getImplantMode());
 			recordDto.setGoods(record.getGoods());
 			recordDto.setDesc(record.getDesc());
+			recordDto.setPageCount(record.getPageCount());
+			
+			String roundIds =record.getPlayRound().getId();
+			List<Double> lableList = playLabelService.queryLableRoundId(roundIds);
+			Double sum = 0d;
+			for (Double LabelScore : lableList) {
+				sum += LabelScore;
+			}
+			//最终精彩指数
+			recordDto.setWonderful(BigDecimalUtil.addMultiply(sum,record.getPageCount()));
+			
 			recordDtoList.add(recordDto);
 		}
 		
